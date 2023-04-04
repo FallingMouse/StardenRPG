@@ -2,18 +2,40 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using StardenRPG.Screens;
+using StardenRPG.StateManagement;
+
 namespace StardenRPG
 {
+        // Sample showing how to manage different game states, with transitions
+        // between menu screens, a loading screen, the game itself, and a pause
+        // menu. This main game class is extremely simple: all the interesting
+        // stuff happens in the ScreenManager component.
+
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private readonly ScreenManager _screenManager;
+        //private SpriteBatch _spriteBatch;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            
+            AudioManager audioManager = new AudioManager(this);
+
+            _screenManager = new ScreenManager(this);
+            _screenManager.BackgroundSongAsset = "Audio/Music/battleThemeA";
+            Components.Add(_screenManager);
+
+            AddInitialScreens();
+        }
+
+        public void AddInitialScreens()
+        {
+            _screenManager.AddScreen(new GameplayScreen(), new PlayerIndex());
         }
 
         protected override void Initialize()
@@ -25,7 +47,7 @@ namespace StardenRPG
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            //_spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }
