@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 
+using tainicom.Aether.Physics2D.Dynamics;
 
 namespace StardenRPG.Screens
 {
