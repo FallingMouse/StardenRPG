@@ -102,6 +102,8 @@ namespace StardenRPG.SpriteManager
         protected void GetCurrentCell(TimeSpan time)
         {
             time += currentTime;
+
+            // If we reached the end, loop back to the start.
             while (time >= currentClip.Duration)
             {
                 time -= currentClip.Duration;
@@ -126,16 +128,23 @@ namespace StardenRPG.SpriteManager
             }
 
             currentTime = time;
+
+            // Read keyframe matrices.
             IList<SpriteSheetKeyFrame> keyframes = currentClip.Keyframes;
+
             while (CurrentKeyframe < keyframes.Count)
             {
                 SpriteSheetKeyFrame spriteSheetKeyFrame = keyframes[CurrentKeyframe];
+
+                // Stop when we've read up to the current time position.
                 if (spriteSheetKeyFrame.Time > currentTime)
                 {
                     break;
                 }
 
+                // Use this keyframe.
                 CurrentCell = spriteSheetKeyFrame.Cell;
+
                 CurrentKeyframe++;
             }
         }

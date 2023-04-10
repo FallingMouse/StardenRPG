@@ -102,6 +102,11 @@ namespace StardenRPG.StateManagement
         // all gestures are placed in the InputState passed to the HandleInput method.
         public GestureType EnabledGestures
         {
+            // ✰ Star
+            // In the context of touchscreens and mobile devices, a "gesture" refers to
+            // a specific pattern of touch or movement that a user makes on the screen
+            // to interact with the device or application.
+            // Examples of gestures include tapping, swiping, pinching, or dragging on the screen
             get => _enabledGestures;
             protected set
             {
@@ -125,6 +130,9 @@ namespace StardenRPG.StateManagement
         // By default, all screens are assumed to be serializable.
         public bool IsSerializable
         {
+            // ✰ Star
+            // "Serializable" means an object can be turned into a format suitable for storage
+            // (like a byte stream or a string) and later be reconstructed into its initial form.
             get => _isSerializable;
             protected set => _isSerializable = value;
         }

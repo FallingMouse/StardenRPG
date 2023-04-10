@@ -22,9 +22,6 @@ namespace StardenRPG.StateManagement
 
     public class ScreenManager : DrawableGameComponent
     {
-#if WINDOWS_PHONE
-        private const string StateFilename = "ScreenManagerState.xml";
-#endif
         public IAudioManager audioManager { get { return Game.Services.GetService<IAudioManager>(); } }
 
         public string BackgroundSongAsset { get; set; }

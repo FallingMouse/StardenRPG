@@ -38,7 +38,7 @@ namespace StardenRPG.Screens
                 if (_content == null)
                     _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-                //_gameFont = _content.Load<SpriteFont>("gamefont");
+                //_gameFont = _content.Load<SpriteFont>("Fonts/gamefont");
 
                 Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/TestSheet1");
                 SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(2, 4));
@@ -139,13 +139,17 @@ namespace StardenRPG.Screens
             }
             else
             {
-                if (input.IsKeyPressed(Keys.Down, ControllingPlayer, out player))
+                if ((input.IsKeyPressed(Keys.Down, ControllingPlayer, out player)) ||
+                    (input.IsKeyPressed(Keys.S, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkDown");
-                else if (input.IsKeyPressed(Keys.Up, ControllingPlayer, out player))
+                else if ((input.IsKeyPressed(Keys.Up, ControllingPlayer, out player)) ||
+                    (input.IsKeyPressed(Keys.W, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkUp");
-                else if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player))
+                else if ((input.IsKeyPressed(Keys.Left, ControllingPlayer, out player)) ||
+                    (input.IsKeyPressed(Keys.A, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkLeft");
-                else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player))
+                else if ((input.IsKeyPressed(Keys.Right, ControllingPlayer, out player)) || 
+                    (input.IsKeyPressed(Keys.D, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkRight");
                 else
                     playerAvatar.animationPlayer.StartClip("Idle");

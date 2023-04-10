@@ -27,7 +27,13 @@ namespace StardenRPG
             AudioManager audioManager = new AudioManager(this);
 
             _screenManager = new ScreenManager(this);
-            _screenManager.BackgroundSongAsset = "Audio/Music/battleThemeA";
+            // No copyright music - CC0(Public Domain)
+            //_screenManager.BackgroundSongAsset = "Audio/Music/battleThemeA";
+
+            // ✰ Star
+            // Don't for get to delete this music cause it copyright
+            _screenManager.BackgroundSongAsset = "Audio/Music/Delete_ReleaseTheFire";
+
             Components.Add(_screenManager);
 
             AddInitialScreens();

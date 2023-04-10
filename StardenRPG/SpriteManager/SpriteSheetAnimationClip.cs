@@ -6,9 +6,7 @@ namespace StardenRPG.SpriteManager
     public class SpriteSheetAnimationClip
     {
         public string Name { get; set; }
-
         public bool Looped { get; set; }
-
         public TimeSpan Duration { get; set; }
 
         public List<SpriteSheetKeyFrame> Keyframes { get; set; }

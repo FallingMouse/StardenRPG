@@ -53,7 +53,7 @@ namespace StardenRPG
 
         protected virtual void OnAnimationStopped(SpriteSheetAnimationClip clip)
         {
-
+            return;
         }
 
         public virtual void StartAnimation(string animation)
