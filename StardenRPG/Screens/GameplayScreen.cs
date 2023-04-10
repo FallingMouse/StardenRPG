@@ -40,27 +40,37 @@ namespace StardenRPG.Screens
 
                 //_gameFont = _content.Load<SpriteFont>("Fonts/gamefont");
 
-                Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/TestSheet1");
-                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(2, 4));
-
-                Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
-                {
-                    { "Idle", sacg.Generate("Idle", new Vector2(1, 0), new Vector2(1, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkDown", sacg.Generate("WalkDown", new Vector2(0, 0), new Vector2(1, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(0, 1), new Vector2(1, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 2), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkUp", sacg.Generate("WalkUp", new Vector2(0, 3), new Vector2(1, 3), new TimeSpan(0, 0, 0, 0, 500), true) },
-                };
-
-                playerAvatar = new Sprite(spriteSheet, new Point(32, 40), new Point(16, 20));
-                playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
-                playerAvatar.StartAnimation("Idle");
+                //Point size = new Point(32, 40);
+                Point size = new Point(138, 88);
+                GeneratePlayerAvatar(size);
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
             }
+        }
+
+        protected void GeneratePlayerAvatar(Point size)
+        {
+                Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
+                //Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/test");
+                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 17));
+                //SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 3));
+
+                Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
+                {
+                    { "Idle", sacg.Generate("Idle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    //{ "WalkDown", sacg.Generate("WalkDown", new Vector2(0, 0), new Vector2(1, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(1, 2), new Vector2(0, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    //{ "WalkUp", sacg.Generate("WalkUp", new Vector2(0, 3), new Vector2(1, 3), new TimeSpan(0, 0, 0, 0, 500), true) },
+                };
+
+                playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44));
+                playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
+                playerAvatar.StartAnimation("Idle");
+                //playerAvatar.Position = new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2);
         }
 
 
@@ -90,22 +100,22 @@ namespace StardenRPG.Screens
             {
                 playerAvatar.Update(gameTime);
 
-                float translateSpeed = .5f;
+                float translateSpeed = 2.5f;
 
                 switch (playerAvatar.animationPlayer.CurrentClip.Name)
                 {
-                    case "WalkDown":
+                    /*case "WalkDown":
                         playerAvatar.Position += new Vector2(0, translateSpeed);
-                        break;
+                        break;*/
                     case "WalkLeft":
                         playerAvatar.Position += new Vector2(-translateSpeed, 0);
                         break;
                     case "WalkRight":
                         playerAvatar.Position += new Vector2(translateSpeed, 0);
                         break;
-                    case "WalkUp":
+                   /* case "WalkUp":
                         playerAvatar.Position += new Vector2(0, -translateSpeed);
-                        break;
+                        break;*/
                     case "Idle":
                         break;
                 }
@@ -139,13 +149,13 @@ namespace StardenRPG.Screens
             }
             else
             {
-                if ((input.IsKeyPressed(Keys.Down, ControllingPlayer, out player)) ||
+                /*if ((input.IsKeyPressed(Keys.Down, ControllingPlayer, out player)) ||
                     (input.IsKeyPressed(Keys.S, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkDown");
                 else if ((input.IsKeyPressed(Keys.Up, ControllingPlayer, out player)) ||
                     (input.IsKeyPressed(Keys.W, ControllingPlayer, out player)))
-                    playerAvatar.animationPlayer.StartClip("WalkUp");
-                else if ((input.IsKeyPressed(Keys.Left, ControllingPlayer, out player)) ||
+                    playerAvatar.animationPlayer.StartClip("WalkUp");*/
+                if ((input.IsKeyPressed(Keys.Left, ControllingPlayer, out player)) ||
                     (input.IsKeyPressed(Keys.A, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkLeft");
                 else if ((input.IsKeyPressed(Keys.Right, ControllingPlayer, out player)) || 
@@ -165,12 +175,12 @@ namespace StardenRPG.Screens
             spriteBatch.Begin();
 
             // Draw Background..
-            spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
+            //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
             playerAvatar.Draw(gameTime, spriteBatch);
 
             // Draw Foreground..
-            spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
+            //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
             spriteBatch.End();
 
