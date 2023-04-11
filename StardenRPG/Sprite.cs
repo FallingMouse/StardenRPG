@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using StardenRPG.SpriteManager;
+using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace StardenRPG
 {
@@ -10,6 +12,12 @@ namespace StardenRPG
         public Vector2 Position { get; set; }
         public Point CellSize { get; set; }
         public Point Size { get; set; }
+        
+        // Physics
+        public Body Body { get; private set; }
+        public World World { get; private set; }
+        public Body PhysicsBody;
+
         public Texture2D spriteTexture { get; set; }
         protected SpriteSheetAnimationPlayer _animationPlayer;
         public SpriteSheetAnimationPlayer animationPlayer
@@ -43,12 +51,26 @@ namespace StardenRPG
             }
         }
 
-        public Sprite(Texture2D spriteSheetAsset, Point size, Point cellSize)
+        public Sprite(Texture2D spriteSheetAsset, Point size, Point cellSize, World world, Vector2 position)
         {
             spriteTexture = spriteSheetAsset;
             Tint = Color.White;
             Size = size;
             CellSize = cellSize;
+            World = world; 
+            Position = position;
+
+            //Body = World.CreateBody(Position, 0, BodyType.Dynamic);
+            Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
+            Body.BodyType = BodyType.Dynamic;
+            Body.FixedRotation = true;
+            Body.OnCollision += OnCollision;
+        }
+
+        private bool OnCollision(Fixture sender, Fixture other, Contact contact)
+        {
+            // You can add custom collision handling logic here.
+            return true;
         }
 
         protected virtual void OnAnimationStopped(SpriteSheetAnimationClip clip)
@@ -72,6 +94,8 @@ namespace StardenRPG
         {
             if (animationPlayer != null)
                 animationPlayer.Update(gameTime.ElapsedGameTime);
+
+            Position = Body.Position;
         }
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)

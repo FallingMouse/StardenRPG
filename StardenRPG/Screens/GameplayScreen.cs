@@ -21,8 +21,16 @@ namespace StardenRPG.Screens
 
         protected Sprite playerAvatar;
 
-        public GameplayScreen()
+        // Ground
+        private Texture2D _groundTexture;
+        private Body _groundBody;
+
+        // Physics
+        private World _world;
+
+        public GameplayScreen(World world)
         {
+            _world = world;
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -44,6 +52,10 @@ namespace StardenRPG.Screens
                 //Point size = new Point(32, 40);
                 Point size = new Point(138, 88);
                 GeneratePlayerAvatar(size);
+
+                // Initialize the ground texture
+                _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
+                _groundTexture.SetData(new[] { Color.White });
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
@@ -67,11 +79,24 @@ namespace StardenRPG.Screens
                     { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
                     //{ "WalkUp", sacg.Generate("WalkUp", new Vector2(0, 3), new Vector2(1, 3), new TimeSpan(0, 0, 0, 0, 500), true) },
                 };
-
-                playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44));
+                
+                Vector2 playerStartPosition = new Vector2(100, 200);
+                
+                playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
                 playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
                 playerAvatar.StartAnimation("Idle");
                 //playerAvatar.Position = new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2);
+
+                // Create a physics body for the player
+                float width = size.X;
+                float height = size.Y;
+                float mass = 10f; // Adjust mass as needed
+                Body playerBody = _world.CreateRectangle(width, height, mass, playerStartPosition, 0);
+                playerBody.BodyType = BodyType.Dynamic;
+                /*playerBody.LinearDamping= 5f; // Adjust this value as needed
+                playerBody.SetRestitution(0.1f); // Set to a value between 0 and 1, lower values will result in less bouncing
+                playerBody.SetFriction(0.7f); // Set to a value between 0 and 1, higher values will result in more friction*/
+                playerAvatar.PhysicsBody = playerBody; // Assign the created body to the playerAvatar
         }
 
 
@@ -99,29 +124,30 @@ namespace StardenRPG.Screens
 
             if (IsActive)
             {
+                // Update the physics world
+                _world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
+                // Update the player Avatar
                 playerAvatar.Update(gameTime);
 
-                float translateSpeed = 2.5f;
+                //float translateSpeed = 2.5f;
+                Vector2 movementDirection = Vector2.Zero;
+                float moveSpeed = 100f; // Adjust the movement speed as needed
 
                 switch (playerAvatar.animationPlayer.CurrentClip.Name)
                 {
-                    /*case "WalkDown":
-                        playerAvatar.Position += new Vector2(0, translateSpeed);
-                        break;*/
                     case "WalkLeft":
-                        playerAvatar.Position += new Vector2(-translateSpeed, 0);
+                        movementDirection = new Vector2(-1, 0);
                         break;
                     case "WalkRight":
-                        playerAvatar.Position += new Vector2(translateSpeed, 0);
+                        movementDirection = new Vector2(1, 0);
                         break;
-                   /* case "WalkUp":
-                        playerAvatar.Position += new Vector2(0, -translateSpeed);
-                        break;*/
                     case "Idle":
                         break;
                 }
 
-                playerAvatar.Position = Vector2.Min(new Vector2(ScreenManager.GraphicsDevice.Viewport.Width - playerAvatar.Size.X, ScreenManager.GraphicsDevice.Viewport.Height - playerAvatar.Size.Y), Vector2.Max(Vector2.Zero, playerAvatar.Position));
+                //playerAvatar.Position = Vector2.Min(new Vector2(ScreenManager.GraphicsDevice.Viewport.Width - playerAvatar.Size.X, ScreenManager.GraphicsDevice.Viewport.Height - playerAvatar.Size.Y), Vector2.Max(Vector2.Zero, playerAvatar.Position));
+                playerAvatar.Body.LinearVelocity = movementDirection * moveSpeed;
             }
         }
 
@@ -178,6 +204,7 @@ namespace StardenRPG.Screens
             // Draw Background..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
+            // Draw the player Avatar
             playerAvatar.Draw(gameTime, spriteBatch);
 
             // Draw Foreground..
