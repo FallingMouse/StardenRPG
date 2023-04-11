@@ -24,6 +24,7 @@ namespace StardenRPG.Screens
         // Ground
         private Texture2D _groundTexture;
         private Body _groundBody;
+        float groundWidth, groundHeight;
 
         // Physics
         private World _world;
@@ -57,6 +58,8 @@ namespace StardenRPG.Screens
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
                 _groundTexture.SetData(new[] { Color.White });
 
+                CreateGround();
+
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
@@ -74,15 +77,16 @@ namespace StardenRPG.Screens
                 Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
                     { "Idle", sacg.Generate("Idle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    //{ "WalkDown", sacg.Generate("WalkDown", new Vector2(0, 0), new Vector2(1, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
                     { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(1, 2), new Vector2(0, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
                     { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    //{ "WalkUp", sacg.Generate("WalkUp", new Vector2(0, 3), new Vector2(1, 3), new TimeSpan(0, 0, 0, 0, 500), true) },
                 };
                 
-                Vector2 playerStartPosition = new Vector2(100, 200);
-                
+                //Vector2 playerStartPosition = new Vector2(100, 200);
+                //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y - 5);
+                Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
+
                 playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
+
                 playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
                 playerAvatar.StartAnimation("Idle");
                 //playerAvatar.Position = new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2);
@@ -99,6 +103,15 @@ namespace StardenRPG.Screens
                 playerAvatar.PhysicsBody = playerBody; // Assign the created body to the playerAvatar
         }
 
+        private void CreateGround()
+        {
+            // Create the ground
+            groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width;
+            groundHeight = 40f;
+            Vector2 groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
+            _groundBody = _world.CreateRectangle(groundWidth, groundHeight, 1, groundPosition);
+            _groundBody.BodyType = BodyType.Static;
+        }
 
         protected override void Deactivate()
         {
@@ -176,12 +189,6 @@ namespace StardenRPG.Screens
             }
             else
             {
-                /*if ((input.IsKeyPressed(Keys.Down, ControllingPlayer, out player)) ||
-                    (input.IsKeyPressed(Keys.S, ControllingPlayer, out player)))
-                    playerAvatar.animationPlayer.StartClip("WalkDown");
-                else if ((input.IsKeyPressed(Keys.Up, ControllingPlayer, out player)) ||
-                    (input.IsKeyPressed(Keys.W, ControllingPlayer, out player)))
-                    playerAvatar.animationPlayer.StartClip("WalkUp");*/
                 if ((input.IsKeyPressed(Keys.Left, ControllingPlayer, out player)) ||
                     (input.IsKeyPressed(Keys.A, ControllingPlayer, out player)))
                     playerAvatar.animationPlayer.StartClip("WalkLeft");
@@ -199,13 +206,20 @@ namespace StardenRPG.Screens
 
             var spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
 
             // Draw Background..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
             // Draw the player Avatar
             playerAvatar.Draw(gameTime, spriteBatch);
+
+            // Draw the ground
+            spriteBatch.Draw(
+                _groundTexture,
+                new Rectangle((int)_groundBody.Position.X, (int)_groundBody.Position.Y, (int)groundWidth, (int)groundHeight),
+                Color.White
+            );
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
