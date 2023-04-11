@@ -20,6 +20,8 @@ namespace StardenRPG
 
         public Texture2D spriteTexture { get; set; }
         protected SpriteSheetAnimationPlayer _animationPlayer;
+        public Vector2 Origin { get; set; }
+
         public SpriteSheetAnimationPlayer animationPlayer
         {
             get { return _animationPlayer; }
@@ -78,10 +80,26 @@ namespace StardenRPG
             return;
         }
 
+        public void SetOriginForAnimation(string animationName)
+        {
+            /*if (animationName == "Idle")
+            {
+                Origin = new Vector2(0, 0); // Adjust these values as needed
+            }*/
+            if (animationName == "WalkLeft")
+            {
+                Origin = new Vector2(12, 0); // Adjust these values as needed
+            }
+            // Add more cases for other animations as needed
+        }
+
         public virtual void StartAnimation(string animation)
         {
             if (animationPlayer != null)
+            {
                 animationPlayer.StartClip(animation);
+                SetOriginForAnimation(animation);
+            }
         }
 
         public virtual void StopAnimation()
@@ -112,7 +130,7 @@ namespace StardenRPG
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y),
+                destinationRectangle: new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)Size.X, (int)Size.Y),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,

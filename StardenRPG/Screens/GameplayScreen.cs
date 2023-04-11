@@ -50,15 +50,16 @@ namespace StardenRPG.Screens
 
                 //_gameFont = _content.Load<SpriteFont>("Fonts/gamefont");
 
-                //Point size = new Point(32, 40);
-                Point size = new Point(138, 88);
-                GeneratePlayerAvatar(size);
-
                 // Initialize the ground texture
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
                 _groundTexture.SetData(new[] { Color.White });
 
                 CreateGround();
+
+                //Point size = new Point(32, 40);
+                Point size = new Point(138, 88);
+                GeneratePlayerAvatar(size);
+
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
@@ -92,15 +93,15 @@ namespace StardenRPG.Screens
                 //playerAvatar.Position = new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2);
 
                 // Create a physics body for the player
-                float width = size.X;
+                /*float width = size.X;
                 float height = size.Y;
                 float mass = 10f; // Adjust mass as needed
                 Body playerBody = _world.CreateRectangle(width, height, mass, playerStartPosition, 0);
                 playerBody.BodyType = BodyType.Dynamic;
-                /*playerBody.LinearDamping= 5f; // Adjust this value as needed
+                *//*playerBody.LinearDamping= 5f; // Adjust this value as needed
                 playerBody.SetRestitution(0.1f); // Set to a value between 0 and 1, lower values will result in less bouncing
-                playerBody.SetFriction(0.7f); // Set to a value between 0 and 1, higher values will result in more friction*/
-                playerAvatar.PhysicsBody = playerBody; // Assign the created body to the playerAvatar
+                playerBody.SetFriction(0.7f); // Set to a value between 0 and 1, higher values will result in more friction*//*
+                playerAvatar.PhysicsBody = playerBody; // Assign the created body to the playerAvatar*/
         }
 
         private void CreateGround()
