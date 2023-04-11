@@ -100,7 +100,26 @@ namespace StardenRPG
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(spriteTexture, new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y), sourceRect, Tint);
+            // Old Code don't delete yet
+            //spriteBatch.Draw(spriteTexture, new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y), sourceRect, Tint);
+
+            // Add these lines to determine the SpriteEffects based on the current animation.
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (animationPlayer != null && animationPlayer.CurrentClip != null && animationPlayer.CurrentClip.Name == "WalkLeft")
+            {
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+
+            spriteBatch.Draw(
+                texture: spriteTexture,
+                destinationRectangle: new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y),
+                sourceRectangle: sourceRect,
+                color: Tint,
+                rotation: 0,
+                origin: Vector2.Zero,
+                effects: spriteEffects,
+                layerDepth: 0
+            );
         }
     }
 }
