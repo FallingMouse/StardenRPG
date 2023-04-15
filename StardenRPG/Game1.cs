@@ -20,6 +20,9 @@ namespace StardenRPG
         private readonly ScreenManager _screenManager;
         //private SpriteBatch _spriteBatch;
 
+        // Scaling System
+        public Vector2 ScaleFactor { get; private set; }
+
         // Physics
         private World _world;
 
@@ -48,7 +51,9 @@ namespace StardenRPG
         {
             _world = new World(new Vector2(0, -10f)); // Initialize physics world with gravity.
 
-            _screenManager.AddScreen(new GameplayScreen(_world), new PlayerIndex());
+            // Calculate the scale of the game world
+            ScaleFactor = CalculateScaleFactor();
+            _screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
         }
 
         protected override void Initialize()
@@ -56,6 +61,9 @@ namespace StardenRPG
             // TODO: Add your initialization logic here
             Window.Title = "Starden RPG";
             Window.AllowUserResizing = true;
+
+            // Calculate the scale of the game world
+            //ScaleFactor = CalculateScaleFactor();
 
             // Set resolution Fullscreen
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -65,6 +73,20 @@ namespace StardenRPG
 
             base.Initialize();
         }
+
+        private Vector2 CalculateScaleFactor()
+        {
+            int baseWidth = 1920; // Base resolution width: 1920
+            int baseHeight = 1080; // Base resolution height: 1080
+
+            int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
+            float scaleX = (float)screenWidth / baseWidth;
+            float scaleY = (float)screenHeight / baseHeight;
+            return new Vector2(scaleX, scaleY);
+        }
+
 
         protected override void LoadContent()
         {

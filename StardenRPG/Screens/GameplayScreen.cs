@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
+using StardenRPG.Entities;
 
 using tainicom.Aether.Physics2D.Dynamics;
+using System.Text.RegularExpressions;
 
 namespace StardenRPG.Screens
 {
@@ -20,7 +22,12 @@ namespace StardenRPG.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        protected Sprite playerAvatar;
+        // scaling
+        private readonly Vector2 _scaleFactor;
+
+        protected Player player; // Replace 'Sprite playerAvatar;' with this line
+        //protected Sprite playerAvatar;
+        protected Ground ground; // Add this line
 
         // Ground
         private Texture2D _groundTexture;
@@ -31,9 +38,13 @@ namespace StardenRPG.Screens
         // Physics
         private World _world;
 
-        public GameplayScreen(World world)
+        // Add the input state object
+        private InputState input = new InputState();
+
+        public GameplayScreen(World world, Vector2 scaleFactor)
         {
             _world = world;
+            _scaleFactor = scaleFactor;
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -73,10 +84,13 @@ namespace StardenRPG.Screens
 
         protected void GeneratePlayerAvatar(Point size)
         {
-                Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
+                /* Old Test character, just an example */
                 //Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/test");
-                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 17));
                 //SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 3));
+                //Vector2 playerStartPosition = new Vector2(100, 200);
+                
+                Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
+                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 17));
 
                 Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
@@ -85,29 +99,18 @@ namespace StardenRPG.Screens
                     { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
                 };
                 
-                //Vector2 playerStartPosition = new Vector2(100, 200);
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
-                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y - 100); // -100 becuase I wan't to test add Mass
+                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y ); // -100 becuase I wan't to test add Mass
 
                 // Player Mass
                 float playerMass = 60f;
 
-                playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
+                player = new Player(spriteSheet, size, new Point(69, 44), _world, playerStartPosition, spriteAnimationClips);
+                player.ControllingPlayer = PlayerIndex.One;
+                //playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
 
-                playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
-                playerAvatar.StartAnimation("Idle");
-                //playerAvatar.Position = new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2, ScreenManager.Game.GraphicsDevice.Viewport.Height / 2);
-
-                // Create a physics body for the player
-                /*float width = size.X;
-                float height = size.Y;
-                float mass = 10f; // Adjust mass as needed
-                Body playerBody = _world.CreateRectangle(width, height, mass, playerStartPosition, 0);
-                playerBody.BodyType = BodyType.Dynamic;
-                *//*playerBody.LinearDamping= 5f; // Adjust this value as needed
-                playerBody.SetRestitution(0.1f); // Set to a value between 0 and 1, lower values will result in less bouncing
-                playerBody.SetFriction(0.7f); // Set to a value between 0 and 1, higher values will result in more friction*//*
-                playerAvatar.PhysicsBody = playerBody; // Assign the created body to the playerAvatar*/
+                //playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
+                //playerAvatar.StartAnimation("Idle");
         }
 
         private void CreateGround()
@@ -116,8 +119,8 @@ namespace StardenRPG.Screens
             groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width;
             groundHeight = 80f;
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
-            _groundBody = _world.CreateRectangle(groundWidth, groundHeight, 1, groundPosition);
-            _groundBody.BodyType = BodyType.Static;
+
+            ground = new Ground(_groundTexture, groundWidth, groundHeight, groundPosition, _world);
         }
 
         protected override void Deactivate()
@@ -128,6 +131,14 @@ namespace StardenRPG.Screens
         public override void Unload()
         {
             _content.Unload();
+        }
+
+        public override void HandleInput(GameTime gameTime, InputState input)
+        {
+            base.HandleInput(gameTime, input);
+
+            // Pass input to the player's HandleInput method
+            player.HandleInput(input);
         }
 
         // This method checks the GameScreen.IsActive property, so the game will
@@ -148,13 +159,14 @@ namespace StardenRPG.Screens
                 _world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 // Update the player Avatar
-                playerAvatar.Update(gameTime);
+                //playerAvatar.Update(gameTime);
+                player.Update(gameTime); // Replace 'playerAvatar.Update(gameTime);' with this line
 
                 //64 pixels on your screen should be 1 meter in the physical world
                 Vector2 movementDirection = Vector2.Zero;
-                float moveSpeed = 128f; // Adjust the movement speed as needed
+                float moveSpeed = 25600000f; // Adjust the movement speed as needed
 
-                switch (playerAvatar.animationPlayer.CurrentClip.Name)
+                switch (player.animationPlayer.CurrentClip.Name)
                 {
                     case "WalkLeft":
                         movementDirection = new Vector2(-1, 0);
@@ -167,43 +179,7 @@ namespace StardenRPG.Screens
                 }
 
                 //playerAvatar.Position = Vector2.Min(new Vector2(ScreenManager.GraphicsDevice.Viewport.Width - playerAvatar.Size.X, ScreenManager.GraphicsDevice.Viewport.Height - playerAvatar.Size.Y), Vector2.Max(Vector2.Zero, playerAvatar.Position));
-                playerAvatar.Body.LinearVelocity = movementDirection * moveSpeed;
-            }
-        }
-
-        // Unlike the Update method, this will only be called when the gameplay screen is active.
-        public override void HandleInput(GameTime gameTime, InputState input)
-        {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
-
-            // Look up inputs for the active player profile.
-            int playerIndex = (int)ControllingPlayer.Value;
-
-            var keyboardState = input.CurrentKeyboardStates[playerIndex];
-            var gamePadState = input.CurrentGamePadStates[playerIndex];
-
-            // The game pauses either if the user presses the pause button, or if
-            // they unplug the active gamepad. This requires us to keep track of
-            // whether a gamepad was ever plugged in, because we don't want to pause
-            // on PC if they are playing with a keyboard and have no gamepad at all!
-            bool gamePadDisconnected = !gamePadState.IsConnected && input.GamePadWasConnected[playerIndex];
-
-            PlayerIndex player;
-            if (_pauseAction.Occurred(input, ControllingPlayer, out player) || gamePadDisconnected)
-            {
-                //ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
-            }
-            else
-            {
-                if ((input.IsKeyPressed(Keys.Left, ControllingPlayer, out player)) ||
-                    (input.IsKeyPressed(Keys.A, ControllingPlayer, out player)))
-                    playerAvatar.animationPlayer.StartClip("WalkLeft");
-                else if ((input.IsKeyPressed(Keys.Right, ControllingPlayer, out player)) || 
-                    (input.IsKeyPressed(Keys.D, ControllingPlayer, out player)))
-                    playerAvatar.animationPlayer.StartClip("WalkRight");
-                else
-                    playerAvatar.animationPlayer.StartClip("Idle");
+                player.Body.LinearVelocity = movementDirection * moveSpeed;
             }
         }
 
@@ -213,20 +189,26 @@ namespace StardenRPG.Screens
 
             var spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+            /* Old SpriteBatch Begin Code */
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+
+            /* This change will apply the scaling factor to all the sprites drawn within the spriteBatch.Begin and spriteBatch.End calls. */
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(_scaleFactor.X, _scaleFactor.Y, 1));
 
             // Draw Background..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
             // Draw the player Avatar
-            playerAvatar.Draw(gameTime, spriteBatch);
+            //playerAvatar.Draw(gameTime, spriteBatch);
+            player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
 
             // Draw the ground
-            spriteBatch.Draw(
+            /*spriteBatch.Draw(
                 _groundTexture,
                 new Rectangle((int)_groundBody.Position.X, (int)_groundBody.Position.Y, (int)groundWidth, (int)groundHeight),
                 Color.White
-            );
+            );*/
+            ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
