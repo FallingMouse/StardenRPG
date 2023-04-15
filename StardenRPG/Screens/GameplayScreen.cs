@@ -24,6 +24,7 @@ namespace StardenRPG.Screens
         // Ground
         private Texture2D _groundTexture;
         private Body _groundBody;
+        private Vector2 groundPosition;
         float groundWidth, groundHeight;
 
         // Physics
@@ -58,6 +59,7 @@ namespace StardenRPG.Screens
 
                 //Point size = new Point(32, 40);
                 Point size = new Point(138, 88);
+                //Point size = new Point(278, 176);
                 GeneratePlayerAvatar(size);
 
 
@@ -83,8 +85,8 @@ namespace StardenRPG.Screens
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, 200);
-                //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y - 5);
-                Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
+                //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
+                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y);
 
                 playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
 
@@ -108,8 +110,8 @@ namespace StardenRPG.Screens
         {
             // Create the ground
             groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width;
-            groundHeight = 40f;
-            Vector2 groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
+            groundHeight = 80f;
+            groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
             _groundBody = _world.CreateRectangle(groundWidth, groundHeight, 1, groundPosition);
             _groundBody.BodyType = BodyType.Static;
         }

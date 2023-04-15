@@ -16,7 +16,6 @@ namespace StardenRPG
         // Physics
         public Body Body { get; private set; }
         public World World { get; private set; }
-        public Body PhysicsBody;
 
         public Texture2D spriteTexture { get; set; }
         protected SpriteSheetAnimationPlayer _animationPlayer;
