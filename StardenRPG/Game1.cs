@@ -28,10 +28,6 @@ namespace StardenRPG
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
-            /*_graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
-            _graphics.ApplyChanges();*/
             
             AudioManager audioManager = new AudioManager(this);
 
@@ -58,6 +54,14 @@ namespace StardenRPG
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Window.Title = "Starden RPG";
+            Window.AllowUserResizing = true;
+
+            // Set resolution Fullscreen
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.IsFullScreen = true;
+            _graphics.ApplyChanges();
 
             base.Initialize();
         }
