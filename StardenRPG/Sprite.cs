@@ -67,9 +67,6 @@ namespace StardenRPG
             //Body.Mass = playerMass;
             Body.FixedRotation = true;
             Body.OnCollision += OnCollision;
-
-            // Test Apply Force
-            //Body.ApplyLinearImpulse(new Vector2(0, -15f));
         }
 
         private bool OnCollision(Fixture sender, Fixture other, Contact contact)

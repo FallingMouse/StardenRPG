@@ -13,6 +13,9 @@ namespace StardenRPG.Entities
     {
         public PlayerIndex ControllingPlayer { get; set; }
 
+        // Check if the player is running
+        public bool IsRunning { get; set; }
+
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
             : base(spriteSheet, size, origin, world, startPosition)
         {
@@ -38,6 +41,11 @@ namespace StardenRPG.Entities
                 animationPlayer.StartClip("WalkRight");
             else
                 animationPlayer.StartClip("Idle");
+
+            //IsRunning = input.CurrentKeyboardStates[(int)ControllingPlayer].IsKeyDown(Keys.LeftShift);
+            IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
+
         }
+
     }
 }

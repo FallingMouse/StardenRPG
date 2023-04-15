@@ -110,8 +110,8 @@ namespace StardenRPG.Screens
                 
                 // Set the player's physics
                 player.Body.Mass = playerMass;
-                player.Body.LinearDamping = 0.2f; // Adjust this value to fine-tune the character's speed
-                player.Body.SetFriction(0.5f);
+                player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
+                player.Body.SetFriction(1f);
         }
 
         private void CreateGround()
@@ -164,7 +164,13 @@ namespace StardenRPG.Screens
 
                 //64 pixels on your screen should be 1 meter in the physical world
                 Vector2 movementDirection = Vector2.Zero;
-                float moveSpeed = 10000f; // Adjust the movement speed as needed
+                //float moveSpeed = 10000f; // Adjust the movement speed as needed
+                //float moveSpeed = player.IsRunning ? 50000f : 10000f; // Adjust the movement speed as needed
+
+                float baseSpeed = 10000f;
+                float runningMultiplier = 10f;
+                float moveSpeed = player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed;
+
 
                 switch (player.animationPlayer.CurrentClip.Name)
                 {
