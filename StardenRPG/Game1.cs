@@ -46,7 +46,7 @@ namespace StardenRPG
 
         public void AddInitialScreens()
         {
-            _world = new World(new Vector2(0, 9.81f)); // Initialize physics world with gravity.
+            _world = new World(new Vector2(0, -10f)); // Initialize physics world with gravity.
 
             _screenManager.AddScreen(new GameplayScreen(_world), new PlayerIndex());
         }

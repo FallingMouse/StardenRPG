@@ -64,8 +64,12 @@ namespace StardenRPG
             //Body = World.CreateBody(Position, 0, BodyType.Dynamic);
             Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
             Body.BodyType = BodyType.Dynamic;
+            //Body.Mass = playerMass;
             Body.FixedRotation = true;
             Body.OnCollision += OnCollision;
+
+            // Test Apply Force
+            //Body.ApplyLinearImpulse(new Vector2(0, -15f));
         }
 
         private bool OnCollision(Fixture sender, Fixture other, Contact contact)

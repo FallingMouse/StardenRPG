@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -86,7 +87,10 @@ namespace StardenRPG.Screens
                 
                 //Vector2 playerStartPosition = new Vector2(100, 200);
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
-                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y);
+                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y - 100); // -100 becuase I wan't to test add Mass
+
+                // Player Mass
+                float playerMass = 60f;
 
                 playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
 
@@ -146,9 +150,9 @@ namespace StardenRPG.Screens
                 // Update the player Avatar
                 playerAvatar.Update(gameTime);
 
-                //float translateSpeed = 2.5f;
+                //64 pixels on your screen should be 1 meter in the physical world
                 Vector2 movementDirection = Vector2.Zero;
-                float moveSpeed = 100f; // Adjust the movement speed as needed
+                float moveSpeed = 128f; // Adjust the movement speed as needed
 
                 switch (playerAvatar.animationPlayer.CurrentClip.Name)
                 {
