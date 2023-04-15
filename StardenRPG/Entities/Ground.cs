@@ -25,6 +25,7 @@ namespace StardenRPG.Entities
         {
             _groundBody = world.CreateRectangle(_groundWidth, _groundHeight, 1, _groundPosition);
             _groundBody.BodyType = BodyType.Static;
+            _groundBody.SetFriction(0.5f);
         }
 
         public void Draw(SpriteBatch spriteBatch)
