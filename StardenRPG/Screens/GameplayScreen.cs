@@ -107,10 +107,11 @@ namespace StardenRPG.Screens
 
                 player = new Player(spriteSheet, size, new Point(69, 44), _world, playerStartPosition, spriteAnimationClips);
                 player.ControllingPlayer = PlayerIndex.One;
-                //playerAvatar = new Sprite(spriteSheet, size, new Point(69, 44), _world, playerStartPosition);
-
-                //playerAvatar.animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
-                //playerAvatar.StartAnimation("Idle");
+                
+                // Set the player's physics
+                player.Body.Mass = playerMass;
+                player.Body.LinearDamping = 0.2f; // Adjust this value to fine-tune the character's speed
+                player.Body.SetFriction(0.5f);
         }
 
         private void CreateGround()
@@ -159,12 +160,11 @@ namespace StardenRPG.Screens
                 _world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 // Update the player Avatar
-                //playerAvatar.Update(gameTime);
-                player.Update(gameTime); // Replace 'playerAvatar.Update(gameTime);' with this line
+                player.Update(gameTime);
 
                 //64 pixels on your screen should be 1 meter in the physical world
                 Vector2 movementDirection = Vector2.Zero;
-                float moveSpeed = 25600000f; // Adjust the movement speed as needed
+                float moveSpeed = 10000f; // Adjust the movement speed as needed
 
                 switch (player.animationPlayer.CurrentClip.Name)
                 {
@@ -178,8 +178,9 @@ namespace StardenRPG.Screens
                         break;
                 }
 
-                //playerAvatar.Position = Vector2.Min(new Vector2(ScreenManager.GraphicsDevice.Viewport.Width - playerAvatar.Size.X, ScreenManager.GraphicsDevice.Viewport.Height - playerAvatar.Size.Y), Vector2.Max(Vector2.Zero, playerAvatar.Position));
-                player.Body.LinearVelocity = movementDirection * moveSpeed;
+                //player.Body.LinearVelocity = movementDirection * moveSpeed;
+                player.Body.ApplyForce(movementDirection * moveSpeed);
+                //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
             }
         }
 
@@ -199,15 +200,8 @@ namespace StardenRPG.Screens
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
             // Draw the player Avatar
-            //playerAvatar.Draw(gameTime, spriteBatch);
             player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
 
-            // Draw the ground
-            /*spriteBatch.Draw(
-                _groundTexture,
-                new Rectangle((int)_groundBody.Position.X, (int)_groundBody.Position.Y, (int)groundWidth, (int)groundHeight),
-                Color.White
-            );*/
             ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
 
             // Draw Foreground..
