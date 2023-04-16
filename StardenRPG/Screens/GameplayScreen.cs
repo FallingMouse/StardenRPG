@@ -42,6 +42,9 @@ namespace StardenRPG.Screens
         // Camera
         private Camera2D _camera;
 
+        // Parallax Background
+        private ParallaxBackground _parallaxBackground;
+
         // Add the input state object
         private InputState input = new InputState();
 
@@ -75,15 +78,34 @@ namespace StardenRPG.Screens
 
                 // Initialize the ground texture
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
-                _groundTexture.SetData(new[] { Color.White });
+                //_groundTexture.SetData(new[] { Color.White });
 
                 CreateGround();
 
-                //Point size = new Point(32, 40);
+                // Load background textures
+                Texture2D[] backgroundLayers = new Texture2D[12];
+                backgroundLayers[11] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0000_9");
+                backgroundLayers[10] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0001_8");
+                backgroundLayers[9] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0002_7");
+                backgroundLayers[8] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0003_6");
+                backgroundLayers[7] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0004_Lights");
+                backgroundLayers[6] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0005_5");
+                backgroundLayers[5] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0006_4");
+                backgroundLayers[4] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0007_Lights");
+                backgroundLayers[3] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0008_3");
+                backgroundLayers[2] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0009_2");
+                backgroundLayers[1] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0010_1");
+                backgroundLayers[0] = _content.Load<Texture2D>("Backgrounds/Background layers/Layer_0011_0");
+
+                // Create ParallaxBackground instance
+                float[] parallaxFactors = new float[] { 1f, 0.9f, 0.8f, 0.8f, 0.7f, 0.6f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0f };
+                //float[] parallaxFactors = new float[] { 0f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f };
+                _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
+
+                // Create the player
                 Point size = new Point(138, 88);
                 //Point size = new Point(278, 176);
                 GeneratePlayerAvatar(size);
-
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
@@ -110,7 +132,7 @@ namespace StardenRPG.Screens
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
-                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y );
+                Vector2 playerStartPosition = new Vector2(900, groundPosition.Y - size.Y );
 
                 // Player Mass
                 float playerMass = 60f;
@@ -219,6 +241,9 @@ namespace StardenRPG.Screens
 
             // Draw Background..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
+
+            // Draw the parallax background
+            _parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
 
             // Draw the player Avatar
             player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
