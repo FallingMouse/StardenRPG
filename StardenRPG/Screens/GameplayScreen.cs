@@ -49,7 +49,7 @@ namespace StardenRPG.Screens
         {
             _world = world;
             _scaleFactor = scaleFactor;
-            _camera = new Camera2D();
+            
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -67,6 +67,11 @@ namespace StardenRPG.Screens
                     _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
                 //_gameFont = _content.Load<SpriteFont>("Fonts/gamefont");
+
+                // Initialize the camera
+                _camera = new Camera2D(ScreenManager.Game.GraphicsDevice);
+                _camera.CameraBounds = new Rectangle(0, 0, 10000, 1080);
+                _camera.CharacterOffset = new Vector2(100, -50);
 
                 // Initialize the ground texture
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
@@ -117,6 +122,9 @@ namespace StardenRPG.Screens
                 player.Body.Mass = playerMass;
                 player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
                 //player.Body.SetFriction(1f);
+                
+                // Tell the camera to follow the player
+                _camera.Follow(player);
         }
 
         private void CreateGround()
@@ -167,6 +175,9 @@ namespace StardenRPG.Screens
                 // Update the player Avatar
                 player.Update(gameTime);
 
+                // Update Camera
+                _camera.Update(gameTime);
+
                 //64 pixels on your screen should be 1 meter in the physical world
                 Vector2 movementDirection = Vector2.Zero;
 
@@ -189,9 +200,6 @@ namespace StardenRPG.Screens
                 //player.Body.LinearVelocity = movementDirection * moveSpeed;
                 player.Body.ApplyForce(movementDirection * moveSpeed);
                 //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
-
-                // Update camera position to follow the player
-                _camera.Position = player.Body.Position - new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2);
             }
         }
 
