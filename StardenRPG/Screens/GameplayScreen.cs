@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using StardenRPG.Entities;
+using StardenRPG.Utilities;
 
 using tainicom.Aether.Physics2D.Dynamics;
 using System.Text.RegularExpressions;
@@ -38,6 +39,9 @@ namespace StardenRPG.Screens
         // Physics
         private World _world;
 
+        // Camera
+        private Camera2D _camera;
+
         // Add the input state object
         private InputState input = new InputState();
 
@@ -45,6 +49,7 @@ namespace StardenRPG.Screens
         {
             _world = world;
             _scaleFactor = scaleFactor;
+            _camera = new Camera2D();
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -184,6 +189,9 @@ namespace StardenRPG.Screens
                 //player.Body.LinearVelocity = movementDirection * moveSpeed;
                 player.Body.ApplyForce(movementDirection * moveSpeed);
                 //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
+
+                // Update camera position to follow the player
+                _camera.Position = player.Body.Position - new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2);
             }
         }
 
@@ -197,7 +205,9 @@ namespace StardenRPG.Screens
             //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
 
             /* This change will apply the scaling factor to all the sprites drawn within the spriteBatch.Begin and spriteBatch.End calls. */
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(_scaleFactor.X, _scaleFactor.Y, 1));
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(_scaleFactor.X, _scaleFactor.Y, 1));
+            //spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _camera.GetViewMatrix());
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, _camera.GetViewMatrix());
 
             // Draw Background..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
