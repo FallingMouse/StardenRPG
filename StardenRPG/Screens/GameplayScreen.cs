@@ -132,7 +132,7 @@ namespace StardenRPG.Screens
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
-                Vector2 playerStartPosition = new Vector2(900, groundPosition.Y - size.Y );
+                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y );
 
                 // Player Mass
                 float playerMass = 60f;

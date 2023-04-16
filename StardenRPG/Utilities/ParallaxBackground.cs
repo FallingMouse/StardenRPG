@@ -9,35 +9,45 @@ namespace StardenRPG.Utilities
         private readonly float[] _parallaxFactors;
         private readonly Viewport _viewport;
 
+        public int RepeatWidth { get; }
+
         public ParallaxBackground(Texture2D[] layers, float[] parallaxFactors, Viewport viewport)
         {
             _layers = layers;
             _parallaxFactors = parallaxFactors;
             _viewport = viewport;
+
+            RepeatWidth = layers[0].Width;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 cameraPosition, Matrix transformationMatrix)
+        public void Draw(SpriteBatch spriteBatch, Vector2 cameraPosition, Matrix viewMatrix)
         {
-
             for (int i = 0; i < _layers.Length; i++)
             {
                 float parallaxFactor = _parallaxFactors[i];
                 Vector2 layerPosition = cameraPosition * parallaxFactor;
-                layerPosition.X = layerPosition.X % _layers[i].Width;
+                layerPosition.X %= RepeatWidth;
 
-                // identify if they are being drawn correctly but are being obscured by other layers.
-                //Color semiTransparentWhite = new Color(255, 255, 255, 128); // 50% transparent white
-                Color semiTransparentWhite = Color.White;
+                int numRepeats = (_viewport.Width + RepeatWidth - 1) / RepeatWidth;
 
-                spriteBatch.Draw(_layers[i], _viewport.Bounds, new Rectangle((int)layerPosition.X, 0, _layers[i].Width, _layers[i].Height), semiTransparentWhite, 0, Vector2.Zero, SpriteEffects.None, 0);
-
-                if (layerPosition.X > 0)
+                for (int repeat = 0; repeat <= numRepeats; repeat++)
                 {
-                    spriteBatch.Draw(_layers[i], new Rectangle((int)(_viewport.Width - layerPosition.X), 0, _layers[i].Width, _layers[i].Height), new Rectangle(0, 0, _layers[i].Width - (int)layerPosition.X, _layers[i].Height), semiTransparentWhite, 0, Vector2.Zero, SpriteEffects.None, 0);
+                    Rectangle sourceRectangle = new Rectangle((int)layerPosition.X, (int)layerPosition.Y, _viewport.Width, _viewport.Height);
+                    Vector2 layerOrigin = new Vector2(layerPosition.X, layerPosition.Y);
+                    Vector2 drawPosition = new Vector2(repeat * RepeatWidth - layerPosition.X, 0);
+
+                    spriteBatch.Draw(_layers[i], drawPosition, sourceRectangle, Color.White, 0, layerOrigin, 1, SpriteEffects.None, 0);
+
+                    // Add this block to handle drawing the next portion of the repeating background
+                    if (sourceRectangle.Right >= RepeatWidth)
+                    {
+                        Rectangle sourceRectangle2 = new Rectangle(0, (int)layerPosition.Y, _viewport.Width - (RepeatWidth - sourceRectangle.Left), _viewport.Height);
+                        Vector2 layerOrigin2 = new Vector2(0, layerPosition.Y);
+                        spriteBatch.Draw(_layers[i], new Vector2(drawPosition.X + RepeatWidth, 0), sourceRectangle2, Color.White, 0, layerOrigin2, 1, SpriteEffects.None, 0);
+                    }
                 }
             }
         }
-
     }
 
 }
