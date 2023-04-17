@@ -134,6 +134,27 @@ namespace StardenRPG.StateManagement
                    IsNewKeyPress(key, PlayerIndex.Four, out playerIndex);
         }
 
+        // I have implement this code by myself not from template
+        public bool IsKeyUp(Keys key, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
+        {
+            if (controllingPlayer.HasValue)
+            {
+                // Read input from the specified player.
+                playerIndex = controllingPlayer.Value;
+
+                int i = (int)playerIndex;
+
+                return _lastKeyboardStates[i].IsKeyUp(key);
+            }
+
+            // Accept input from any player.
+            return IsKeyUp(key, PlayerIndex.One, out playerIndex) ||
+                   IsKeyUp(key, PlayerIndex.Two, out playerIndex) ||
+                   IsKeyUp(key, PlayerIndex.Three, out playerIndex) ||
+                   IsKeyUp(key, PlayerIndex.Four, out playerIndex);
+        }
+
+
         // Helper for checking if a button was newly pressed during this update.
         // The controllingPlayer parameter specifies which player to read input for.
         // If this is null, it will accept input from any player. When a button press

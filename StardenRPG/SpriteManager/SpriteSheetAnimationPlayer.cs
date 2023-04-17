@@ -20,6 +20,9 @@ namespace StardenRPG.SpriteManager
 
         public int CurrentKeyframe { get; set; }
 
+        public int CurrentFrameIndex { get; private set; }
+
+
         public float ClipLerpValue
         {
             get
@@ -144,6 +147,9 @@ namespace StardenRPG.SpriteManager
 
                 // Use this keyframe.
                 CurrentCell = spriteSheetKeyFrame.Cell;
+
+                // Update the CurrentFrameIndex
+                CurrentFrameIndex = CurrentKeyframe;
 
                 CurrentKeyframe++;
             }

@@ -127,12 +127,14 @@ namespace StardenRPG.Screens
                 Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
                     { "Idle", sacg.Generate("Idle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(1, 2), new Vector2(0, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
                     { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
+
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
                 Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y );
+                //Vector2 playerStartPosition = new Vector2(100, 500);
 
                 // Player Mass
                 float playerMass = 60f;
