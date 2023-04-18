@@ -1,13 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace StardenRPG.Entities
 {
     public class Ground
     {
         private Texture2D _groundTexture;
-        private Body _groundBody;
+        public Body _groundBody; // should be private but I want to test it.
         private Vector2 _groundPosition;
         private float _groundWidth, _groundHeight;
 
@@ -26,6 +27,14 @@ namespace StardenRPG.Entities
             _groundBody = world.CreateRectangle(_groundWidth, _groundHeight, 1, _groundPosition);
             _groundBody.BodyType = BodyType.Static;
             _groundBody.SetFriction(0.5f);
+
+            _groundBody.OnCollision += OnCollision;
+        }
+
+        private bool OnCollision(Fixture sender, Fixture other, Contact contact)
+        {
+            // You can add custom collision handling logic here.
+            return true;
         }
 
         public void Draw(SpriteBatch spriteBatch)

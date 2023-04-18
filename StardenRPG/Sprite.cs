@@ -100,7 +100,7 @@ namespace StardenRPG
             }*/
             if (animationName == "WalkLeft")
             {
-                Origin = new Vector2(12, 0); // Adjust these values as needed
+                Origin = new Vector2(0, 0); // Adjust these values as needed
             }
             // Add more cases for other animations as needed
         }

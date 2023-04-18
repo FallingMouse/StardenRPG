@@ -28,10 +28,10 @@ namespace StardenRPG.Screens
 
         protected Player player; // Replace 'Sprite playerAvatar;' with this line
         //protected Sprite playerAvatar;
-        protected Ground ground; // Add this line
+        protected Ground ground, ground2; // Add this line
 
         // Ground
-        private Texture2D _groundTexture;
+        private Texture2D _groundTexture, _groundTexture2;
         private Body _groundBody;
         private Vector2 groundPosition;
         float groundWidth, groundHeight;
@@ -78,7 +78,8 @@ namespace StardenRPG.Screens
 
                 // Initialize the ground texture
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
-                //_groundTexture.SetData(new[] { Color.White });
+                _groundTexture2 = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
+                _groundTexture2.SetData(new[] { Color.White });
 
                 CreateGround();
 
@@ -103,7 +104,7 @@ namespace StardenRPG.Screens
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
                 // Create the player
-                Point size = new Point(138, 88);
+                Point size = new Point(88, 138);
                 //Point size = new Point(278, 176);
                 GeneratePlayerAvatar(size);
 
@@ -133,13 +134,13 @@ namespace StardenRPG.Screens
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
-                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y );
+                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y - 100);
                 //Vector2 playerStartPosition = new Vector2(100, 500);
 
                 // Player Mass
                 float playerMass = 60f;
 
-                player = new Player(spriteSheet, size, new Point(69, 44), _world, playerStartPosition, spriteAnimationClips);
+                player = new Player(spriteSheet, size, new Point(18, 33), _world, playerStartPosition, spriteAnimationClips);
                 player.ControllingPlayer = PlayerIndex.One;
                 
                 // Set the player's physics
@@ -155,10 +156,13 @@ namespace StardenRPG.Screens
         {
             // Create the ground
             groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width;
-            groundHeight = 80f;
+            groundHeight = 350f;
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
 
             ground = new Ground(_groundTexture, groundWidth, groundHeight, groundPosition, _world);
+
+            // test player collider
+            //ground2 = new Ground(_groundTexture2, 100f, 500f, new Vector2(500, 500), _world);
         }
 
         protected override void Deactivate()
@@ -251,6 +255,7 @@ namespace StardenRPG.Screens
             player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
 
             ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
+            //ground2.Draw(spriteBatch);
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
