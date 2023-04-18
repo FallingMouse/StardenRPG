@@ -17,6 +17,7 @@ namespace StardenRPG.Screens
 {
     public class GameplayScreen : GameScreen
     {
+
         private ContentManager _content;
         private SpriteFont _gameFont;
 
@@ -47,6 +48,12 @@ namespace StardenRPG.Screens
 
         // Add the input state object
         private InputState input = new InputState();
+
+        //test add currentStamina bar
+        private KeyboardState previousKeyboardState;
+        private StaminaBar staminaBar;
+
+        private float autoIncreaseStamina, coolDown;
 
         public GameplayScreen(World world, Vector2 scaleFactor)
         {
@@ -102,8 +109,13 @@ namespace StardenRPG.Screens
                 //float[] parallaxFactors = new float[] { 0f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f };
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
-                // Create the player
-                Point size = new Point(138, 88);
+                //test currentStamina
+                staminaBar = new StaminaBar(ScreenManager.GraphicsDevice);
+                autoIncreaseStamina = 60f;
+                coolDown = 2f;
+
+        // Create the player
+        Point size = new Point(138, 88);
                 //Point size = new Point(278, 176);
                 GeneratePlayerAvatar(size);
 
@@ -183,6 +195,25 @@ namespace StardenRPG.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
+
+            //test decreasing currentStamina when press space bar
+            KeyboardState keyboardState = Keyboard.GetState();
+            if(keyboardState.IsKeyDown(Keys.K) && previousKeyboardState.IsKeyUp(Keys.K))
+            {
+                player.currentStamina -= 10;
+            }
+            previousKeyboardState= keyboardState;
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            coolDown -= deltaTime;
+
+            if (coolDown <= 0)
+            {
+                player.currentStamina += autoIncreaseStamina * deltaTime;
+                player.currentStamina = MathHelper.Clamp(player.currentStamina, 0f, Player.MAX_stamina);
+                coolDown = 2f; // Reset the cooldown
+            }
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
@@ -249,6 +280,9 @@ namespace StardenRPG.Screens
             player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
 
             ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
+
+            //test currentStamina bar
+            staminaBar.Draw(spriteBatch, player);
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);

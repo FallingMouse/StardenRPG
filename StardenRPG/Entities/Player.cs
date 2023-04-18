@@ -16,9 +16,20 @@ namespace StardenRPG.Entities
         // Check if the player is running
         public bool IsRunning { get; set; }
 
+        //test currentStamina
+        public float currentStamina { get; set; }
+        public const float MAX_stamina = 200f;
+        /*
+        public const float autoIncreaseStamina = 10f;
+        public const float coolDown = 5f;
+        */
+
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
             : base(spriteSheet, size, origin, world, startPosition)
         {
+            //test currentStamina
+            currentStamina = MAX_stamina;
+
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("Idle");
         }
