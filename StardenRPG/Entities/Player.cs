@@ -23,8 +23,8 @@ namespace StardenRPG.Entities
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("Idle");
 
-            DrawWidth = 88;
-            DrawHeight = 138;
+            DrawWidth = 72;
+            DrawHeight = 132;
 
             _frameSizes = new Dictionary<string, List<Rectangle>>
             {

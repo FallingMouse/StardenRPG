@@ -104,7 +104,7 @@ namespace StardenRPG.Screens
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
                 // Create the player
-                Point size = new Point(88, 138);
+                Point size = new Point(72, 132);
                 //Point size = new Point(278, 176);
                 GeneratePlayerAvatar(size);
 

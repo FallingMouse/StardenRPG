@@ -135,9 +135,24 @@ namespace StardenRPG
 
             // Add these lines to determine the SpriteEffects based on the current animation.
             SpriteEffects spriteEffects = SpriteEffects.None;
-            if (animationPlayer != null && animationPlayer.CurrentClip != null && animationPlayer.CurrentClip.Name == "WalkLeft")
+            if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
-                spriteEffects = SpriteEffects.FlipHorizontally;
+                if(animationPlayer.CurrentClip.Name == "Idle")
+                {
+                    DrawWidth = 72; // 18 * 4
+                    DrawHeight = 132; // 33 * 4
+                }
+                else if (animationPlayer.CurrentClip.Name == "WalkRight")
+                {
+                    DrawWidth = 112; // 28 * 4
+                    DrawHeight = 124; // 31 * 4
+                }
+                else if (animationPlayer.CurrentClip.Name == "WalkLeft")
+                {
+                    spriteEffects = SpriteEffects.FlipHorizontally;
+                    DrawWidth = 112; // 28 * 4
+                    DrawHeight = 124; // 31 * 4
+                }
             }
 
             spriteBatch.Draw(
