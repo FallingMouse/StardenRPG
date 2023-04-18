@@ -23,33 +23,36 @@ namespace StardenRPG.Entities
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("Idle");
 
+            DrawWidth = 88;
+            DrawHeight = 138;
+
             _frameSizes = new Dictionary<string, List<Rectangle>>
             {
                 { "Idle", new List<Rectangle> { 
-                    new Rectangle(0 + 18, 0, 18, 33),
-                    new Rectangle(69 + 18, 0, 18, 33),
-                    new Rectangle(138 + 17, 0, 20, 32),
-                    new Rectangle(207 + 17, 0, 20, 31),
-                    new Rectangle(276 + 18, 0, 18, 31),
-                    new Rectangle(345 + 18, 0, 18, 32), } },
-                { "WalkLeft", new List<Rectangle> { 
-                    new Rectangle(0 + 15, 44, 22, 29),
-                    new Rectangle(69 + 15, 44, 22, 26),
-                    new Rectangle(138 + 15, 44, 24, 26),
-                    new Rectangle(207 + 15, 44, 22, 27),
-                    new Rectangle(276 + 14, 44, 25, 28),
-                    new Rectangle(345 + 15, 44, 26, 32),
-                    new Rectangle(18 + 18, 88, 22, 28),
-                    new Rectangle(69 + 15, 88, 22, 28), } },
+                    new Rectangle(0 + 18, 0 + 10, 18, 33),
+                    new Rectangle(69 + 18, 0 + 10, 18, 33),
+                    new Rectangle(138 + 17, 0 + 11, 20, 32),
+                    new Rectangle(207 + 17, 0 + 12, 20, 31),
+                    new Rectangle(276 + 18, 0 + 12, 18, 31),
+                    new Rectangle(345 + 18, 0 + 11, 18, 32), } },
+                { "WalkLeft", new List<Rectangle> {
+                    new Rectangle(0 + 12, 44 + 14, 25, 29),
+                    new Rectangle(69 + 13, 44 + 14, 24, 26),
+                    new Rectangle(138 + 12, 44 + 15, 29, 27),
+                    new Rectangle(207 + 11, 44 + 16, 26, 27),
+                    new Rectangle(276 + 12, 44 + 15, 29, 28),
+                    new Rectangle(345 + 13, 44 + 12, 28, 31),
+                    new Rectangle(18 + 11, 88 + 13, 29, 28),
+                    new Rectangle(69 + 13, 88 + 15, 24, 28), } },
                 { "WalkRight", new List<Rectangle> {
-                    new Rectangle(0 + 15, 44, 22, 28),
-                    new Rectangle(69 + 15, 44, 22, 28),
-                    new Rectangle(138 + 15, 44, 26, 32),
-                    new Rectangle(207 + 15, 44, 25, 28),
-                    new Rectangle(276 + 14, 44, 22, 27),
-                    new Rectangle(345 + 15, 44, 24, 26),
-                    new Rectangle(18 + 18, 88, 22, 26),
-                    new Rectangle(69 + 15, 88, 22, 29), } },
+                    new Rectangle(0 + 12, 44 + 14, 25, 29),
+                    new Rectangle(69 + 13, 44 + 14, 24, 26),
+                    new Rectangle(138 + 12, 44 + 15, 29, 27),
+                    new Rectangle(207 + 11, 44 + 16, 26, 27),
+                    new Rectangle(276 + 12, 44 + 15, 29, 28),
+                    new Rectangle(345 + 13, 44 + 12, 28, 31),
+                    new Rectangle(18 + 11, 88 + 13, 29, 28),
+                    new Rectangle(69 + 13, 88 + 15, 24, 28), } },
                 // Add more animations as needed
             };
         }

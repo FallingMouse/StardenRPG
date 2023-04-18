@@ -18,6 +18,10 @@ namespace StardenRPG
         public Body Body { get; private set; }
         public World World { get; private set; }
 
+        public int DrawWidth { get; set; }
+        public int DrawHeight { get; set; }
+
+
         public Texture2D spriteTexture { get; set; }
         protected SpriteSheetAnimationPlayer _animationPlayer;
         protected Dictionary<string, List<Rectangle>> _frameSizes;
@@ -66,6 +70,9 @@ namespace StardenRPG
             CellSize = cellSize;
             World = world; 
             Position = position;
+
+            DrawWidth = size.X;
+            DrawHeight = size.Y;
 
             //Body = World.CreateBody(Position, 0, BodyType.Dynamic);
             Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
@@ -135,7 +142,7 @@ namespace StardenRPG
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)Size.X, (int)Size.Y),
+                destinationRectangle: new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), DrawWidth, DrawHeight),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,
