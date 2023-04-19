@@ -53,6 +53,15 @@ namespace StardenRPG.Entities
                     new Rectangle(345 + 13, 44 + 12, 28, 31),
                     new Rectangle(18 + 11, 88 + 13, 29, 28),
                     new Rectangle(69 + 13, 88 + 15, 24, 28), } },
+                { "Attack", new List<Rectangle> {
+                    /*new Rectangle(138 + 12, 88 + 1, 27, 42),
+                    new Rectangle(207 + 9, 88 + 6, 30, 37),
+                    new Rectangle(276 + 11, 88 + 11, 28, 32),
+                    new Rectangle(345 + 13, 88 + 11, 29, 32),*/
+                    //new Rectangle(0+ 15, 132 + 11, 27, 32),
+                    new Rectangle(69+ 13, 132 + 3, 48, 40),
+                    new Rectangle(138+ 16, 132 + 4, 48, 39),
+                } },
                 // Add more animations as needed
             };
         }
@@ -73,6 +82,8 @@ namespace StardenRPG.Entities
                 animationPlayer.StartClip("WalkLeft");
             else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
                 animationPlayer.StartClip("WalkRight");
+            else if (input.IsKeyPressed(Keys.P, ControllingPlayer, out player) /*&& input.IsKeyUp(Keys.P, ControllingPlayer, out player)*/)
+                animationPlayer.StartClip("Attack");
             else
                 animationPlayer.StartClip("Idle");
 

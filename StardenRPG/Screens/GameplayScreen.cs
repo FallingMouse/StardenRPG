@@ -100,12 +100,10 @@ namespace StardenRPG.Screens
 
                 // Create ParallaxBackground instance
                 float[] parallaxFactors = new float[] { 1f, 0.9f, 0.8f, 0.8f, 0.7f, 0.6f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0f };
-                //float[] parallaxFactors = new float[] { 0f, 0.05f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f };
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
                 // Create the player
                 Point size = new Point(72, 132);
-                //Point size = new Point(278, 176);
                 GeneratePlayerAvatar(size);
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -125,12 +123,12 @@ namespace StardenRPG.Screens
                 Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
                 SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 17));
 
-                Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
+            Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
                     { "Idle", sacg.Generate("Idle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
                     { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
                     { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
-
+                    { "Attack", sacg.Generate("Attack", new Vector2(1, 3), new Vector2(2, 3), new TimeSpan(0, 0, 0, 0, 3000), false)},
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
@@ -156,7 +154,7 @@ namespace StardenRPG.Screens
         {
             // Create the ground
             groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width * 10;
-            groundHeight = 350f - 110;
+            groundHeight = 350f - 110f; // - 110 is bug
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
 
             ground = new Ground(_groundTexture, groundWidth, groundHeight, groundPosition, _world);
@@ -222,6 +220,8 @@ namespace StardenRPG.Screens
                         movementDirection = new Vector2(1, 0);
                         break;
                     case "Idle":
+                        break;
+                    case "Attack":
                         break;
                 }
 

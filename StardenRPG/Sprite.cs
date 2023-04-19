@@ -128,8 +128,8 @@ namespace StardenRPG
                 }
                 else if (animation == "Attack")
                 {
-                    newWidth = 48 * 4;
-                    newHeight = 40 * 4;
+                    newWidth = 192;
+                    newHeight = 160;
                 }
                 // Add more cases for other animations as needed
 
@@ -188,6 +188,11 @@ namespace StardenRPG
                     spriteEffects = SpriteEffects.FlipHorizontally;
                     DrawWidth = 112; // 28 * 4
                     DrawHeight = 124; // 31 * 4
+                }
+                else if (animationPlayer.CurrentClip.Name == "Attack")
+                {
+                    DrawWidth = 192; // 48 * 4;
+                    DrawHeight = 160; // 40 * 4;
                 }
             }
 
