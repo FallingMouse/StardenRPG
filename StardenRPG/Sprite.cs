@@ -111,7 +111,43 @@ namespace StardenRPG
             {
                 animationPlayer.StartClip(animation);
                 SetOriginForAnimation(animation);
+
+                // Update the body size based on the current animation
+                float newWidth = Size.X;
+                float newHeight = Size.Y;
+
+                if (animation == "Idle")
+                {
+                    newWidth = 72;
+                    newHeight = 132;
+                }
+                else if (animation == "WalkRight" || animation == "WalkLeft")
+                {
+                    newWidth = 112;
+                    newHeight = 124;
+                }
+                else if (animation == "Attack")
+                {
+                    newWidth = 48 * 4;
+                    newHeight = 40 * 4;
+                }
+                // Add more cases for other animations as needed
+
+                // Update the fixture size
+                UpdateFixtureSize(newWidth, newHeight);
             }
+        }
+
+        private void UpdateFixtureSize(float width, float height)
+        {
+            // Remove the existing fixture
+            if (Body.FixtureList.Count > 0)
+            {
+                Body.Remove(Body.FixtureList[0]);
+            }
+
+            // Create a new fixture with the updated size and the current position
+            Body = World.CreateRectangle(width, height, 1, Body.Position, 0, BodyType.Dynamic);
         }
 
         public virtual void StopAnimation()

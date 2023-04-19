@@ -134,13 +134,13 @@ namespace StardenRPG.Screens
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
-                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y - 100);
+                Vector2 playerStartPosition = new Vector2(100, groundPosition.Y - size.Y);
                 //Vector2 playerStartPosition = new Vector2(100, 500);
 
                 // Player Mass
                 float playerMass = 60f;
 
-                player = new Player(spriteSheet, size, new Point(18, 33), _world, playerStartPosition, spriteAnimationClips);
+                player = new Player(spriteSheet, size, new Point(0, 0), _world, playerStartPosition, spriteAnimationClips);
                 player.ControllingPlayer = PlayerIndex.One;
                 
                 // Set the player's physics
@@ -155,14 +155,14 @@ namespace StardenRPG.Screens
         private void CreateGround()
         {
             // Create the ground
-            groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width;
-            groundHeight = 350f;
+            groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width * 10;
+            groundHeight = 350f - 110;
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
 
             ground = new Ground(_groundTexture, groundWidth, groundHeight, groundPosition, _world);
 
             // test player collider
-            //ground2 = new Ground(_groundTexture2, 100f, 500f, new Vector2(500, 500), _world);
+            //ground2 = new Ground(_groundTexture2, 80f, 500f, new Vector2(600, 500), _world);
         }
 
         protected override void Deactivate()
