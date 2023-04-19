@@ -121,14 +121,14 @@ namespace StardenRPG.Screens
                 //Vector2 playerStartPosition = new Vector2(100, 200);
                 
                 Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
-                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 17));
+                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(8, 3));
 
-            Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
+                Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
                     { "Idle", sacg.Generate("Idle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "Attack", sacg.Generate("Attack", new Vector2(1, 3), new Vector2(2, 3), new TimeSpan(0, 0, 0, 0, 3000), false)},
+                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
+                    { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
+                    { "Attack", sacg.Generate("Attack", new Vector2(0, 2), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 120), false)},
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);

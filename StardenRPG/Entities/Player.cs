@@ -42,8 +42,8 @@ namespace StardenRPG.Entities
                     new Rectangle(207 + 11, 44 + 16, 26, 27),
                     new Rectangle(276 + 12, 44 + 15, 29, 28),
                     new Rectangle(345 + 13, 44 + 12, 28, 31),
-                    new Rectangle(18 + 11, 88 + 13, 29, 28),
-                    new Rectangle(69 + 13, 88 + 15, 24, 28), } },
+                    new Rectangle(414 + 11, 44 + 13, 29, 28),
+                    new Rectangle(483 + 13, 44 + 15, 24, 28), } },
                 { "WalkRight", new List<Rectangle> {
                     new Rectangle(0 + 12, 44 + 14, 25, 29),
                     new Rectangle(69 + 13, 44 + 14, 24, 26),
@@ -51,16 +51,16 @@ namespace StardenRPG.Entities
                     new Rectangle(207 + 11, 44 + 16, 26, 27),
                     new Rectangle(276 + 12, 44 + 15, 29, 28),
                     new Rectangle(345 + 13, 44 + 12, 28, 31),
-                    new Rectangle(18 + 11, 88 + 13, 29, 28),
-                    new Rectangle(69 + 13, 88 + 15, 24, 28), } },
+                    new Rectangle(414 + 11, 44 + 13, 29, 28),
+                    new Rectangle(483 + 13, 44 + 15, 24, 28), } },
                 { "Attack", new List<Rectangle> {
-                    /*new Rectangle(138 + 12, 88 + 1, 27, 42),
-                    new Rectangle(207 + 9, 88 + 6, 30, 37),
-                    new Rectangle(276 + 11, 88 + 11, 28, 32),
-                    new Rectangle(345 + 13, 88 + 11, 29, 32),*/
-                    //new Rectangle(0+ 15, 132 + 11, 27, 32),
-                    new Rectangle(69+ 13, 132 + 3, 48, 40),
-                    new Rectangle(138+ 16, 132 + 4, 48, 39),
+                    /*new Rectangle(0 + 13, 88 + 3, 48, 40),
+                    new Rectangle(69 + 16, 88 + 4, 48, 39),
+                    new Rectangle(138 + 11, 88 + 11, 28, 32),
+                    new Rectangle(207 + 13, 88 + 11, 29, 32),
+                    new Rectangle(276+ 15, 88 + 11, 27, 32),*/
+                    new Rectangle(0 + 13, 88 + 3, 48, 40),
+                    new Rectangle(69 + 16, 88 + 4, 48, 39),
                 } },
                 // Add more animations as needed
             };

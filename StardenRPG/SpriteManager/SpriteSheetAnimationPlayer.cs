@@ -65,6 +65,9 @@ namespace StardenRPG.SpriteManager
                 CurrentKeyframe = frame;
                 currentClip = clip;
                 _IsPlaying = true;
+
+                // Reset the CurrentFrameIndex when starting a new clip
+                CurrentFrameIndex = 0;
             }
         }
 
