@@ -7,11 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
-using StardenRPG.Entities;
 using StardenRPG.Utilities;
+using StardenRPG.Entities.Character;
 
 using tainicom.Aether.Physics2D.Dynamics;
 using System.Text.RegularExpressions;
+using StardenRPG.Entities.Monster;
 
 namespace StardenRPG.Screens
 {
@@ -26,8 +27,8 @@ namespace StardenRPG.Screens
         // scaling
         private readonly Vector2 _scaleFactor;
 
-        protected Player player; // Replace 'Sprite playerAvatar;' with this line
-        //protected Sprite playerAvatar;
+        protected Player player;
+        protected Slime slime;
         protected Ground ground, ground2; // Add this line
 
         // Ground
@@ -103,8 +104,12 @@ namespace StardenRPG.Screens
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
                 // Create the player
-                Point size = new Point(72, 132);
-                GeneratePlayerAvatar(size);
+                Point characterSize = new Point(72, 132);
+                GeneratePlayerAvatar(characterSize);
+
+                // Create the slime
+                Point slimeSize = new Point(64, 48);
+                GenerateSlime(slimeSize);
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
@@ -120,15 +125,15 @@ namespace StardenRPG.Screens
                 //SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 3));
                 //Vector2 playerStartPosition = new Vector2(100, 200);
                 
-                Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
-                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(8, 3));
+                Texture2D characterSpriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
+                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(characterSpriteSheet.Width, characterSpriteSheet.Height), new Vector2(8, 3));
 
                 Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
-                    { "Idle", sacg.Generate("Idle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "WalkLeft", sacg.Generate("WalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
-                    { "WalkRight", sacg.Generate("WalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
-                    { "Attack", sacg.Generate("Attack", new Vector2(0, 2), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 120), false)},
+                    { "PlayerIdle", sacg.Generate("PlayerIdle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    { "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
+                    { "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
+                    { "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 120), false)},
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
@@ -138,7 +143,7 @@ namespace StardenRPG.Screens
                 // Player Mass
                 float playerMass = 60f;
 
-                player = new Player(spriteSheet, size, new Point(0, 0), _world, playerStartPosition, spriteAnimationClips);
+                player = new Player(characterSpriteSheet, size, new Point(69, 44), _world, playerStartPosition, spriteAnimationClips);
                 player.ControllingPlayer = PlayerIndex.One;
                 
                 // Set the player's physics
@@ -148,6 +153,34 @@ namespace StardenRPG.Screens
                 
                 // Tell the camera to follow the player
                 _camera.Follow(player);
+        }
+
+        protected void GenerateSlime(Point size)
+        {
+            Texture2D slimeSpriteSheet = _content.Load<Texture2D>("Sprites/Monster/Slime/Normal/Slime");
+            SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(slimeSpriteSheet.Width, slimeSpriteSheet.Height), new Vector2(18, 4));
+
+            Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
+                {
+                    { "SlimeIdle", sacg.Generate("SlimeIdle", new Vector2(0, 0), new Vector2(3, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    //{ "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
+                    //{ "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 1000), true) },
+                    //{ "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 120), false)},
+                };
+
+            //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
+            Vector2 slimeStartPosition = new Vector2(1000, groundPosition.Y - size.Y);
+            //Vector2 playerStartPosition = new Vector2(100, 500);
+
+            // Player Mass
+            float playerMass = 60f;
+
+            slime = new Slime(slimeSpriteSheet, size, new Point(64, 41), _world, slimeStartPosition, spriteAnimationClips);
+
+            //// Set the player's physics
+            //player.Body.Mass = playerMass;
+            //player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
+            //player.Body.SetFriction(1f);
         }
 
         private void CreateGround()
@@ -201,6 +234,9 @@ namespace StardenRPG.Screens
                 // Update the player Avatar
                 player.Update(gameTime);
 
+                // Update the slime
+                slime.Update(gameTime, player.Position);
+
                 // Update Camera
                 _camera.Update(gameTime);
 
@@ -209,19 +245,19 @@ namespace StardenRPG.Screens
 
                 float baseSpeed = 55000f;
                 float runningMultiplier = baseSpeed * 64f;
-                float moveSpeed = player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed;
+                float moveSpeed = player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
 
                 switch (player.animationPlayer.CurrentClip.Name)
                 {
-                    case "WalkLeft":
+                    case "PlayerWalkLeft":
                         movementDirection = new Vector2(-1, 0);
                         break;
-                    case "WalkRight":
+                    case "PlayerWalkRight":
                         movementDirection = new Vector2(1, 0);
                         break;
-                    case "Idle":
+                    case "PlayerIdle":
                         break;
-                    case "Attack":
+                    case "PlayerAttack":
                         break;
                 }
 
@@ -252,7 +288,10 @@ namespace StardenRPG.Screens
             _parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
 
             // Draw the player Avatar
-            player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
+            player.Draw(gameTime, spriteBatch, SpriteEffects.None); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
+
+            // Draw the slime
+            slime.Draw(gameTime, spriteBatch, SpriteEffects.None);
 
             ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
             //ground2.Draw(spriteBatch);

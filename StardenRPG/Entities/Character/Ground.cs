@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
-namespace StardenRPG.Entities
+namespace StardenRPG.Entities.Character
 {
     public class Ground
     {

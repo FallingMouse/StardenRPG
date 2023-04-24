@@ -49,7 +49,6 @@ namespace StardenRPG
             {
                 if (animationPlayer != null && _frameSizes.ContainsKey(animationPlayer.CurrentClip.Name))
                     //return new Rectangle((int)animationPlayer.CurrentCell.X, (int)animationPlayer.CurrentCell.Y, CellSize.X, CellSize.Y);
-                    //return _frameSizes[animationPlayer.CurrentClip.Name][(int)animationPlayer.CurrentCell.X];
                     return _frameSizes[animationPlayer.CurrentClip.Name][animationPlayer.CurrentFrameIndex];
                     //return _frameSizes[animationPlayer.CurrentClip.Name][0];
                 else
@@ -92,41 +91,27 @@ namespace StardenRPG
             return;
         }
 
-        public void SetOriginForAnimation(string animationName)
-        {
-            /*if (animationName == "Idle")
-            {
-                Origin = new Vector2(0, 0); // Adjust these values as needed
-            }*/
-            if (animationName == "WalkLeft")
-            {
-                Origin = new Vector2(0, 0); // Adjust these values as needed
-            }
-            // Add more cases for other animations as needed
-        }
-
         public virtual void StartAnimation(string animation)
         {
             if (animationPlayer != null)
             {
                 animationPlayer.StartClip(animation);
-                SetOriginForAnimation(animation);
 
                 // Update the body size based on the current animation
                 float newWidth = Size.X;
                 float newHeight = Size.Y;
 
-                if (animation == "Idle")
+                if (animation == "PlayerIdle")
                 {
                     newWidth = 72;
                     newHeight = 132;
                 }
-                else if (animation == "WalkRight" || animation == "WalkLeft")
+                else if (animation == "PlayerWalkRight" || animation == "PlayerWalkLeft")
                 {
                     newWidth = 112;
                     newHeight = 124;
                 }
-                else if (animation == "Attack")
+                else if (animation == "PlayerAttack")
                 {
                     newWidth = 192;
                     newHeight = 160;
@@ -138,7 +123,7 @@ namespace StardenRPG
             }
         }
 
-        private void UpdateFixtureSize(float width, float height)
+        public void UpdateFixtureSize(float width, float height)
         {
             // Remove the existing fixture
             if (Body.FixtureList.Count > 0)
@@ -164,37 +149,11 @@ namespace StardenRPG
             Position = Body.Position;
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
         {
             // Old Code don't delete yet
             //spriteBatch.Draw(spriteTexture, new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y), sourceRect, Tint);
-
-            // Add these lines to determine the SpriteEffects based on the current animation.
-            SpriteEffects spriteEffects = SpriteEffects.None;
-            if (animationPlayer != null && animationPlayer.CurrentClip != null)
-            {
-                if(animationPlayer.CurrentClip.Name == "Idle")
-                {
-                    DrawWidth = 72; // 18 * 4
-                    DrawHeight = 132; // 33 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "WalkRight")
-                {
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "WalkLeft")
-                {
-                    spriteEffects = SpriteEffects.FlipHorizontally;
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "Attack")
-                {
-                    DrawWidth = 192; // 48 * 4;
-                    DrawHeight = 160; // 40 * 4;
-                }
-            }
+            SpriteEffects _spriteEffects = spriteEffects;
 
             spriteBatch.Draw(
                 texture: spriteTexture,
@@ -203,7 +162,7 @@ namespace StardenRPG
                 color: Tint,
                 rotation: 0,
                 origin: Vector2.Zero,
-                effects: spriteEffects,
+                effects: _spriteEffects,
                 layerDepth: 0
             );
         }
