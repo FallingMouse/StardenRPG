@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardenRPG.Entities;
+using StardenRPG.Entities.Character;
 using tainicom.Aether.Physics2D.Dynamics;
 
 namespace StardenRPG.Utilities
