@@ -54,13 +54,8 @@ namespace StardenRPG.Entities.Character
                     new Rectangle(414 + 11, 44 + 13, 29, 28),
                     new Rectangle(483 + 13, 44 + 15, 24, 28), } },
                 { "PlayerAttack", new List<Rectangle> {
-                    /*new Rectangle(0 + 13, 88 + 3, 48, 40),
-                    new Rectangle(69 + 16, 88 + 4, 48, 39),
-                    new Rectangle(138 + 11, 88 + 11, 28, 32),
-                    new Rectangle(207 + 13, 88 + 11, 29, 32),
-                    new Rectangle(276+ 15, 88 + 11, 27, 32),*/
                     new Rectangle(0 + 13, 88 + 3, 48, 40),
-                    new Rectangle(69 + 16, 88 + 4, 48, 39),
+                    new Rectangle(69 + 14, 88 + 4, 50, 39),
                 } },
                 // Add more animations as needed
             };
@@ -68,6 +63,18 @@ namespace StardenRPG.Entities.Character
 
         public override void Update(GameTime gameTime)
         {
+            if (animationPlayer != null && animationPlayer.CurrentClip != null)
+            {
+                string currentClipName = animationPlayer.CurrentClip.Name;
+                if (_frameSizes.ContainsKey(currentClipName))
+                {
+                    Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
+                    DrawWidth = currentFrame.Width * 4;
+                    DrawHeight = currentFrame.Height * 4;
+                    UpdateFixtureSize(DrawWidth, DrawHeight);
+                }
+            }
+
             base.Update(gameTime);
         }
 
@@ -80,18 +87,13 @@ namespace StardenRPG.Entities.Character
 
             if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player) || input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
                 animationPlayer.StartClip("PlayerWalkLeft");
-                //StartAnimation("PlayerWalkLeft");
             else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
                 animationPlayer.StartClip("PlayerWalkRight");
-                //StartAnimation("PlayerWalkRight");
             else if (input.IsKeyPressed(Keys.P, ControllingPlayer, out player) /*&& input.IsKeyUp(Keys.P, ControllingPlayer, out player)*/)
                 animationPlayer.StartClip("PlayerAttack");
-                //StartAnimation("PlayerAttack");
             else
-                //animationPlayer.StartClip("PlayerIdle");
-                StartAnimation("PlayerIdle");
+                animationPlayer.StartClip("PlayerIdle");
 
-            //IsRunning = input.CurrentKeyboardStates[(int)ControllingPlayer].IsKeyDown(Keys.LeftShift);
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
 
         }
@@ -101,32 +103,14 @@ namespace StardenRPG.Entities.Character
             SpriteEffects _spriteEffects = spriteEffects;
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
-                if (animationPlayer.CurrentClip.Name == "PlayerIdle")
-                {
-                    DrawWidth = 72; // 18 * 4
-                    DrawHeight = 132; // 33 * 4
-                    UpdateFixtureSize(DrawWidth, DrawHeight);
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight")
-                {
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                    //UpdateFixtureSize(DrawWidth, DrawHeight);
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
+                if (animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
                 {
                     _spriteEffects = SpriteEffects.FlipHorizontally;
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerAttack")
-                {
-                    DrawWidth = 192; // 48 * 4;
-                    DrawHeight = 160; // 40 * 4;
                 }
             }
 
             base.Draw(gameTime, spriteBatch, _spriteEffects);
         }
+
     }
 }

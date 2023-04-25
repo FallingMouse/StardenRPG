@@ -175,7 +175,7 @@ namespace StardenRPG.Screens
             // Player Mass
             float playerMass = 60f;
 
-            slime = new Slime(slimeSpriteSheet, size, new Point(64, 41), _world, slimeStartPosition, spriteAnimationClips);
+            slime = new Slime(slimeSpriteSheet, size, new Point(0, 0), _world, slimeStartPosition, spriteAnimationClips);
 
             //// Set the player's physics
             //player.Body.Mass = playerMass;

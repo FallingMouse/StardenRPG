@@ -37,9 +37,9 @@ namespace StardenRPG.Entities.Monster
             {
                 { "SlimeIdle", new List<Rectangle> {
                         new Rectangle(0 + 25, 0 + 29, 16, 12),
-                        new Rectangle(0 + 25, 0 + 30, 18, 11),
-                        new Rectangle(0 + 23, 0 + 31, 20, 10),
-                        new Rectangle(0 + 24, 0 + 30, 18, 11), 
+                        new Rectangle(64 + 25, 0 + 30, 18, 11),
+                        new Rectangle(128 + 23, 0 + 31, 20, 10),
+                        new Rectangle(192 + 24, 0 + 30, 18, 11), 
                 } }, 
             };
         }
@@ -47,6 +47,18 @@ namespace StardenRPG.Entities.Monster
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float distanceToPlayer = Vector2.Distance(Body.Position, playerPosition);
+
+            if (animationPlayer != null && animationPlayer.CurrentClip != null)
+            {
+                string currentClipName = animationPlayer.CurrentClip.Name;
+                if (_frameSizes.ContainsKey(currentClipName))
+                {
+                    Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
+                    DrawWidth = currentFrame.Width * 4;
+                    DrawHeight = currentFrame.Height * 4;
+                    UpdateFixtureSize(DrawWidth, DrawHeight);
+                }
+            }
 
             // Check if the player is within the slime's attack range
             if (distanceToPlayer <= attackRange)
@@ -80,7 +92,7 @@ namespace StardenRPG.Entities.Monster
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
         {
             SpriteEffects _spriteEffects = spriteEffects;
-            if (animationPlayer != null && animationPlayer.CurrentClip != null)
+            /*if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
                 if (animationPlayer.CurrentClip.Name == "SlimeIdle")
                 {
@@ -88,7 +100,7 @@ namespace StardenRPG.Entities.Monster
                     DrawHeight = 48; // 12 * 4
                     UpdateFixtureSize(DrawWidth, DrawHeight);
                 }
-                /*else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight")
+                else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight")
                 {
                     DrawWidth = 112; // 28 * 4
                     DrawHeight = 124; // 31 * 4
@@ -104,8 +116,8 @@ namespace StardenRPG.Entities.Monster
                 {
                     DrawWidth = 192; // 48 * 4;
                     DrawHeight = 160; // 40 * 4;
-                }*/
-            }
+                }
+            }*/
 
             base.Draw(gameTime, spriteBatch, _spriteEffects);
         }
