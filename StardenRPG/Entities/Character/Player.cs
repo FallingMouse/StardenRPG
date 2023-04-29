@@ -12,7 +12,24 @@ namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
+        public enum PlayerState
+        {
+            Idle,
+            Walking,
+            Attacking
+        }
+
+        public enum FacingDirection
+        {
+            Left,
+            Right
+        }
+
+        public PlayerState CurrentPlayerState { get; set; }
+        public FacingDirection CurrentFacingDirection { get; set; } = FacingDirection.Right;
         public PlayerIndex ControllingPlayer { get; set; }
+
+        SpriteEffects _spriteEffects = SpriteEffects.None;
 
         // Check if the player is running
         public bool IsRunning { get; set; }
@@ -76,6 +93,25 @@ namespace StardenRPG.Entities.Character
             }
 
             base.Update(gameTime);
+
+            // Update the player state based on the current animation clip
+            switch (animationPlayer.CurrentClip.Name)
+            {
+                case "PlayerIdle":
+                    CurrentPlayerState = PlayerState.Idle;
+                    break;
+                case "PlayerWalkLeft":
+                    CurrentPlayerState = PlayerState.Walking;
+                    CurrentFacingDirection = FacingDirection.Left;
+                    break;
+                case "PlayerWalkRight":
+                    CurrentPlayerState = PlayerState.Walking;
+                    CurrentFacingDirection = FacingDirection.Right;
+                    break;
+                case "PlayerAttack":
+                    CurrentPlayerState = PlayerState.Attacking;
+                    break;
+            }
         }
 
         public void HandleInput(InputState input)
@@ -85,16 +121,31 @@ namespace StardenRPG.Entities.Character
 
             PlayerIndex player;
 
-            if (animationPlayer.IsAnimationComplete("PlayerAttack")) // Use the new method here
+            if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player) || input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
             {
-                if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player) || input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
+                CurrentFacingDirection = FacingDirection.Left;
+                if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
+                {
                     animationPlayer.StartClip("PlayerWalkLeft");
-                else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
+                }
+            }
+            else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
+            {
+                CurrentFacingDirection = FacingDirection.Right;
+                if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
+                {
                     animationPlayer.StartClip("PlayerWalkRight");
-                else if (input.IsNewKeyPress(Keys.P, ControllingPlayer, out player))
-                    animationPlayer.StartClip("PlayerAttack");
-                else
-                    animationPlayer.StartClip("PlayerIdle");
+                }
+            }
+            else if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
+            {
+                animationPlayer.StartClip("PlayerIdle");
+            }
+
+            if (input.IsNewKeyPress(Keys.P, ControllingPlayer, out player))
+            {
+                animationPlayer.StartClip("PlayerAttack");
+                CurrentPlayerState = PlayerState.Attacking;
             }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
@@ -102,13 +153,17 @@ namespace StardenRPG.Entities.Character
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
         {
-            SpriteEffects _spriteEffects = spriteEffects;
+            _spriteEffects = spriteEffects;
 
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
-                if (animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
+                if (CurrentFacingDirection == FacingDirection.Left)
                 {
                     _spriteEffects = SpriteEffects.FlipHorizontally;
+                }
+                else
+                {
+                    _spriteEffects = SpriteEffects.None;
                 }
 
                 if (animationPlayer.CurrentClip.Name == "PlayerIdle")
