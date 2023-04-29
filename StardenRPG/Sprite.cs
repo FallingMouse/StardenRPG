@@ -26,7 +26,7 @@ namespace StardenRPG
         protected SpriteSheetAnimationPlayer _animationPlayer;
         protected Dictionary<string, List<Rectangle>> _frameSizes;
 
-        public Vector2 _yOffset { get; set; } = Vector2.Zero;
+        public Vector2 Offset { get; set; } = Vector2.Zero;
 
         public SpriteSheetAnimationPlayer animationPlayer
         {
@@ -133,7 +133,7 @@ namespace StardenRPG
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)(Position.X + _yOffset.X), (int)(Position.Y + _yOffset.Y), DrawWidth, DrawHeight),
+                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), DrawWidth, DrawHeight),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,

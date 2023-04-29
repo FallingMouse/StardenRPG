@@ -168,15 +168,17 @@ namespace StardenRPG.Entities.Character
 
                 if (animationPlayer.CurrentClip.Name == "PlayerIdle")
                 {
-                    _yOffset = Vector2.Zero;
+                    Offset = Vector2.Zero;
                 }
                 else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight" || animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
                 {
-                    _yOffset = new Vector2(0, (33 - 29) * 4); // Difference in heights between Idle and Walk animations
+                    Offset = new Vector2(0, (33 - 29) * 4); // Difference in heights between Idle and Walk animations
                 }
                 else if (animationPlayer.CurrentClip.Name == "PlayerAttack")
                 {
-                    _yOffset = new Vector2(0, (33 - 39) * 4); // Difference in heights between Idle and Attack animations
+                    Offset = CurrentFacingDirection == FacingDirection.Left ? 
+                        new Vector2(-(50 - 27) * 4, (33 - 39) * 4) : 
+                        new Vector2(0, (33 - 39) * 4); // Difference in widths and heights between Attack and Idle/Walk animations when facing left
                 }
                 // Add more cases for other animations as needed
             }
