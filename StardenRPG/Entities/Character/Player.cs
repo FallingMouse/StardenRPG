@@ -101,16 +101,32 @@ namespace StardenRPG.Entities.Character
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
         {
             SpriteEffects _spriteEffects = spriteEffects;
+
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
                 if (animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
                 {
                     _spriteEffects = SpriteEffects.FlipHorizontally;
                 }
+
+                if (animationPlayer.CurrentClip.Name == "PlayerIdle")
+                {
+                    _yOffset = Vector2.Zero;
+                }
+                else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight" || animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
+                {
+                    _yOffset = new Vector2(0, (33 - 29) * 4); // Difference in heights between Idle and Walk animations
+                }
+                else if (animationPlayer.CurrentClip.Name == "PlayerAttack")
+                {
+                    _yOffset = new Vector2(0, (33 - 39) * 4); // Difference in heights between Idle and Attack animations
+                }
+                // Add more cases for other animations as needed
             }
 
             base.Draw(gameTime, spriteBatch, _spriteEffects);
         }
+
 
     }
 }

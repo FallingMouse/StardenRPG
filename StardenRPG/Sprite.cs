@@ -26,7 +26,7 @@ namespace StardenRPG
         protected SpriteSheetAnimationPlayer _animationPlayer;
         protected Dictionary<string, List<Rectangle>> _frameSizes;
 
-        public Vector2 Origin { get; set; }
+        public Vector2 _yOffset { get; set; } = Vector2.Zero;
 
         public SpriteSheetAnimationPlayer animationPlayer
         {
@@ -96,30 +96,6 @@ namespace StardenRPG
             if (animationPlayer != null)
             {
                 animationPlayer.StartClip(animation);
-
-                // Update the body size based on the current animation
-                float newWidth = Size.X;
-                float newHeight = Size.Y;
-
-                if (animation == "PlayerIdle")
-                {
-                    newWidth = 72;
-                    newHeight = 132;
-                }
-                else if (animation == "PlayerWalkRight" || animation == "PlayerWalkLeft")
-                {
-                    newWidth = 112;
-                    newHeight = 124;
-                }
-                else if (animation == "PlayerAttack")
-                {
-                    newWidth = 192;
-                    newHeight = 160;
-                }
-                // Add more cases for other animations as needed
-
-                // Update the fixture size
-                UpdateFixtureSize(newWidth, newHeight);
             }
         }
 
@@ -157,7 +133,7 @@ namespace StardenRPG
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), DrawWidth, DrawHeight),
+                destinationRectangle: new Rectangle((int)(Position.X + _yOffset.X), (int)(Position.Y + _yOffset.Y), DrawWidth, DrawHeight),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,
