@@ -82,6 +82,15 @@ namespace StardenRPG.SpriteManager
                 }
             }
         }
+        public bool IsAnimationComplete(string animationName)
+        {
+            if (CurrentClip == null || CurrentClip.Name != animationName)
+            {
+                return true;
+            }
+
+            return CurrentKeyframe == CurrentClip.Keyframes.Count;
+        }
 
         public void Update(TimeSpan time)
         {

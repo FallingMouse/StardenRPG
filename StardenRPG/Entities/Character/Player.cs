@@ -85,17 +85,19 @@ namespace StardenRPG.Entities.Character
 
             PlayerIndex player;
 
-            if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player) || input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
-                animationPlayer.StartClip("PlayerWalkLeft");
-            else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
-                animationPlayer.StartClip("PlayerWalkRight");
-            else if (input.IsKeyPressed(Keys.P, ControllingPlayer, out player) /*&& input.IsKeyUp(Keys.P, ControllingPlayer, out player)*/)
-                animationPlayer.StartClip("PlayerAttack");
-            else
-                animationPlayer.StartClip("PlayerIdle");
+            if (animationPlayer.IsAnimationComplete("PlayerAttack")) // Use the new method here
+            {
+                if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player) || input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
+                    animationPlayer.StartClip("PlayerWalkLeft");
+                else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
+                    animationPlayer.StartClip("PlayerWalkRight");
+                else if (input.IsNewKeyPress(Keys.P, ControllingPlayer, out player))
+                    animationPlayer.StartClip("PlayerAttack");
+                else
+                    animationPlayer.StartClip("PlayerIdle");
+            }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
-
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
