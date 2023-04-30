@@ -80,6 +80,7 @@ namespace StardenRPG.Entities.Character
 
         public override void Update(GameTime gameTime)
         {
+            // Update Hitbox size based on the current animation frame
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
                 string currentClipName = animationPlayer.CurrentClip.Name;
@@ -88,7 +89,7 @@ namespace StardenRPG.Entities.Character
                     Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
                     DrawWidth = currentFrame.Width * 4;
                     DrawHeight = currentFrame.Height * 4;
-                    UpdateFixtureSize(DrawWidth, DrawHeight);
+                    UpdateFixtureSize(DrawWidth, DrawHeight, Offset);
                 }
             }
 
