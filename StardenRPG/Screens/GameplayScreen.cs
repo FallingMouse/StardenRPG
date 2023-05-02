@@ -125,15 +125,15 @@ namespace StardenRPG.Screens
                 //SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 3));
                 //Vector2 playerStartPosition = new Vector2(100, 200);
                 
-                Texture2D characterSpriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/Warrior_Sheet-Effect");
-                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(characterSpriteSheet.Width, characterSpriteSheet.Height), new Vector2(8, 3));
+                Texture2D characterSpriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/FireKnight");
+                SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(characterSpriteSheet.Width, characterSpriteSheet.Height), new Vector2(11, 3));
 
                 Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
                 {
-                    { "PlayerIdle", sacg.Generate("PlayerIdle", new Vector2(0, 0), new Vector2(5, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
-                    { "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 800), true) },
-                    { "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 800), true) },
-                    { "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(1, 2), new TimeSpan(0, 0, 0, 0, 300), false)},
+                    { "PlayerIdle", sacg.Generate("PlayerIdle", new Vector2(0, 0), new Vector2(7, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
+                    { "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 300), true) },
+                    { "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 300), true) },
+                    { "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(10, 2), new TimeSpan(0, 0, 0, 0, 800), false)},
                 };
                 
                 //Vector2 playerStartPosition = new Vector2(100, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight - size.Y);
@@ -147,7 +147,7 @@ namespace StardenRPG.Screens
                 player.ControllingPlayer = PlayerIndex.One;
                 
                 // Set the player's physics
-                player.Body.Mass = playerMass;
+                //player.Body.Mass = playerMass;
                 player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
                 //player.Body.SetFriction(1f);
                 

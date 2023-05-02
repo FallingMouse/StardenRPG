@@ -249,6 +249,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/menufont.spritefont
 
+#begin Sprites/Character/MainCharacter/FireKnight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Character/MainCharacter/FireKnight.png
+
 #begin Sprites/Character/MainCharacter/test.png
 /importer:TextureImporter
 /processor:TextureProcessor

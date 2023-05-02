@@ -78,14 +78,6 @@ namespace StardenRPG
             Body.BodyType = BodyType.Dynamic;
             Body.FixedRotation = true;
             Body.OnCollision += OnCollision;
-
-            // Update this line to assign the created rectangle to _fixture
-            /*Body = World.CreateBody(Position, 0, BodyType.Dynamic);
-            _fixture = Body.CreateRectangle(Size.X, Size.Y, 1, Position);
-            _fixture.Restitution = 0.3f;
-            _fixture.Friction = 0.5f;
-            Body.FixedRotation = true;
-            Body.OnCollision += OnCollision;*/
         }
 
         private bool OnCollision(Fixture sender, Fixture other, Contact contact)
@@ -106,18 +98,6 @@ namespace StardenRPG
                 animationPlayer.StartClip(animation);
             }
         }
-
-        /*public void UpdateFixtureSize(float width, float height, Vector2 offset = default)
-        {
-            // Remove the existing fixture
-            if (Body.FixtureList.Count > 0)
-            {
-                Body.Remove(Body.FixtureList[0]);
-            }
-
-            // Create a new fixture with the updated size and the current position
-            Body = World.CreateRectangle(width, height, 1, Body.Position, 0, BodyType.Dynamic);
-        }*/
 
         public void UpdateFixtureSize(int width, int height, Vector2 offset = default)
         {
