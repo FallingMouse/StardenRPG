@@ -40,11 +40,13 @@ namespace StardenRPG.Entities.Character
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("PlayerIdle");
 
-            DrawWidth = 100; // 25 * 4
-            DrawHeight = 176; // 44 * 4
+            SizeExpand = 3;
+
+            /*DrawWidth = 100; // 25 * 4
+            DrawHeight = 176; // 44 * 4*/
 
             // Create _frameSizes(cellsize) and _actualSizes(actual character size)
-            CreateFrameSizes();
+            /*CreateFrameSizes();*/
             CreateActualCharSize();
             /*CalculateOffsetFrameSizes();*/
             CalculateOffsetActualSizes();
@@ -56,17 +58,18 @@ namespace StardenRPG.Entities.Character
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
                 string currentClipName = animationPlayer.CurrentClip.Name;
-                if (_frameSizes.ContainsKey(currentClipName))
+                //if (_frameSizes.ContainsKey(currentClipName))
+                if (animationPlayer != null)
                 {
                     // Update Frames size based on the current animation frame
-                    Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
+                    /*Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
                     DrawWidth = currentFrame.Width * 4;
-                    DrawHeight = currentFrame.Height * 4;
+                    DrawHeight = currentFrame.Height * 4;*/
 
                     // Update Hitbox size based on the current animation frame
                     Rectangle currentActualFrame = _actualSizes[currentClipName][animationPlayer.CurrentFrameIndex];
-                    DrawActualWidth = currentActualFrame.Width * 4;
-                    DrawActualHeight = currentActualFrame.Height * 4;
+                    DrawActualWidth = currentActualFrame.Width * SizeExpand;
+                    DrawActualHeight = currentActualFrame.Height * SizeExpand;
                     UpdateFixtureSize(DrawActualWidth, DrawActualHeight, OffsetActualSizes[currentClipName][animationPlayer.CurrentFrameIndex]);
                 }
             }
@@ -115,14 +118,58 @@ namespace StardenRPG.Entities.Character
         {
             OffsetActualSizes = new Dictionary<string, List<Vector2>>();
 
-            foreach (var key in _actualSizes.Keys)
+            /*foreach (var key in _actualSizes.Keys)
             {
                 List<Vector2> offsets = new List<Vector2>();
 
                 for (int i = 0; i < _actualSizes[key].Count; i++)
                 {
-                    float offsetX = (_actualSizes[key][i].X - _frameSizes[key][i].X) * 4;
-                    float offsetY = (_actualSizes[key][i].Y - _frameSizes[key][i].Y) * 4;
+                    float offsetX = (_actualSizes[key][i].X - _frameSizes[key][i].X) * SizeExpand;
+                    float offsetY = (_actualSizes[key][i].Y - _frameSizes[key][i].Y) * SizeExpand;
+                    offsets.Add(new Vector2(offsetX, offsetY));
+                }
+
+                OffsetActualSizes.Add(key, offsets);
+            }*/
+
+            /*foreach (var key in _actualSizes.Keys)
+            {
+                List<Vector2> offsets = new List<Vector2>();
+                var currentClip = animationPlayer.Clips[key];
+
+                for (int i = 0; i < _actualSizes[key].Count; i++)
+                {
+                    // Calculate the source rectangle for the current frame
+                    int frameX = (i % currentClip.FrameCount.X) * CellSize.X;
+                    int frameY = (i / currentClip.FrameCount.X) * CellSize.Y;
+                    Rectangle frameRect = new Rectangle(frameX, frameY, CellSize.X, CellSize.Y);
+
+                    // Calculate the offset
+                    float offsetX = (_actualSizes[key][i].X - frameRect.X) * SizeExpand;
+                    float offsetY = (_actualSizes[key][i].Y - frameRect.Y) * SizeExpand;
+                    offsets.Add(new Vector2(offsetX, offsetY));
+                }
+
+                OffsetActualSizes.Add(key, offsets);
+            }*/
+
+            foreach (var key in _actualSizes.Keys)
+            {
+                List<Vector2> offsets = new List<Vector2>();
+                var currentClip = animationPlayer.Clips[key];
+
+                int framesPerRow = spriteTexture.Width / CellSize.X;
+
+                for (int i = 0; i < _actualSizes[key].Count; i++)
+                {
+                    // Calculate the source rectangle for the current frame
+                    int frameX = (i % framesPerRow) * CellSize.X;
+                    int frameY = (i / framesPerRow) * CellSize.Y;
+                    Rectangle frameRect = new Rectangle(frameX, frameY, CellSize.X, CellSize.Y);
+
+                    // Calculate the offset
+                    float offsetX = (_actualSizes[key][i].X - frameRect.X) * SizeExpand;
+                    float offsetY = (_actualSizes[key][i].Y - frameRect.Y) * SizeExpand;
                     offsets.Add(new Vector2(offsetX, offsetY));
                 }
 
@@ -196,27 +243,27 @@ namespace StardenRPG.Entities.Character
                 }*/
 
                 /* Old Code 2 */
-                if (animationPlayer.CurrentClip.Name == "PlayerIdle")
+                /*if (animationPlayer.CurrentClip.Name == "PlayerIdle")
                 {
                     OffsetFrameSizes = Vector2.Zero;
                 }
                 else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight" || animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
                 {
-                    OffsetFrameSizes = new Vector2(0, (33 - 29) * 4); // Difference in heights between Idle and Walk animations
+                    OffsetFrameSizes = new Vector2(0, (33 - 29) * SizeExpand); // Difference in heights between Idle and Walk animations
                 }
                 else if (animationPlayer.CurrentClip.Name == "PlayerAttack")
                 {
                     OffsetFrameSizes = CurrentFacingDirection == FacingDirection.Left ?
-                        new Vector2(-(50 - 27) * 4, (33 - 39) * 4) :
-                        new Vector2(0, (33 - 39) * 4); // Difference in widths and heights between Attack and Idle/Walk animations when facing left
-                }
+                        new Vector2(-(50 - 27) * SizeExpand, (33 - 39) * SizeExpand) :
+                        new Vector2(0, (33 - 39) * SizeExpand); // Difference in widths and heights between Attack and Idle/Walk animations when facing left
+                }*/
                 // Add more cases for other animations as needed
             }
 
             base.Draw(gameTime, spriteBatch, _spriteEffects);
         }
 
-        public void CreateFrameSizes()
+        /*public void CreateFrameSizes()
         {
             _frameSizes = new Dictionary<string, List<Rectangle>>
             {
@@ -262,7 +309,7 @@ namespace StardenRPG.Entities.Character
                 } },
                 // Add more animations as needed
             };
-        }
+        }*/
 
         public void CreateActualCharSize()
         {

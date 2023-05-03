@@ -18,6 +18,7 @@ namespace StardenRPG
         public Body Body { get; private set; }
         public World World { get; private set; }
 
+        public int SizeExpand { get; set; } = 1;
         public int DrawWidth { get; set; }
         public int DrawHeight { get; set; }
         public int DrawActualWidth { get; set; }
@@ -56,9 +57,10 @@ namespace StardenRPG
         {
             get
             {
-                if (animationPlayer != null && _frameSizes.ContainsKey(animationPlayer.CurrentClip.Name))
-                    //return new Rectangle((int)animationPlayer.CurrentCell.X, (int)animationPlayer.CurrentCell.Y, CellSize.X, CellSize.Y);
-                    return _frameSizes[animationPlayer.CurrentClip.Name][animationPlayer.CurrentFrameIndex];
+                if (animationPlayer != null)
+                //if (animationPlayer != null && _frameSizes.ContainsKey(animationPlayer.CurrentClip.Name))
+                    return new Rectangle((int)animationPlayer.CurrentCell.X, (int)animationPlayer.CurrentCell.Y, CellSize.X, CellSize.Y);
+                    //return _frameSizes[animationPlayer.CurrentClip.Name][animationPlayer.CurrentFrameIndex];
                 else
                 {
                     if (CellSize == Point.Zero)
@@ -141,7 +143,7 @@ namespace StardenRPG
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), DrawWidth, DrawHeight),
+                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), (int)Size.X, (int)Size.Y),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,

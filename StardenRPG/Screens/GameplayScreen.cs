@@ -104,7 +104,7 @@ namespace StardenRPG.Screens
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
                 // Create the player
-                Point characterSize = new Point(72, 132);
+                Point characterSize = new Point(288 * 3, 128 * 3);
                 GeneratePlayerAvatar(characterSize);
 
                 // Create the slime
@@ -143,7 +143,7 @@ namespace StardenRPG.Screens
                 // Player Mass
                 float playerMass = 60f;
 
-                player = new Player(characterSpriteSheet, size, new Point(69, 44), _world, playerStartPosition, spriteAnimationClips);
+                player = new Player(characterSpriteSheet, size, new Point(288, 128), _world, playerStartPosition, spriteAnimationClips);
                 player.ControllingPlayer = PlayerIndex.One;
                 
                 // Set the player's physics
@@ -175,7 +175,7 @@ namespace StardenRPG.Screens
             // Player Mass
             float playerMass = 60f;
 
-            slime = new Slime(slimeSpriteSheet, size, new Point(0, 0), _world, slimeStartPosition, spriteAnimationClips);
+            slime = new Slime(slimeSpriteSheet, size, new Point(64, 64), _world, slimeStartPosition, spriteAnimationClips);
 
             //// Set the player's physics
             //player.Body.Mass = playerMass;
@@ -190,7 +190,7 @@ namespace StardenRPG.Screens
             groundHeight = 350f - 110f; // - 110 is bug
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
 
-            ground = new Ground(_groundTexture, groundWidth, groundHeight, groundPosition, _world);
+            ground = new Ground(_groundTexture2, groundWidth, groundHeight, groundPosition, _world);
 
             // test player collider
             //ground2 = new Ground(_groundTexture2, 80f, 500f, new Vector2(600, 500), _world);
