@@ -30,7 +30,12 @@ namespace StardenRPG
         protected Dictionary<string, List<Rectangle>> _actualSizes;
 
         public Vector2 OffsetFrameSizes { get; set; } = Vector2.Zero;
-        public Vector2 OffsetActualSizes { get; set; } = Vector2.Zero;
+        //public Vector2 OffsetActualSizes { get; set; } = Vector2.Zero;
+        public Vector2 Offset { get; set; } = Vector2.Zero;
+        //public Dictionary<string, List<Vector2>> OffsetFrameSizes { get; set; }
+
+        public Dictionary<string, List<Vector2>> OffsetActualSizes { get; set; }
+
 
         public SpriteSheetAnimationPlayer animationPlayer
         {
@@ -54,7 +59,6 @@ namespace StardenRPG
                 if (animationPlayer != null && _frameSizes.ContainsKey(animationPlayer.CurrentClip.Name))
                     //return new Rectangle((int)animationPlayer.CurrentCell.X, (int)animationPlayer.CurrentCell.Y, CellSize.X, CellSize.Y);
                     return _frameSizes[animationPlayer.CurrentClip.Name][animationPlayer.CurrentFrameIndex];
-                    //return _frameSizes[animationPlayer.CurrentClip.Name][0];
                 else
                 {
                     if (CellSize == Point.Zero)
@@ -137,7 +141,7 @@ namespace StardenRPG
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)(Position.X + OffsetFrameSizes.X), (int)(Position.Y + OffsetFrameSizes.Y), DrawWidth, DrawHeight),
+                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), DrawWidth, DrawHeight),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,
