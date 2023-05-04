@@ -42,13 +42,8 @@ namespace StardenRPG.Entities.Character
 
             SizeExpand = 3;
 
-            /*DrawWidth = 100; // 25 * 4
-            DrawHeight = 176; // 44 * 4*/
-
-            // Create _frameSizes(cellsize) and _actualSizes(actual character size)
-            /*CreateFrameSizes();*/
+            // Create the actual size of the character and the offset
             CreateActualCharSize();
-            /*CalculateOffsetFrameSizes();*/
             CalculateOffsetActualSizes();
         }
 
@@ -58,14 +53,8 @@ namespace StardenRPG.Entities.Character
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
                 string currentClipName = animationPlayer.CurrentClip.Name;
-                //if (_frameSizes.ContainsKey(currentClipName))
                 if (animationPlayer != null)
                 {
-                    // Update Frames size based on the current animation frame
-                    /*Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
-                    DrawWidth = currentFrame.Width * 4;
-                    DrawHeight = currentFrame.Height * 4;*/
-
                     // Update Hitbox size based on the current animation frame
                     Rectangle currentActualFrame = _actualSizes[currentClipName][animationPlayer.CurrentFrameIndex];
                     DrawActualWidth = currentActualFrame.Width * SizeExpand;
@@ -95,82 +84,31 @@ namespace StardenRPG.Entities.Character
                     break;
             }
         }
-        /*public void CalculateOffsetFrameSizes()
-        {
-            OffsetFrameSizes = new Dictionary<string, List<Vector2>>();
-
-            foreach (var key in _frameSizes.Keys)
-            {
-                List<Vector2> offsets = new List<Vector2>();
-
-                for (int i = 0; i < _frameSizes[key].Count; i++)
-                {
-                    float offsetX = _frameSizes[key][i].X - _actualSizes[key][i].X;
-                    float offsetY = _frameSizes[key][i].Y - _actualSizes[key][i].Y;
-                    offsets.Add(new Vector2(offsetX, offsetY));
-                }
-
-                OffsetFrameSizes.Add(key, offsets);
-            }
-        }*/
 
         public void CalculateOffsetActualSizes()
         {
             OffsetActualSizes = new Dictionary<string, List<Vector2>>();
-
-            /*foreach (var key in _actualSizes.Keys)
-            {
-                List<Vector2> offsets = new List<Vector2>();
-
-                for (int i = 0; i < _actualSizes[key].Count; i++)
-                {
-                    float offsetX = (_actualSizes[key][i].X - _frameSizes[key][i].X) * SizeExpand;
-                    float offsetY = (_actualSizes[key][i].Y - _frameSizes[key][i].Y) * SizeExpand;
-                    offsets.Add(new Vector2(offsetX, offsetY));
-                }
-
-                OffsetActualSizes.Add(key, offsets);
-            }*/
-
-            /*foreach (var key in _actualSizes.Keys)
-            {
-                List<Vector2> offsets = new List<Vector2>();
-                var currentClip = animationPlayer.Clips[key];
-
-                for (int i = 0; i < _actualSizes[key].Count; i++)
-                {
-                    // Calculate the source rectangle for the current frame
-                    int frameX = (i % currentClip.FrameCount.X) * CellSize.X;
-                    int frameY = (i / currentClip.FrameCount.X) * CellSize.Y;
-                    Rectangle frameRect = new Rectangle(frameX, frameY, CellSize.X, CellSize.Y);
-
-                    // Calculate the offset
-                    float offsetX = (_actualSizes[key][i].X - frameRect.X) * SizeExpand;
-                    float offsetY = (_actualSizes[key][i].Y - frameRect.Y) * SizeExpand;
-                    offsets.Add(new Vector2(offsetX, offsetY));
-                }
-
-                OffsetActualSizes.Add(key, offsets);
-            }*/
+            int j = 0;
 
             foreach (var key in _actualSizes.Keys)
             {
                 List<Vector2> offsets = new List<Vector2>();
-                var currentClip = animationPlayer.Clips[key];
-
-                int framesPerRow = spriteTexture.Width / CellSize.X;
+                
+                if (key == "PlayerWalkRight") j -= 1;
 
                 for (int i = 0; i < _actualSizes[key].Count; i++)
                 {
                     // Calculate the source rectangle for the current frame
-                    int frameX = (i % framesPerRow) * CellSize.X;
-                    int frameY = (i / framesPerRow) * CellSize.Y;
+                    int frameX = i * CellSize.X;
+                    int frameY = j * CellSize.Y;
                     Rectangle frameRect = new Rectangle(frameX, frameY, CellSize.X, CellSize.Y);
 
                     // Calculate the offset
                     float offsetX = (_actualSizes[key][i].X - frameRect.X) * SizeExpand;
                     float offsetY = (_actualSizes[key][i].Y - frameRect.Y) * SizeExpand;
                     offsets.Add(new Vector2(offsetX, offsetY));
+                    
+                    if (i == _actualSizes[key].Count - 1) j++;
                 }
 
                 OffsetActualSizes.Add(key, offsets);
@@ -228,88 +166,10 @@ namespace StardenRPG.Entities.Character
                 {
                     _spriteEffects = SpriteEffects.None;
                 }
-
-                /* Old Code 1 */
-                /*string currentClipName = animationPlayer.CurrentClip.Name;
-                int currentFrameIndex = animationPlayer.CurrentFrameIndex;
-
-                if (OffsetFrameSizes.ContainsKey(currentClipName))
-                {
-                    Offset = OffsetFrameSizes[currentClipName][currentFrameIndex];
-                }
-                else
-                {
-                    Offset = Vector2.Zero;
-                }*/
-
-                /* Old Code 2 */
-                /*if (animationPlayer.CurrentClip.Name == "PlayerIdle")
-                {
-                    OffsetFrameSizes = Vector2.Zero;
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight" || animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
-                {
-                    OffsetFrameSizes = new Vector2(0, (33 - 29) * SizeExpand); // Difference in heights between Idle and Walk animations
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerAttack")
-                {
-                    OffsetFrameSizes = CurrentFacingDirection == FacingDirection.Left ?
-                        new Vector2(-(50 - 27) * SizeExpand, (33 - 39) * SizeExpand) :
-                        new Vector2(0, (33 - 39) * SizeExpand); // Difference in widths and heights between Attack and Idle/Walk animations when facing left
-                }*/
-                // Add more cases for other animations as needed
             }
 
             base.Draw(gameTime, spriteBatch, _spriteEffects);
         }
-
-        /*public void CreateFrameSizes()
-        {
-            _frameSizes = new Dictionary<string, List<Rectangle>>
-            {
-                { "PlayerIdle", new List<Rectangle> {
-                    new Rectangle(0 + 100, 0 + 83, 60, 44),
-                    new Rectangle(288 + 100, 0 + 83, 60, 44),
-                    new Rectangle(576+ 100, 0 + 83, 60, 44),
-                    new Rectangle(864 + 100, 0 + 83, 60, 44),
-                    new Rectangle(1152 + 100, 0 + 83, 60, 44),
-                    new Rectangle(1440 + 100, 0 + 84, 60, 43),
-                    new Rectangle(1728 + 100, 0 + 84, 60, 43),
-                    new Rectangle(2016 + 100, 0 + 84, 60, 43), } },
-                { "PlayerWalkLeft", new List<Rectangle> {
-                    new Rectangle(0 + 101, 128 + 83, 58, 44),
-                    new Rectangle(288 + 102, 128 + 82, 62, 43),
-                    new Rectangle(576+ 103, 128 + 83, 60, 44),
-                    new Rectangle(864 + 102, 128 + 84, 57, 43),
-                    new Rectangle(1152 + 101, 128 + 83, 58, 44),
-                    new Rectangle(1440 + 101, 128 + 82, 58, 43),
-                    new Rectangle(1728 + 101, 128 + 83, 58, 44),
-                    new Rectangle(2016 + 101, 128 + 84, 58, 43), } },
-                { "PlayerWalkRight", new List<Rectangle> {
-                    new Rectangle(0 + 101, 128 + 83, 58, 44),
-                    new Rectangle(288 + 102, 128 + 82, 62, 43),
-                    new Rectangle(576+ 103, 128 + 83, 60, 44),
-                    new Rectangle(864 + 102, 128 + 84, 57, 43),
-                    new Rectangle(1152 + 101, 128 + 83, 58, 44),
-                    new Rectangle(1440 + 101, 128 + 82, 58, 43),
-                    new Rectangle(1728 + 101, 128 + 83, 58, 44),
-                    new Rectangle(2016 + 101, 128 + 84, 58, 43), } },
-                { "PlayerAttack", new List<Rectangle> {
-                    new Rectangle(0 + 109, 256 + 86, 51, 41),
-                    new Rectangle(288 + 111, 256 + 84, 45, 43),
-                    new Rectangle(576+ 119, 256 + 79, 41, 48),
-                    new Rectangle(864 + 118, 256 + 67, 48, 60),
-                    new Rectangle(1152 + 118, 256 + 44, 94, 83),
-                    new Rectangle(1440 + 138, 256 + 46, 73, 81),
-                    new Rectangle(1728 + 138, 256 + 54, 72, 73),
-                    new Rectangle(2016 + 138, 256 + 89, 70, 38),
-                    new Rectangle(2304 + 127, 256 + 83, 33, 44),
-                    new Rectangle(2592 + 100, 256 + 83, 60, 44),
-                    new Rectangle(2880 + 130, 256 + 84, 57, 43),
-                } },
-                // Add more animations as needed
-            };
-        }*/
 
         public void CreateActualCharSize()
         {
@@ -353,7 +213,6 @@ namespace StardenRPG.Entities.Character
                     new Rectangle(2016 + 142, 256 + 89, 26, 38),
                     new Rectangle(2304 + 135, 256 + 83, 21, 44),
                     new Rectangle(2592 + 135, 256 + 83, 21, 44),
-                    new Rectangle(2880 + 131, 256 + 84, 24, 43),
                 } },
                 // Add more animations as needed
             };

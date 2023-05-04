@@ -30,7 +30,7 @@ namespace StardenRPG.Entities.Monster
             attackCooldown = 1f;
             timeSinceLastAttack = 0f;
 
-            DrawWidth = 64; // 16 * 4
+            /*DrawWidth = 64; // 16 * 4
             DrawHeight = 48; // 12 * 4
 
             _frameSizes = new Dictionary<string, List<Rectangle>> 
@@ -41,7 +41,7 @@ namespace StardenRPG.Entities.Monster
                         new Rectangle(128 + 23, 0 + 31, 20, 10),
                         new Rectangle(192 + 24, 0 + 30, 18, 11), 
                 } }, 
-            };
+            };*/
         }
         public void Update(GameTime gameTime, Vector2 playerPosition)
         {
@@ -51,13 +51,13 @@ namespace StardenRPG.Entities.Monster
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
                 string currentClipName = animationPlayer.CurrentClip.Name;
-                if (_frameSizes.ContainsKey(currentClipName))
+                /*if (_frameSizes.ContainsKey(currentClipName))
                 {
                     Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
                     DrawWidth = currentFrame.Width * 4;
                     DrawHeight = currentFrame.Height * 4;
                     UpdateFixtureSize(DrawWidth, DrawHeight);
-                }
+                }*/
             }
 
             // Check if the player is within the slime's attack range

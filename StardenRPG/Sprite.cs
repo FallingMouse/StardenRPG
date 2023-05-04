@@ -19,22 +19,14 @@ namespace StardenRPG
         public World World { get; private set; }
 
         public int SizeExpand { get; set; } = 1;
-        public int DrawWidth { get; set; }
-        public int DrawHeight { get; set; }
         public int DrawActualWidth { get; set; }
         public int DrawActualHeight { get; set; }
 
-
         public Texture2D spriteTexture { get; set; }
         protected SpriteSheetAnimationPlayer _animationPlayer;
-        protected Dictionary<string, List<Rectangle>> _frameSizes;
         protected Dictionary<string, List<Rectangle>> _actualSizes;
 
-        public Vector2 OffsetFrameSizes { get; set; } = Vector2.Zero;
-        //public Vector2 OffsetActualSizes { get; set; } = Vector2.Zero;
         public Vector2 Offset { get; set; } = Vector2.Zero;
-        //public Dictionary<string, List<Vector2>> OffsetFrameSizes { get; set; }
-
         public Dictionary<string, List<Vector2>> OffsetActualSizes { get; set; }
 
 
@@ -80,8 +72,8 @@ namespace StardenRPG
             World = world; 
             Position = position;
 
-            DrawWidth = size.X;
-            DrawHeight = size.Y;
+            /*DrawWidth = size.X;
+            DrawHeight = size.Y;*/
 
             //Body = World.CreateBody(Position, 0, BodyType.Dynamic);
             Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
