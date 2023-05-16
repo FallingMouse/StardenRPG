@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
+using StardenRPG.Entities.Weapons;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 
@@ -28,6 +29,7 @@ namespace StardenRPG.Entities.Character
         public PlayerState CurrentPlayerState { get; set; }
         public FacingDirection CurrentFacingDirection { get; set; } = FacingDirection.Right;
         public PlayerIndex ControllingPlayer { get; set; }
+        public Weapon CurrentWeapon { get; set; }
 
         SpriteEffects _spriteEffects = SpriteEffects.None;
 
@@ -47,6 +49,9 @@ namespace StardenRPG.Entities.Character
             // Create the actual size of the character and the offset
             CreateActualCharSize();
             CalculateOffsetActualSizes();
+
+            // Create weapon for character
+            CurrentWeapon = new Sword();
         }
 
         public override void Update(GameTime gameTime)
@@ -84,6 +89,12 @@ namespace StardenRPG.Entities.Character
                 case "PlayerAttack":
                     CurrentPlayerState = PlayerState.Attacking;
                     break;
+            }
+
+            if (CurrentPlayerState == PlayerState.Attacking)
+            {
+                Rectangle currentWeaponHitbox = CurrentWeapon.GetCurrentHitbox("PlayerAttack", animationPlayer.CurrentFrameIndex);
+                // Update your physics world or collision detection system with the currentWeaponHitbox...
             }
         }
 
