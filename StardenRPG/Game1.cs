@@ -40,7 +40,7 @@ namespace StardenRPG
 
             // ✰ Star
             // Don't for get to delete this music cause it copyright
-            _screenManager.BackgroundSongAsset = "Audio/Music/Delete_ReleaseTheFire";
+            //_screenManager.BackgroundSongAsset = "Audio/Music/Delete_ReleaseTheFire";
 
             Components.Add(_screenManager);
 

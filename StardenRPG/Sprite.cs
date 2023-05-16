@@ -72,12 +72,11 @@ namespace StardenRPG
             World = world; 
             Position = position;
 
-            /*DrawWidth = size.X;
-            DrawHeight = size.Y;*/
-
-            //Body = World.CreateBody(Position, 0, BodyType.Dynamic);
-            Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
-            Body.BodyType = BodyType.Dynamic;
+            Body = World.CreateBody(Position, 0, BodyType.Dynamic);
+            var fixture = Body.CreateRectangle(Size.X, Size.Y, 1f, Vector2.Zero);
+            fixture.Tag = this;
+            //Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
+            //Body.BodyType = BodyType.Dynamic;
             Body.FixedRotation = true;
             Body.OnCollision += OnCollision;
         }
@@ -110,6 +109,7 @@ namespace StardenRPG
                 var newFixture = Body.CreateRectangle(width, height, 1f, offset);
                 newFixture.Restitution = 0.3f;
                 newFixture.Friction = 0.5f;
+                newFixture.Tag = this;
             }
         }
 

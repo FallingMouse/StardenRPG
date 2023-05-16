@@ -187,7 +187,7 @@ namespace StardenRPG.Screens
         {
             // Create the ground
             groundWidth = ScreenManager.Game.GraphicsDevice.Viewport.Width * 10;
-            groundHeight = 350f - 110f; // - 110 is bug
+            groundHeight = 350f - 110f - 110; // - 110 is bug
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
 
             ground = new Ground(_groundTexture2, groundWidth, groundHeight, groundPosition, _world);
@@ -258,6 +258,7 @@ namespace StardenRPG.Screens
                     case "PlayerIdle":
                         break;
                     case "PlayerAttack":
+                        movementDirection = new Vector2(0, 0);
                         break;
                 }
 
