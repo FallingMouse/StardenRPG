@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Newtonsoft.Json;
@@ -79,8 +80,8 @@ namespace StardenRPG.StateManagement
             var content = Game.Content;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            //_font = content.Load<SpriteFont>("menufont");
-            _blankTexture = content.Load<Texture2D>("Backgrounds/Fade/blank");
+            _font = content.Load<SpriteFont>("Fonts/menufont");
+            _blankTexture = content.Load<Texture2D>("blank");
 
             // Tell each of the screens to load their content.
             foreach (var screen in _screens)

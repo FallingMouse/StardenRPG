@@ -35,6 +35,10 @@ namespace StardenRPG
             AudioManager audioManager = new AudioManager(this);
 
             _screenManager = new ScreenManager(this);
+
+            var screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
+
             // No copyright music - CC0(Public Domain)
             //_screenManager.BackgroundSongAsset = "Audio/Music/battleThemeA";
 
@@ -49,11 +53,15 @@ namespace StardenRPG
 
         public void AddInitialScreens()
         {
-            _world = new World(new Vector2(0, 1000f)); // Initialize physics world with gravity.
+            _screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(), null);
 
-            // Calculate the scale of the game world
-            ScaleFactor = CalculateScaleFactor();
-            _screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
+            // ยังไม่แน่ใจว่าต้องเอาออกไหม
+
+            //_world = new World(new Vector2(0, 1000f)); // Initialize physics world with gravity.
+            //ScaleFactor = CalculateScaleFactor(); // Calculate the scale of the game world
+
+            //_screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
         }
 
         protected override void Initialize()
