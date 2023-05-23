@@ -75,7 +75,7 @@ namespace StardenRPG.Screens
                 // Initialize the camera
                 _camera = new Camera2D(ScreenManager.Game.GraphicsDevice);
                 _camera.CameraBounds = new Rectangle(0, 0, 10000, 1080);
-                _camera.CharacterOffset = new Vector2(100, -50);
+                _camera.CharacterOffset = new Vector2(399, 0);
 
                 // Initialize the ground texture
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);

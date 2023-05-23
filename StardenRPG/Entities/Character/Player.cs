@@ -8,6 +8,7 @@ using StardenRPG.StateManagement;
 using StardenRPG.Entities.Weapons;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Collision.Shapes;
 
 namespace StardenRPG.Entities.Character
 {
@@ -29,7 +30,10 @@ namespace StardenRPG.Entities.Character
         public PlayerState CurrentPlayerState { get; set; }
         public FacingDirection CurrentFacingDirection { get; set; } = FacingDirection.Right;
         public PlayerIndex ControllingPlayer { get; set; }
+
+        // Weapon
         public Weapon CurrentWeapon { get; set; }
+        public Body WeaponBody { get; set; }
 
         SpriteEffects _spriteEffects = SpriteEffects.None;
 
@@ -52,6 +56,12 @@ namespace StardenRPG.Entities.Character
 
             // Create weapon for character
             CurrentWeapon = new Sword();
+
+            // Initialize the weapon body
+            WeaponBody = World.CreateBody(Position, 0, BodyType.Dynamic);
+            WeaponBody.FixedRotation = true;
+            WeaponBody.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
+            WeaponBody.Enabled = false; // Initially disable the weapon body, we'll enable it when attacking
         }
 
         public override void Update(GameTime gameTime)
@@ -91,11 +101,50 @@ namespace StardenRPG.Entities.Character
                     break;
             }
 
+            // Update the weapon hitbox size based on the current animation frame
             if (CurrentPlayerState == PlayerState.Attacking)
             {
                 Rectangle currentWeaponHitbox = CurrentWeapon.GetCurrentHitbox("PlayerAttack", animationPlayer.CurrentFrameIndex);
-                // Update your physics world or collision detection system with the currentWeaponHitbox...
+
+                // Update the weapon body position and size
+                WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
+                // Assume UpdateWeaponFixtureSize works similarly to UpdateFixtureSize
+                //UpdateWeaponFixtureSize(currentWeaponHitbox.Width, currentWeaponHitbox.Height);
+
+                // Enable the weapon body
+                WeaponBody.Enabled = true;
             }
+            else
+            {
+                // Disable the weapon body when not attacking
+                WeaponBody.Enabled = false;
+            }
+        }
+        /*public void UpdateWeaponFixtureSize(float width, float height)
+        {
+            // Convert from pixels to world units if necessary
+            float widthInWorldUnits = ConvertPixelsToWorldUnits(width);
+            float heightInWorldUnits = ConvertPixelsToWorldUnits(height);
+
+            // Remove the old fixture from the weapon body
+            if (WeaponBody.FixtureList.Count > 0)
+            {
+                WeaponBody.DestroyFixture(WeaponBody.FixtureList[0]);
+            }
+
+            // Create and attach a new fixture with the updated size
+            PolygonShape shape = new PolygonShape(1f);
+            shape.SetAsBox(widthInWorldUnits / 2, heightInWorldUnits / 2);
+            Fixture fixture = WeaponBody.CreateFixture(shape);
+            fixture.IsSensor = true; // Set to true if you want the weapon to only detect collisions without physically reacting
+        }*/
+
+        // This method will handle the collisions of the weapon body
+        private bool OnWeaponCollision(Fixture sender, Fixture other, tainicom.Aether.Physics2D.Dynamics.Contacts.Contact contact)
+        {
+            // Handle weapon collisions...
+
+            return true;
         }
 
         public void CalculateOffsetActualSizes()
