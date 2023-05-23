@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Newtonsoft.Json;
+using Microsoft.Xna.Framework.Content;
 
 namespace StardenRPG.StateManagement
 {
@@ -42,6 +43,8 @@ namespace StardenRPG.StateManagement
         // each screen having to bother creating their own local instance.
         public SpriteBatch SpriteBatch => _spriteBatch;
 
+        public ContentManager Content { get; private set; }
+
         // A default font shared by all the screens. This saves
         // each screen having to bother loading their own local copy.
         public SpriteFont Font => _font;
@@ -65,6 +68,8 @@ namespace StardenRPG.StateManagement
             // we must set EnabledGestures before we can query for them, but
             // we don't assume the game wants to read them.
             TouchPanel.EnabledGestures = GestureType.None;
+
+            Content = game.Content;
         }
 
         public override void Initialize()
@@ -76,11 +81,11 @@ namespace StardenRPG.StateManagement
         protected override void LoadContent()
         {
             // Load content belonging to the screen manager.
-            var content = Game.Content;
+            Content = Game.Content;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             //_font = content.Load<SpriteFont>("menufont");
-            _blankTexture = content.Load<Texture2D>("Backgrounds/Fade/blank");
+            _blankTexture = Content.Load<Texture2D>("Backgrounds/Fade/blank");
 
             // Tell each of the screens to load their content.
             foreach (var screen in _screens)
