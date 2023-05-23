@@ -4,8 +4,8 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
-using Newtonsoft.Json;
 using Microsoft.Xna.Framework.Content;
+using Newtonsoft.Json;
 
 namespace StardenRPG.StateManagement
 {
@@ -42,6 +42,10 @@ namespace StardenRPG.StateManagement
         // A default SpriteBatch shared by all the screens. This saves
         // each screen having to bother creating their own local instance.
         public SpriteBatch SpriteBatch => _spriteBatch;
+
+        public LineBatch LineBatch { get; private set; }
+
+        public BasicEffect BatchEffect { get; private set; }
 
         public ContentManager Content { get; private set; }
 
@@ -86,6 +90,10 @@ namespace StardenRPG.StateManagement
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             //_font = content.Load<SpriteFont>("menufont");
             _blankTexture = Content.Load<Texture2D>("Backgrounds/Fade/blank");
+
+            BatchEffect = new BasicEffect(GraphicsDevice);
+            BatchEffect.VertexColorEnabled = true;
+            BatchEffect.TextureEnabled = true;
 
             // Tell each of the screens to load their content.
             foreach (var screen in _screens)

@@ -18,6 +18,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 {
     public class PhysicsGameScreen : GameScreen
     {
+        public Camera2D Camera;
         protected DebugView DebugView;
         protected World World;
         protected Body HiddenBody;
@@ -25,11 +26,15 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
 
         public PlayerIndex ControllingPlayer { get; set; }
 
+        public bool EnableCameraControl { get; set; }
+
         protected PhysicsGameScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            EnableCameraControl = true;
             World = null;
+            Camera = null;
             DebugView = null;
         }
 
@@ -43,10 +48,6 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 {
                     World = new World(Vector2.Zero);
                     World.JointRemoved += JointRemoved;
-                }
-                else
-                {
-                    World.Clear();
                 }
 
                 // enable multithreading
@@ -63,6 +64,11 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                     DebugView.SleepingShapeColor = Color.LightGray;
                     DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);
                 }
+
+                if (Camera == null)
+                    Camera = new Camera2D(ScreenManager.GraphicsDevice);
+                else
+                    Camera.ResetCamera();
 
                 HiddenBody = World.CreateBody(Vector2.Zero);
 
@@ -85,6 +91,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
                 World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, (1f / 30f)));
             }
 
+            Camera.Update(gameTime);
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
             DebugView.UpdatePerformanceGraph(World.UpdateTime);
@@ -132,7 +139,26 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
             if (input.IsNewKeyPress(Keys.Escape, ControllingPlayer, out player))
                 ExitScreen();
 
+            if (EnableCameraControl)
+                HandleCamera(input, gameTime);
+
             base.HandleInput(gameTime, input);
+        }
+
+        private void HandleCamera(InputState input, GameTime gameTime)
+        {
+            PlayerIndex player;
+
+            Vector2 camMove = Vector2.Zero;
+
+            if (input.IsKeyPressed(Keys.PageUp, ControllingPlayer, out player))
+                Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+            if (input.IsKeyPressed(Keys.PageDown, ControllingPlayer, out player))
+                Camera.Zoom -= 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
+            if (camMove != Vector2.Zero)
+                Camera.MoveCamera(camMove);
+            if (input.IsNewKeyPress(Keys.Home, ControllingPlayer, out player))
+                Camera.ResetCamera();
         }
 
         private void EnableOrDisableFlag(DebugViewFlags flag)
