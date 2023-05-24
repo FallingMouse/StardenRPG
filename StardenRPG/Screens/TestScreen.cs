@@ -24,7 +24,7 @@ namespace StardenRPG.Screens
 {
     class TestScreen : PhysicsGameScreen
     {
-        // scaling
+        #region fields 
         private readonly Vector2 _scaleFactor;
 
         private float _pauseAlpha;
@@ -43,7 +43,10 @@ namespace StardenRPG.Screens
         private Sprite _wheel;
 
         private const float MaxSpeed = 50.0f;
+        #endregion
 
+
+        #region constructors
         public TestScreen(World world, Vector2 scaleFactor)
         {
             World = world;
@@ -56,6 +59,8 @@ namespace StardenRPG.Screens
                 new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back }, true);
         }
+        #endregion
+
 
         public override void Activate(bool instancePreserved)
         {
@@ -63,6 +68,29 @@ namespace StardenRPG.Screens
 
             EnableCameraControl = true;
 
+            // terrain
+            CreateGround();
+
+            // Car
+            CreateCar();
+
+            #region Camera
+            Camera.MinRotation = -0.05f;
+            Camera.MaxRotation = 0.05f;
+
+            Camera.TrackingBody = _car;
+            Camera.EnableTracking = true;
+            #endregion
+
+            // once the load has finished, we use ResetElapsedTime to tell the game's
+            // timing mechanism that we have just finished a very long frame, and that
+            // it should not try to catch up.
+            ScreenManager.Game.ResetElapsedTime();
+        }
+
+        #region Create Object
+        private void CreateGround()
+        {
             // terrain
             _ground = World.CreateBody();
             {
@@ -108,7 +136,10 @@ namespace StardenRPG.Screens
                     gfixture.Friction = 0.6f;
                 }
             }
+        }
 
+        private void CreateCar()
+        {
             // car
             {
                 Vertices vertices = new Vertices(8);
@@ -161,18 +192,8 @@ namespace StardenRPG.Screens
                 _carBody = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/car"), Sprite.CalculateOrigin(_car, 24f));
                 _wheel = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/wheel"));
             }
-
-            Camera.MinRotation = -0.05f;
-            Camera.MaxRotation = 0.05f;
-
-            Camera.TrackingBody = _car;
-            Camera.EnableTracking = true;
-
-            // once the load has finished, we use ResetElapsedTime to tell the game's
-            // timing mechanism that we have just finished a very long frame, and that
-            // it should not try to catch up.
-            ScreenManager.Game.ResetElapsedTime();
         }
+        #endregion
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
@@ -188,6 +209,7 @@ namespace StardenRPG.Screens
                 // Update Camera
                 Camera.Update(gameTime);
 
+                // Car update MotorSpeed
                 _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, MaxSpeed, Math.Abs(_acceleration));
                 if (Math.Abs(_springBack.MotorSpeed) < MaxSpeed * 0.06f)
                 {
@@ -224,15 +246,21 @@ namespace StardenRPG.Screens
             // Setup Camera
             ScreenManager.BatchEffect.View = Camera.View;
             ScreenManager.BatchEffect.Projection = Camera.Projection;
-            
+
+
+            #region SpriteBatch
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
+            
             // draw car
             ScreenManager.SpriteBatch.Draw(_wheel.TextureTest, _wheelBack.Position, null, Color.White, _wheelBack.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_wheel.TextureTest, _wheelFront.Position, null, Color.White, _wheelFront.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_carBody.TextureTest, _car.Position, null, Color.White, _car.Rotation, _carBody.Origin, new Vector2(5f, 1.27f) * _carBody.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             ScreenManager.SpriteBatch.End();
+            #endregion
 
+
+            #region LineBatch
             ScreenManager.LineBatch.Begin(Camera.Projection, Camera.View);
             
             // draw ground
@@ -241,6 +269,8 @@ namespace StardenRPG.Screens
                 ScreenManager.LineBatch.DrawLineShape(fixture.Shape, Color.Black);
             }
             ScreenManager.LineBatch.End();
+            #endregion
+
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0 || _pauseAlpha > 0)
