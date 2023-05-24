@@ -14,7 +14,7 @@ using StardenRPG.Utilities;
 using static System.TimeZoneInfo;
 using StardenRPG.Entities.Character;
 
-namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
+namespace StardenRPG.StateManagement
 {
     public class PhysicsGameScreen : GameScreen
     {
@@ -24,7 +24,7 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         protected Body HiddenBody;
         protected FixedMouseJoint _fixedMouseJoint;
 
-        public PlayerIndex ControllingPlayer { get; set; }
+        public new PlayerIndex ControllingPlayer { get; set; }
 
         public bool EnableCameraControl { get; set; }
 
@@ -42,39 +42,36 @@ namespace tainicom.Aether.Physics2D.Samples.ScreenSystem
         {
             base.Activate(instancePreserved);
 
-            if (!instancePreserved)
-            { 
-                if (World == null)
-                {
-                    World = new World(Vector2.Zero);
-                    World.JointRemoved += JointRemoved;
-                }
-
-                // enable multithreading
-                World.ContactManager.VelocityConstraintsMultithreadThreshold = 256;
-                World.ContactManager.PositionConstraintsMultithreadThreshold = 256;
-                World.ContactManager.CollideMultithreadThreshold = 256;
-
-                if (DebugView == null)
-                {
-                    DebugView = new DebugView(World);
-                    DebugView.RemoveFlags(DebugViewFlags.Shape);
-                    DebugView.RemoveFlags(DebugViewFlags.Joint);
-                    DebugView.DefaultShapeColor = Color.White;
-                    DebugView.SleepingShapeColor = Color.LightGray;
-                    DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);
-                }
-
-                if (Camera == null)
-                    Camera = new Camera2D(ScreenManager.GraphicsDevice);
-                else
-                    Camera.ResetCamera();
-
-                HiddenBody = World.CreateBody(Vector2.Zero);
-
-                // Loading may take a while... so prevent the game from "catching up" once we finished loading
-                ScreenManager.Game.ResetElapsedTime();
+            if (World == null)
+            {
+                World = new World(Vector2.Zero);
+                World.JointRemoved += JointRemoved;
             }
+
+            // enable multithreading
+            World.ContactManager.VelocityConstraintsMultithreadThreshold = 256;
+            World.ContactManager.PositionConstraintsMultithreadThreshold = 256;
+            World.ContactManager.CollideMultithreadThreshold = 256;
+
+            if (DebugView == null)
+            {
+                DebugView = new DebugView(World);
+                DebugView.RemoveFlags(DebugViewFlags.Shape);
+                DebugView.RemoveFlags(DebugViewFlags.Joint);
+                DebugView.DefaultShapeColor = Color.White;
+                DebugView.SleepingShapeColor = Color.LightGray;
+                DebugView.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.Content);
+            }
+
+            if (Camera == null)
+                Camera = new Camera2D(ScreenManager.GraphicsDevice);
+            else
+                Camera.ResetCamera();
+
+            HiddenBody = World.CreateBody(Vector2.Zero);
+
+            // Loading may take a while... so prevent the game from "catching up" once we finished loading
+            ScreenManager.Game.ResetElapsedTime();
         }
 
         protected virtual void JointRemoved(World sender, Joint joint)

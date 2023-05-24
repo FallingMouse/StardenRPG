@@ -13,10 +13,11 @@ using StardenRPG.Entities.Character;
 using tainicom.Aether.Physics2D.Dynamics;
 using System.Text.RegularExpressions;
 using StardenRPG.Entities.Monster;
+using tainicom.Aether.Physics2D.Common;
 
 namespace StardenRPG.Screens
 {
-    public class GameplayScreen : GameScreen
+    public class GameplayScreen : PhysicsGameScreen
     {
         private ContentManager _content;
         private SpriteFont _gameFont;
@@ -29,19 +30,18 @@ namespace StardenRPG.Screens
 
         protected Player player;
         protected Slime slime;
-        protected Ground ground, ground2; // Add this line
+        
+        // New Ground
+        private Body _ground;
 
-        // Ground
+        // Old Ground
+        protected Ground groundOBJ, groundOBJ2;
         private Texture2D _groundTexture, _groundTexture2;
-        private Body _groundBody;
         private Vector2 groundPosition;
         float groundWidth, groundHeight;
 
         // Physics
-        private World _world;
-
-        // Camera
-        private Camera2D _camera;
+        //private World _world;
 
         // Parallax Background
         private ParallaxBackground _parallaxBackground;
@@ -51,7 +51,7 @@ namespace StardenRPG.Screens
 
         public GameplayScreen(World world, Vector2 scaleFactor)
         {
-            _world = world;
+            World = world;
             _scaleFactor = scaleFactor;
             
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -67,22 +67,69 @@ namespace StardenRPG.Screens
         {
             if (!instancePreserved)
             {
+                base.Activate(instancePreserved);
+
                 if (_content == null)
                     _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
                 //_gameFont = _content.Load<SpriteFont>("Fonts/gamefont");
 
                 // Initialize the camera
-                _camera = new Camera2D(ScreenManager.Game.GraphicsDevice);
-                _camera.CameraBounds = new Rectangle(0, 0, 10000, 1080);
-                _camera.CharacterOffset = new Vector2(399, 0);
+                EnableCameraControl = true;
+                //_camera.CameraBounds = new Rectangle(0, 0, 10000, 1080);
+                //_camera.CharacterOffset = new Vector2(399, 0);
 
                 // Initialize the ground texture
                 _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
                 _groundTexture2 = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
                 _groundTexture2.SetData(new[] { Color.White });
-
                 CreateGround();
+
+                // terrain
+                _ground = World.CreateBody();
+                {
+                    Vertices terrain = new Vertices();
+                    terrain.Add(new Vector2(-20f, 5f));
+                    terrain.Add(new Vector2(-20f, 0f));
+                    terrain.Add(new Vector2(20f, 0f));
+                    terrain.Add(new Vector2(25f, 0.25f));
+                    terrain.Add(new Vector2(30f, 1f));
+                    terrain.Add(new Vector2(35f, 4f));
+                    terrain.Add(new Vector2(40f, 0f));
+                    terrain.Add(new Vector2(45f, 0f));
+                    terrain.Add(new Vector2(50f, -1f));
+                    terrain.Add(new Vector2(55f, -2f));
+                    terrain.Add(new Vector2(60f, -2f));
+                    terrain.Add(new Vector2(65f, -1.25f));
+                    terrain.Add(new Vector2(70f, 0f));
+                    terrain.Add(new Vector2(75f, 0.3f));
+                    terrain.Add(new Vector2(80f, 1.5f));
+                    terrain.Add(new Vector2(85f, 3.5f));
+                    terrain.Add(new Vector2(90f, 0f));
+                    terrain.Add(new Vector2(95f, -0.5f));
+                    terrain.Add(new Vector2(100f, -1f));
+                    terrain.Add(new Vector2(105f, -2f));
+                    terrain.Add(new Vector2(110f, -2.5f));
+                    terrain.Add(new Vector2(115f, -1.3f));
+                    terrain.Add(new Vector2(120f, 0f));
+                    terrain.Add(new Vector2(160f, 0f));
+                    terrain.Add(new Vector2(159f, -10f));
+                    terrain.Add(new Vector2(201f, -10f));
+                    terrain.Add(new Vector2(200f, 0f));
+                    terrain.Add(new Vector2(240f, 0f));
+                    terrain.Add(new Vector2(250f, 5f));
+                    terrain.Add(new Vector2(250f, -10f));
+                    terrain.Add(new Vector2(270f, -10f));
+                    terrain.Add(new Vector2(270f, 0));
+                    terrain.Add(new Vector2(310f, 0));
+                    terrain.Add(new Vector2(310f, 5));
+
+                    for (int i = 0; i < terrain.Count - 1; ++i)
+                    {
+                        var gfixture = _ground.CreateEdge(terrain[i], terrain[i + 1]);
+                        gfixture.Friction = 0.6f;
+                    }
+                }
 
                 // Load background textures
                 Texture2D[] backgroundLayers = new Texture2D[12];
@@ -110,6 +157,12 @@ namespace StardenRPG.Screens
                 // Create the slime
                 Point slimeSize = new Point(64, 48);
                 //GenerateSlime(slimeSize);
+
+                Camera.MinRotation = -0.05f;
+                Camera.MaxRotation = 0.05f;
+
+                Camera.TrackingBody = player.Body;
+                Camera.EnableTracking = true;
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
@@ -143,16 +196,13 @@ namespace StardenRPG.Screens
             // Player Mass
             float playerMass = 60f;
 
-            player = new Player(characterSpriteSheet, size, new Point(288, 128), _world, playerStartPosition, spriteAnimationClips);
+            player = new Player(characterSpriteSheet, size, new Point(288, 128), World, playerStartPosition, spriteAnimationClips);
             player.ControllingPlayer = PlayerIndex.One;
                 
             // Set the player's physics
             //player.Body.Mass = playerMass;
             player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
             //player.Body.SetFriction(1f);
-                
-            // Tell the camera to follow the player
-            _camera.Follow(player);
         }
 
         protected void GenerateSlime(Point size)
@@ -175,7 +225,7 @@ namespace StardenRPG.Screens
             // Player Mass
             float playerMass = 60f;
 
-            slime = new Slime(slimeSpriteSheet, size, new Point(64, 64), _world, slimeStartPosition, spriteAnimationClips);
+            slime = new Slime(slimeSpriteSheet, size, new Point(64, 64), World, slimeStartPosition, spriteAnimationClips);
 
             //// Set the player's physics
             //player.Body.Mass = playerMass;
@@ -190,7 +240,7 @@ namespace StardenRPG.Screens
             groundHeight = 350f - 110f - 110; // - 110 is bug
             groundPosition = new Vector2(0, ScreenManager.Game.GraphicsDevice.Viewport.Height - groundHeight);
 
-            ground = new Ground(_groundTexture2, groundWidth, groundHeight, groundPosition, _world);
+            groundOBJ = new Ground(_groundTexture2, groundWidth, groundHeight, groundPosition, World);
 
             // test player collider
             //ground2 = new Ground(_groundTexture2, 80f, 500f, new Vector2(600, 500), _world);
@@ -229,7 +279,7 @@ namespace StardenRPG.Screens
             if (IsActive)
             {
                 // Update the physics world
-                _world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+                //World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 // Update the player Avatar
                 player.Update(gameTime);
@@ -238,7 +288,7 @@ namespace StardenRPG.Screens
                 //slime.Update(gameTime, player.Position);
 
                 // Update Camera
-                _camera.Update(gameTime);
+                Camera.Update(gameTime);
 
                 //64 pixels on your screen should be 1 meter in the physical world
                 Vector2 movementDirection = Vector2.Zero;
@@ -273,20 +323,20 @@ namespace StardenRPG.Screens
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
 
             var spriteBatch = ScreenManager.SpriteBatch;
+            var batchEffect = ScreenManager.BatchEffect;
 
-            /* Old SpriteBatch Begin Code */
-            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+            batchEffect.View = Camera.View;
+            batchEffect.Projection = Camera.Projection;
 
-            /* This change will apply the scaling factor to all the sprites drawn within the spriteBatch.Begin and spriteBatch.End calls. */
-            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(_scaleFactor.X, _scaleFactor.Y, 1));
-            //spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, _camera.GetViewMatrix());
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, _camera.GetViewMatrix());
+            /* Old Code of draw sprite + camera(Old) */
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, _camera.GetViewMatrix());
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
             // Draw Background..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestBG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
 
             // Draw the parallax background
-            _parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
+            //_parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
 
             // Draw the player Avatar
             player.Draw(gameTime, spriteBatch, SpriteEffects.None); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
@@ -294,8 +344,18 @@ namespace StardenRPG.Screens
             // Draw the slime
             //slime.Draw(gameTime, spriteBatch, SpriteEffects.None);
 
-            ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
-            //ground2.Draw(spriteBatch);
+            //groundOBJ.Draw(spriteBatch); // Replace the existing ground drawing code with this line
+            //groundOBJ2.Draw(spriteBatch);
+            
+            // New Ground
+            ScreenManager.LineBatch.Begin(Camera.Projection, Camera.View);
+            // draw ground
+            foreach (Fixture fixture in _ground.FixtureList)
+            {
+                ScreenManager.LineBatch.DrawLineShape(fixture.Shape, Color.Black);
+            }
+            ScreenManager.LineBatch.End();
+
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);
@@ -309,6 +369,8 @@ namespace StardenRPG.Screens
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
+
+            base.Draw(gameTime);
         }
     }
 }

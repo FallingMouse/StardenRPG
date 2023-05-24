@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using StardenRPG.SpriteManager;
 using System.Collections.Generic;
+using tainicom.Aether.Physics2D.Collision;
+using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
@@ -26,9 +28,50 @@ namespace StardenRPG
         protected SpriteSheetAnimationPlayer _animationPlayer;
         protected Dictionary<string, List<Rectangle>> _actualSizes;
 
+        /* From Sprite Aether Sample */
         public Vector2 Offset { get; set; } = Vector2.Zero;
         public Dictionary<string, List<Vector2>> OffsetActualSizes { get; set; }
 
+        public readonly Texture2D TextureTest;
+        public readonly Vector2 SizeVT;
+        public readonly Vector2 TexelSize;
+        public Vector2 Origin;
+
+        public Sprite(Texture2D texture, Vector2 origin)
+        {
+            TextureTest = texture;
+            SizeVT = new Vector2(TextureTest.Width, TextureTest.Height);
+            TexelSize = Vector2.One / SizeVT;
+            Origin = origin;
+        }
+
+        public Sprite(Texture2D texture)
+        {
+            TextureTest = texture;
+            SizeVT = new Vector2(TextureTest.Width, TextureTest.Height);
+            TexelSize = Vector2.One / SizeVT;
+            Origin = SizeVT / 2f;
+        }
+        public static Vector2 CalculateOrigin(Body b, float pixelsPerMeter)
+        {
+            Vector2 lBound = new Vector2(float.MaxValue);
+            Transform trans = b.GetTransform();
+
+            foreach (Fixture fixture in b.FixtureList)
+            {
+                for (int j = 0; j < fixture.Shape.ChildCount; ++j)
+                {
+                    AABB bounds;
+                    fixture.Shape.ComputeAABB(out bounds, ref trans, j);
+                    Vector2.Min(ref lBound, ref bounds.LowerBound, out lBound);
+                }
+            }
+
+            // calculate body offset from its center and add a 1 pixel border
+            // because we generate the textures a little bigger than the actual body's fixtures
+            return pixelsPerMeter * (b.Position - lBound) + new Vector2(1f);
+        }
+        /* End From Sprite Aether Sample */
 
         public SpriteSheetAnimationPlayer animationPlayer
         {

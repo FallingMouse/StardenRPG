@@ -40,7 +40,7 @@ namespace StardenRPG
 
             // ✰ Star
             // Don't for get to delete this music cause it copyright
-            //_screenManager.BackgroundSongAsset = "Audio/Music/Delete_ReleaseTheFire";
+            _screenManager.BackgroundSongAsset = "Audio/Music/Delete_ReleaseTheFire";
 
             Components.Add(_screenManager);
 
@@ -49,11 +49,12 @@ namespace StardenRPG
 
         public void AddInitialScreens()
         {
-            _world = new World(new Vector2(0f, 10f)); // Initialize physics world with gravity.
+            _world = new World(new Vector2(0f, -10f)); // Initialize physics world with gravity.
 
             // Calculate the scale of the game world
             ScaleFactor = CalculateScaleFactor();
-            _screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
+            //_screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
+            _screenManager.AddScreen(new TestScreen(_world, ScaleFactor), new PlayerIndex());
         }
 
         protected override void Initialize()
