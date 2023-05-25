@@ -20,6 +20,7 @@ using Microsoft.Xna.Framework.Input;
 using StardenRPG;
 using StardenRPG.StateManagement;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics.Tracing;
 
 namespace StardenRPG.Screens
 {
@@ -50,17 +51,18 @@ namespace StardenRPG.Screens
         private Sprite _wheel;
 
         //import bg
-        private Sprite _background;
+        private Sprite _backgroundTexture;
+        private Vector2 _bgBodySize = new Vector2(80f, 26f); 
         private World _world;
 
-        //all about the ground
+        //all about the ground & bg
         //private Texture2D _groundTexture;
         private Sprite _groundTexture;
-        private Vector2 _groundTextureSize;
-        private Vector2 _groundTextureOrigin;
+        private Vector2 _groundTextureSize, _bgTextureSize;
+        private Vector2 _groundTextureOrigin, _bgTextureOrigin;
 
-        private Body _groundBody;
-        private Vector2 _groundBodySize = new Vector2(80f ,20f); //divide  32
+        private Body _groundBody, _bgBody;
+        private Vector2 _groundBodySize = new Vector2(80f ,20f); //divide 16
 
 
         private float _acceleration;
@@ -102,7 +104,7 @@ namespace StardenRPG.Screens
             //_background = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/Map1"), new Vector2(0f, 0f));
             //_background = new ContentManager.Load<Texture2D>("Samples/Map1");
 
-
+            CreateBackground();
             // terrain
             CreateGround();
 
@@ -132,7 +134,23 @@ namespace StardenRPG.Screens
         }
 
         #region Create Object
+        private void CreateBackground()
+        {
+            //create the world
+            _world = new World();
 
+            Vector2 bgPosition = new Vector2(0, (_bgBodySize.Y / 2f));
+
+            //create the bg
+            _bgBody = _world.CreateBody(bgPosition, 0, BodyType.Static);
+            var gfixture = _bgBody.CreateRectangle(_bgBodySize.X, _bgBodySize.Y, 1f, Vector2.Zero);
+
+            _backgroundTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/mapbackground"));
+
+            _bgTextureSize = new Vector2(_backgroundTexture.Size.X, _backgroundTexture.Size.Y);
+
+            _bgTextureOrigin = _bgTextureSize / 2f;
+        }
         private void CreateNewGround()
         {
             //create the world
@@ -340,6 +358,8 @@ namespace StardenRPG.Screens
 
             #region SpriteBatch
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
+
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(-28f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             // draw car
             ScreenManager.SpriteBatch.Draw(_wheel.TextureTest, _wheelBack.Position, null, Color.White, _wheelBack.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
