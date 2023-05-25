@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
-namespace StardenRPG.Entities
+namespace StardenRPG.Entities.Character
 {
     public class Ground
     {
@@ -24,11 +24,12 @@ namespace StardenRPG.Entities
 
         private void CreateGround(World world)
         {
-            _groundBody = world.CreateRectangle(_groundWidth, _groundHeight, 1, _groundPosition);
-            _groundBody.BodyType = BodyType.Static;
-            _groundBody.SetFriction(0.5f);
+            _groundBody = world.CreateBody(_groundPosition, 0, BodyType.Static);
+            var groundFixture = _groundBody.CreateRectangle(_groundWidth, _groundHeight, 1f, Vector2.Zero);
+            groundFixture.Friction = 0.5f;
 
             _groundBody.OnCollision += OnCollision;
+            _groundBody.Tag = "Ground";
         }
 
         private bool OnCollision(Fixture sender, Fixture other, Contact contact)

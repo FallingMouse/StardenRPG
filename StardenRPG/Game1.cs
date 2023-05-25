@@ -56,12 +56,12 @@ namespace StardenRPG
             _screenManager.AddScreen(new BackgroundScreen(), null);
             _screenManager.AddScreen(new MainMenuScreen(), null);
 
-            // ยังไม่แน่ใจว่าต้องเอาออกไหม
 
-            //_world = new World(new Vector2(0, 1000f)); // Initialize physics world with gravity.
+            //_world = new World(new Vector2(0, -10f)); // Initialize physics world with gravity.
             //ScaleFactor = CalculateScaleFactor(); // Calculate the scale of the game world
 
             //_screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
+            //_screenManager.AddScreen(new TestScreen(_world, ScaleFactor), new PlayerIndex());
         }
 
         protected override void Initialize()

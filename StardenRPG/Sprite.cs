@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 using StardenRPG.SpriteManager;
 using System.Collections.Generic;
+using tainicom.Aether.Physics2D.Collision;
+using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
@@ -18,15 +20,58 @@ namespace StardenRPG
         public Body Body { get; private set; }
         public World World { get; private set; }
 
-        public int DrawWidth { get; set; }
-        public int DrawHeight { get; set; }
-
+        public int SizeExpand { get; set; } = 1;
+        public int DrawActualWidth { get; set; }
+        public int DrawActualHeight { get; set; }
 
         public Texture2D spriteTexture { get; set; }
         protected SpriteSheetAnimationPlayer _animationPlayer;
-        protected Dictionary<string, List<Rectangle>> _frameSizes;
+        protected Dictionary<string, List<Rectangle>> _actualSizes;
 
-        public Vector2 Origin { get; set; }
+        /* From Sprite Aether Sample */
+        public Vector2 Offset { get; set; } = Vector2.Zero;
+        public Dictionary<string, List<Vector2>> OffsetActualSizes { get; set; }
+
+        public readonly Texture2D TextureTest;
+        public readonly Vector2 SizeVT;
+        public readonly Vector2 TexelSize;
+        public Vector2 Origin;
+
+        public Sprite(Texture2D texture, Vector2 origin)
+        {
+            TextureTest = texture;
+            SizeVT = new Vector2(TextureTest.Width, TextureTest.Height);
+            TexelSize = Vector2.One / SizeVT;
+            Origin = origin;
+        }
+
+        public Sprite(Texture2D texture)
+        {
+            TextureTest = texture;
+            SizeVT = new Vector2(TextureTest.Width, TextureTest.Height);
+            TexelSize = Vector2.One / SizeVT;
+            Origin = SizeVT / 2f;
+        }
+        public static Vector2 CalculateOrigin(Body b, float pixelsPerMeter)
+        {
+            Vector2 lBound = new Vector2(float.MaxValue);
+            Transform trans = b.GetTransform();
+
+            foreach (Fixture fixture in b.FixtureList)
+            {
+                for (int j = 0; j < fixture.Shape.ChildCount; ++j)
+                {
+                    AABB bounds;
+                    fixture.Shape.ComputeAABB(out bounds, ref trans, j);
+                    Vector2.Min(ref lBound, ref bounds.LowerBound, out lBound);
+                }
+            }
+
+            // calculate body offset from its center and add a 1 pixel border
+            // because we generate the textures a little bigger than the actual body's fixtures
+            return pixelsPerMeter * (b.Position - lBound) + new Vector2(1f);
+        }
+        /* End From Sprite Aether Sample */
 
         public SpriteSheetAnimationPlayer animationPlayer
         {
@@ -47,11 +92,10 @@ namespace StardenRPG
         {
             get
             {
-                if (animationPlayer != null && _frameSizes.ContainsKey(animationPlayer.CurrentClip.Name))
-                    //return new Rectangle((int)animationPlayer.CurrentCell.X, (int)animationPlayer.CurrentCell.Y, CellSize.X, CellSize.Y);
-                    //return _frameSizes[animationPlayer.CurrentClip.Name][(int)animationPlayer.CurrentCell.X];
-                    return _frameSizes[animationPlayer.CurrentClip.Name][animationPlayer.CurrentFrameIndex];
-                    //return _frameSizes[animationPlayer.CurrentClip.Name][0];
+                if (animationPlayer != null)
+                //if (animationPlayer != null && _frameSizes.ContainsKey(animationPlayer.CurrentClip.Name))
+                    return new Rectangle((int)animationPlayer.CurrentCell.X, (int)animationPlayer.CurrentCell.Y, CellSize.X, CellSize.Y);
+                    //return _frameSizes[animationPlayer.CurrentClip.Name][animationPlayer.CurrentFrameIndex];
                 else
                 {
                     if (CellSize == Point.Zero)
@@ -71,12 +115,11 @@ namespace StardenRPG
             World = world; 
             Position = position;
 
-            DrawWidth = size.X;
-            DrawHeight = size.Y;
-
-            //Body = World.CreateBody(Position, 0, BodyType.Dynamic);
-            Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
-            Body.BodyType = BodyType.Dynamic;
+            Body = World.CreateBody(Position, 0, BodyType.Dynamic);
+            var fixture = Body.CreateRectangle(Size.X, Size.Y, 1f, Vector2.Zero);
+            fixture.Tag = this;
+            //Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
+            //Body.BodyType = BodyType.Dynamic;
             Body.FixedRotation = true;
             Body.OnCollision += OnCollision;
         }
@@ -92,62 +135,25 @@ namespace StardenRPG
             return;
         }
 
-        public void SetOriginForAnimation(string animationName)
-        {
-            /*if (animationName == "Idle")
-            {
-                Origin = new Vector2(0, 0); // Adjust these values as needed
-            }*/
-            if (animationName == "WalkLeft")
-            {
-                Origin = new Vector2(0, 0); // Adjust these values as needed
-            }
-            // Add more cases for other animations as needed
-        }
-
         public virtual void StartAnimation(string animation)
         {
             if (animationPlayer != null)
             {
                 animationPlayer.StartClip(animation);
-                SetOriginForAnimation(animation);
-
-                // Update the body size based on the current animation
-                float newWidth = Size.X;
-                float newHeight = Size.Y;
-
-                if (animation == "Idle")
-                {
-                    newWidth = 72;
-                    newHeight = 132;
-                }
-                else if (animation == "WalkRight" || animation == "WalkLeft")
-                {
-                    newWidth = 112;
-                    newHeight = 124;
-                }
-                else if (animation == "Attack")
-                {
-                    newWidth = 192;
-                    newHeight = 160;
-                }
-                // Add more cases for other animations as needed
-
-                // Update the fixture size
-                UpdateFixtureSize(newWidth, newHeight);
             }
         }
 
-        private void UpdateFixtureSize(float width, float height)
+        public void UpdateFixtureSize(int width, int height, Vector2 offset = default)
         {
-            // Remove the existing fixture
-            if (Body.FixtureList.Count > 0)
+            if (Body != null && Body.FixtureList.Count > 0)
             {
-                Body.Remove(Body.FixtureList[0]);
+                var oldFixture = Body.FixtureList[0];
+                Body.Remove(oldFixture);
+                var newFixture = Body.CreateRectangle(width, height, 1f, offset);
+                newFixture.Restitution = 0.3f;
+                newFixture.Friction = 0.5f;
+                newFixture.Tag = this;
             }
-
-            // Create a new fixture with the updated size and the current position
-            Body = World.CreateRectangle(width, height, 1, Body.Position, 0, BodyType.Dynamic);
         }
 
         public virtual void StopAnimation()
@@ -164,46 +170,20 @@ namespace StardenRPG
             Position = Body.Position;
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
         {
             // Old Code don't delete yet
             //spriteBatch.Draw(spriteTexture, new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y), sourceRect, Tint);
-
-            // Add these lines to determine the SpriteEffects based on the current animation.
-            SpriteEffects spriteEffects = SpriteEffects.None;
-            if (animationPlayer != null && animationPlayer.CurrentClip != null)
-            {
-                if(animationPlayer.CurrentClip.Name == "Idle")
-                {
-                    DrawWidth = 72; // 18 * 4
-                    DrawHeight = 132; // 33 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "WalkRight")
-                {
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "WalkLeft")
-                {
-                    spriteEffects = SpriteEffects.FlipHorizontally;
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                }
-                else if (animationPlayer.CurrentClip.Name == "Attack")
-                {
-                    DrawWidth = 192; // 48 * 4;
-                    DrawHeight = 160; // 40 * 4;
-                }
-            }
+            SpriteEffects _spriteEffects = spriteEffects;
 
             spriteBatch.Draw(
                 texture: spriteTexture,
-                destinationRectangle: new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), DrawWidth, DrawHeight),
+                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), (int)Size.X, (int)Size.Y),
                 sourceRectangle: sourceRect,
                 color: Tint,
                 rotation: 0,
                 origin: Vector2.Zero,
-                effects: spriteEffects,
+                effects: _spriteEffects,
                 layerDepth: 0
             );
         }
