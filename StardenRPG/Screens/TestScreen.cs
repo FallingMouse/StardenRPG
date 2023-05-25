@@ -1,7 +1,7 @@
 ﻿/* Original source Farseer Physics Engine:
- * Copyright (c) 2014 Ian Qvist, http://farseerphysics.codeplex.com
- * Microsoft Permissive License (Ms-PL) v1.1
- */
+* Copyright (c) 2014 Ian Qvist, http://farseerphysics.codeplex.com
+* Microsoft Permissive License (Ms-PL) v1.1
+*/
 
 using System;
 using System.Collections.Generic;
@@ -49,6 +49,20 @@ namespace StardenRPG.Screens
         private Sprite _carBody;
         private Sprite _wheel;
 
+        //import bg
+        private Sprite _background;
+        private World _world;
+
+        //all about the ground
+        //private Texture2D _groundTexture;
+        private Sprite _groundTexture;
+        private Vector2 _groundTextureSize;
+        private Vector2 _groundTextureOrigin;
+
+        private Body _groundBody;
+        private Vector2 _groundBodySize = new Vector2(80f ,20f); //divide  32
+
+
         private float _acceleration;
         private const float MaxSpeed = 50.0f;
 
@@ -69,6 +83,7 @@ namespace StardenRPG.Screens
             _pauseAction = new InputAction(
                 new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back }, true);
+
         }
         #endregion
 
@@ -83,14 +98,22 @@ namespace StardenRPG.Screens
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             #region Create Object
+            //BG
+            //_background = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/Map1"), new Vector2(0f, 0f));
+            //_background = new ContentManager.Load<Texture2D>("Samples/Map1");
+
+
             // terrain
             CreateGround();
+
+            CreateNewGround();
 
             // Car
             CreateCar();
 
             // Create the player
             Point characterSize = new Point(288 * 3, 128 * 3);
+
             GeneratePlayerAvatar(characterSize);
             #endregion
 
@@ -109,46 +132,64 @@ namespace StardenRPG.Screens
         }
 
         #region Create Object
+
+        private void CreateNewGround()
+        {
+            //create the world
+            _world = new World();
+
+            Vector2 groundPosition = new Vector2(0, -(_groundBodySize.Y / 2f ));
+
+            //create the ground
+            _groundBody = _world.CreateBody(groundPosition, 0, BodyType.Static);
+            var gfixture = _groundBody.CreateRectangle(_groundBodySize.X, _groundBodySize.Y, 1f, Vector2.Zero);
+
+            _groundTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/mapforeground")); 
+
+            _groundTextureSize = new Vector2(_groundTexture.Size.X, _groundTexture.Size.Y);
+
+            _groundTextureOrigin = _groundTextureSize / 2f;
+        }
         private void CreateGround()
         {
             // terrain
             _ground = World.CreateBody();
             {
                 Vertices terrain = new Vertices();
-                terrain.Add(new Vector2(-20f, 5f));
-                terrain.Add(new Vector2(-20f, 0f));
+                terrain.Add(new Vector2(-25f, 5f));
+                terrain.Add(new Vector2(-25f, 0f));
                 terrain.Add(new Vector2(20f, 0f));
-                terrain.Add(new Vector2(25f, 0.25f));
-                terrain.Add(new Vector2(30f, 1f));
-                terrain.Add(new Vector2(35f, 4f));
+                terrain.Add(new Vector2(25f, 0f));
+                terrain.Add(new Vector2(30f, 0f));
+                terrain.Add(new Vector2(35f, 0f));
                 terrain.Add(new Vector2(40f, 0f));
                 terrain.Add(new Vector2(45f, 0f));
-                terrain.Add(new Vector2(50f, -1f));
-                terrain.Add(new Vector2(55f, -2f));
-                terrain.Add(new Vector2(60f, -2f));
-                terrain.Add(new Vector2(65f, -1.25f));
+                terrain.Add(new Vector2(50f, 0f));
+                terrain.Add(new Vector2(55f, 0f));
+                terrain.Add(new Vector2(60f, 0f));
+                terrain.Add(new Vector2(65f, 0f));
                 terrain.Add(new Vector2(70f, 0f));
-                terrain.Add(new Vector2(75f, 0.3f));
-                terrain.Add(new Vector2(80f, 1.5f));
-                terrain.Add(new Vector2(85f, 3.5f));
+                terrain.Add(new Vector2(75f, 0f));
+                terrain.Add(new Vector2(80f, 0f));
+                terrain.Add(new Vector2(85f, 0f));
                 terrain.Add(new Vector2(90f, 0f));
-                terrain.Add(new Vector2(95f, -0.5f));
-                terrain.Add(new Vector2(100f, -1f));
-                terrain.Add(new Vector2(105f, -2f));
-                terrain.Add(new Vector2(110f, -2.5f));
-                terrain.Add(new Vector2(115f, -1.3f));
+                terrain.Add(new Vector2(95f, 0f));
+                terrain.Add(new Vector2(100f, 0f));
+                terrain.Add(new Vector2(105f, 0f));
+                terrain.Add(new Vector2(110f, 0f));
+                terrain.Add(new Vector2(115f, 0f));
                 terrain.Add(new Vector2(120f, 0f));
                 terrain.Add(new Vector2(160f, 0f));
-                terrain.Add(new Vector2(159f, -10f));
-                terrain.Add(new Vector2(201f, -10f));
+                terrain.Add(new Vector2(170f, 0f));
+                terrain.Add(new Vector2(201f, 0f));
                 terrain.Add(new Vector2(200f, 0f));
                 terrain.Add(new Vector2(240f, 0f));
-                terrain.Add(new Vector2(250f, 5f));
-                terrain.Add(new Vector2(250f, -10f));
-                terrain.Add(new Vector2(270f, -10f));
+                terrain.Add(new Vector2(250f, 0f));
+                terrain.Add(new Vector2(250f, 0f));
+                terrain.Add(new Vector2(270f, 0f));
                 terrain.Add(new Vector2(270f, 0));
-                terrain.Add(new Vector2(310f, 0));
-                terrain.Add(new Vector2(310f, 5));
+                terrain.Add(new Vector2(310f, 0f));
+                terrain.Add(new Vector2(310f, 5f));
 
                 for (int i = 0; i < terrain.Count - 1; ++i)
                 {
@@ -299,11 +340,21 @@ namespace StardenRPG.Screens
 
             #region SpriteBatch
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
-            
+
             // draw car
             ScreenManager.SpriteBatch.Draw(_wheel.TextureTest, _wheelBack.Position, null, Color.White, _wheelBack.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_wheel.TextureTest, _wheelFront.Position, null, Color.White, _wheelFront.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_carBody.TextureTest, _car.Position, null, Color.White, _car.Rotation, _carBody.Origin, new Vector2(5f, 1.27f) * _carBody.TexelSize, SpriteEffects.FlipVertically, 0f);
+
+            //draw gound texture
+            //ScreenManager.SpriteBatch.Draw(_background.TextureTest, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(0.5f) * _background.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(-28f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(52f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(132f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(212f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(292f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+
 
             ScreenManager.SpriteBatch.End();
             #endregion
@@ -311,7 +362,7 @@ namespace StardenRPG.Screens
 
             #region LineBatch
             ScreenManager.LineBatch.Begin(Camera.Projection, Camera.View);
-            
+
             // draw ground
             foreach (Fixture fixture in _ground.FixtureList)
             {
