@@ -275,7 +275,9 @@ namespace StardenRPG.Screens
         {
             PlayerIndex player;
 
-            if (input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
+            if (_pauseAction.Occurred(input, ControllingPlayer, out player))
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            else if (input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
                 _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
             else if (input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
                 _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);

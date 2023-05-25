@@ -272,7 +272,6 @@ namespace StardenRPG.Screens
 
             // Look up inputs for the active player profile.
             int playerIndex = (int)ControllingPlayer.Value;
-
             var keyboardState = input.CurrentKeyboardStates[playerIndex];
 
             PlayerIndex player;
