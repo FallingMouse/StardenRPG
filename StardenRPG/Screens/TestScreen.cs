@@ -359,7 +359,13 @@ namespace StardenRPG.Screens
             #region SpriteBatch
             ScreenManager.SpriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(-108f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(-28f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(52f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(132f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(212f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(292f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_backgroundTexture.TextureTest, new Vector2(372f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             // draw car
             ScreenManager.SpriteBatch.Draw(_wheel.TextureTest, _wheelBack.Position, null, Color.White, _wheelBack.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
@@ -368,6 +374,7 @@ namespace StardenRPG.Screens
 
             //draw gound texture
             //ScreenManager.SpriteBatch.Draw(_background.TextureTest, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(0.5f) * _background.TexelSize, SpriteEffects.FlipVertically, 0f);
+            ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(-108f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(-28f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(52f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
             ScreenManager.SpriteBatch.Draw(_groundTexture.TextureTest, new Vector2(132f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
