@@ -49,7 +49,7 @@ namespace StardenRPG
 
         public void AddInitialScreens()
         {
-            _world = new World(new Vector2(0f, -10f)); // Initialize physics world with gravity.
+            _world = new World(new Vector2(0f, -20f)); // Initialize physics world with gravity.
 
             // Calculate the scale of the game world
             ScaleFactor = CalculateScaleFactor();

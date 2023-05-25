@@ -9,6 +9,7 @@ using StardenRPG.Entities.Weapons;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
+using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace StardenRPG.Entities.Character
 {
@@ -35,26 +36,26 @@ namespace StardenRPG.Entities.Character
         public Weapon CurrentWeapon { get; set; }
         public Body WeaponBody { get; set; }
 
-        SpriteEffects _spriteEffects = SpriteEffects.None;
+        SpriteEffects _spriteEffects;
 
         // Check if the player is running
         public bool IsRunning { get; set; }
 
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
-            : base(spriteSheet, size, origin, world, startPosition)
+            : base(spriteSheet, size, origin, world, startPosition, new Vector2(2, 3), new Vector2((288 - 133) / 16, 7))
         {
             Body.Tag = "Player";
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("PlayerIdle");
 
-            SizeExpand = 3;
+            SizeExpand = 1; // Old is 3
 
             // Create the actual size of the character and the offset
             CreateActualCharSize();
             CalculateOffsetActualSizes();
 
-            // Create weapon for character
+            // Create weapon for characterr
             CurrentWeapon = new Sword();
 
             // Initialize the weapon body
@@ -76,7 +77,7 @@ namespace StardenRPG.Entities.Character
                     Rectangle currentActualFrame = _actualSizes[currentClipName][animationPlayer.CurrentFrameIndex];
                     DrawActualWidth = currentActualFrame.Width * SizeExpand;
                     DrawActualHeight = currentActualFrame.Height * SizeExpand;
-                    UpdateFixtureSize(DrawActualWidth, DrawActualHeight, OffsetActualSizes[currentClipName][animationPlayer.CurrentFrameIndex]);
+                    //UpdateFixtureSize(DrawActualWidth, DrawActualHeight, OffsetActualSizes[currentClipName][animationPlayer.CurrentFrameIndex]);
                 }
             }
 
@@ -140,7 +141,7 @@ namespace StardenRPG.Entities.Character
         }*/
 
         // This method will handle the collisions of the weapon body
-        private bool OnWeaponCollision(Fixture sender, Fixture other, tainicom.Aether.Physics2D.Dynamics.Contacts.Contact contact)
+        private bool OnWeaponCollision(Fixture sender, Fixture other, Contact contact)
         {
             // Handle weapon collisions...
 
@@ -166,8 +167,8 @@ namespace StardenRPG.Entities.Character
                     Rectangle frameRect = new Rectangle(frameX, frameY, CellSize.X, CellSize.Y);
 
                     // Calculate the offset
-                    float offsetX = (_actualSizes[key][i].X - frameRect.X) * SizeExpand;
-                    float offsetY = (_actualSizes[key][i].Y - frameRect.Y) * SizeExpand;
+                    float offsetX = (_actualSizes[key][i].X - frameRect.X) / SizeExpand;
+                    float offsetY = (_actualSizes[key][i].Y - frameRect.Y) / SizeExpand;
                     offsets.Add(new Vector2(offsetX, offsetY));
                     
                     if (i == _actualSizes[key].Count - 1) j++;
@@ -184,7 +185,7 @@ namespace StardenRPG.Entities.Character
 
             PlayerIndex player;
 
-            if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player) || input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
+            if (input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
             {
                 CurrentFacingDirection = FacingDirection.Left;
                 if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
@@ -192,7 +193,7 @@ namespace StardenRPG.Entities.Character
                     animationPlayer.StartClip("PlayerWalkLeft");
                 }
             }
-            else if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player) || input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
+            else if (input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
             {
                 CurrentFacingDirection = FacingDirection.Right;
                 if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
@@ -212,6 +213,35 @@ namespace StardenRPG.Entities.Character
             }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
+
+
+            //64 pixels on your screen should be 1 meter in the physical world
+            Vector2 movementDirection = Vector2.Zero;
+
+            float baseSpeed = 250f;
+            float runningMultiplier = baseSpeed * 2f;
+            float moveSpeed = IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
+
+            switch (animationPlayer.CurrentClip.Name)
+            {
+                case "PlayerWalkLeft":
+                    movementDirection = new Vector2(-1, 0);
+                    //Body.ApplyTorque(100);
+                    break;
+                case "PlayerWalkRight":
+                    movementDirection = new Vector2(1, 0);
+                    //Body.ApplyTorque(-100);
+                    break;
+                case "PlayerIdle":
+                    break;
+                case "PlayerAttack":
+                    movementDirection = new Vector2(0, 0);
+                    break;
+            }
+
+            //player.Body.LinearVelocity = movementDirection * moveSpeed;
+            Body.ApplyForce(movementDirection * moveSpeed);
+            //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
@@ -220,17 +250,26 @@ namespace StardenRPG.Entities.Character
 
             if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
-                if (CurrentFacingDirection == FacingDirection.Left)
+                if (CurrentFacingDirection == FacingDirection.Right)
                 {
                     _spriteEffects = SpriteEffects.FlipHorizontally;
                 }
-                else
-                {
-                    _spriteEffects = SpriteEffects.None;
-                }
             }
 
-            base.Draw(gameTime, spriteBatch, _spriteEffects);
+            //base.Draw(gameTime, spriteBatch, _spriteEffects);
+
+            spriteBatch.Draw(
+                texture: spriteTexture,
+                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), (int)Size.X, (int)Size.Y),
+                sourceRectangle: sourceRect,
+                color: Tint,
+                rotation: (float)Math.PI,
+                origin: Vector2.Zero,
+                effects: _spriteEffects,
+                layerDepth: 0
+            );
+            /*spriteBatch.Draw(spriteTexture, Position, sourceRect, Color.White, 0, 
+                Vector2.Zero, new Vector2(72f, 32f) * 1, SpriteEffects.FlipVertically, 0f);*/
         }
 
         public void CreateActualCharSize()

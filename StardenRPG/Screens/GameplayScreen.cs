@@ -28,7 +28,7 @@ namespace StardenRPG.Screens
         // scaling
         private readonly Vector2 _scaleFactor;
 
-        protected Player player;
+        protected Player _player;
         protected Slime slime;
         
         // New Ground
@@ -161,7 +161,7 @@ namespace StardenRPG.Screens
                 Camera.MinRotation = -0.05f;
                 Camera.MaxRotation = 0.05f;
 
-                Camera.TrackingBody = player.Body;
+                Camera.TrackingBody = _player.Body;
                 Camera.EnableTracking = true;
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -196,12 +196,12 @@ namespace StardenRPG.Screens
             // Player Mass
             float playerMass = 60f;
 
-            player = new Player(characterSpriteSheet, size, new Point(288, 128), World, playerStartPosition, spriteAnimationClips);
-            player.ControllingPlayer = PlayerIndex.One;
+            _player = new Player(characterSpriteSheet, size, new Point(288, 128), World, playerStartPosition, spriteAnimationClips);
+            _player.ControllingPlayer = PlayerIndex.One;
                 
             // Set the player's physics
             //player.Body.Mass = playerMass;
-            player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
+            _player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
             //player.Body.SetFriction(1f);
         }
 
@@ -261,7 +261,7 @@ namespace StardenRPG.Screens
             base.HandleInput(gameTime, input);
 
             // Pass input to the player's HandleInput method
-            player.HandleInput(input);
+            _player.HandleInput(input);
         }
 
         // This method checks the GameScreen.IsActive property, so the game will
@@ -282,7 +282,7 @@ namespace StardenRPG.Screens
                 //World.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 // Update the player Avatar
-                player.Update(gameTime);
+                _player.Update(gameTime);
 
                 // Update the slime
                 //slime.Update(gameTime, player.Position);
@@ -290,31 +290,7 @@ namespace StardenRPG.Screens
                 // Update Camera
                 Camera.Update(gameTime);
 
-                //64 pixels on your screen should be 1 meter in the physical world
-                Vector2 movementDirection = Vector2.Zero;
-
-                float baseSpeed = 55000f;
-                float runningMultiplier = baseSpeed * 64f;
-                float moveSpeed = player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
-
-                switch (player.animationPlayer.CurrentClip.Name)
-                {
-                    case "PlayerWalkLeft":
-                        movementDirection = new Vector2(-1, 0);
-                        break;
-                    case "PlayerWalkRight":
-                        movementDirection = new Vector2(1, 0);
-                        break;
-                    case "PlayerIdle":
-                        break;
-                    case "PlayerAttack":
-                        movementDirection = new Vector2(0, 0);
-                        break;
-                }
-
-                //player.Body.LinearVelocity = movementDirection * moveSpeed;
-                player.Body.ApplyForce(movementDirection * moveSpeed);
-                //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
+                //HandleInput(gameTime, input);
             }
         }
 
@@ -339,7 +315,7 @@ namespace StardenRPG.Screens
             //_parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
 
             // Draw the player Avatar
-            player.Draw(gameTime, spriteBatch, SpriteEffects.None); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
+            _player.Draw(gameTime, spriteBatch, SpriteEffects.None); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
 
             // Draw the slime
             //slime.Draw(gameTime, spriteBatch, SpriteEffects.None);
