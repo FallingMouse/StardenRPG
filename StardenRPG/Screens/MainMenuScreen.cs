@@ -14,7 +14,7 @@ namespace StardenRPG.Screens
         // Physics
         private World _world;
 
-        public MainMenuScreen() : base("Main Menu")
+        public MainMenuScreen() : base("")
         {
             var playGameMenuEntry = new MenuEntry("Play Game");
             var optionsMenuEntry = new MenuEntry("Options");

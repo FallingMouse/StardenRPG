@@ -23,7 +23,7 @@ namespace StardenRPG.Screens
 
         protected float volumeDelta = .005f;
 
-        public AudioOptionsScreen() : base("Audio Options")
+        public AudioOptionsScreen() : base("")
         {            
             MenuEntry back = new MenuEntry("Back");
 

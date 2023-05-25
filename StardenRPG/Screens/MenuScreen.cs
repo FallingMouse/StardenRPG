@@ -112,7 +112,8 @@ namespace StardenRPG.Screens
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
-            var position = new Vector2(0f, 175f);
+            /*var position = new Vector2(0f, 175f);*/
+            var position = new Vector2(0f, 550f);
 
             // update each menu entry's location in turn
             foreach (var menuEntry in _menuEntries)
@@ -130,6 +131,8 @@ namespace StardenRPG.Screens
 
                 // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight(this);
+                // increase y position
+                position.Y += 50f;
             }
         }
 
@@ -172,7 +175,8 @@ namespace StardenRPG.Screens
             var titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
             var titleOrigin = font.MeasureString(_menuTitle) / 2;
             var titleColor = new Color(192, 192, 192) * TransitionAlpha;
-            const float titleScale = 1.25f;
+            /*const float titleScale = 1.25f;*/
+            const float titleScale = 1.5f;
 
             titlePosition.Y -= transitionOffset * 100;
 

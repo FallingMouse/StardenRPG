@@ -8,7 +8,7 @@ namespace StardenRPG.Screens
         private readonly MenuEntry controlsMenu;
         private readonly MenuEntry audioMenu;
 
-        public OptionsMenuScreen() : base("Options")
+        public OptionsMenuScreen() : base("")
         {
             controlsMenu = new MenuEntry(string.Empty);
             audioMenu= new MenuEntry(string.Empty);

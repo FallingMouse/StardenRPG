@@ -89,7 +89,7 @@ namespace StardenRPG.StateManagement
             Content = Game.Content;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _font = Content.Load<SpriteFont>("Fonts/menufont");
+            _font = Content.Load<SpriteFont>("Fonts/pixelfont");
             LineBatch = new LineBatch(GraphicsDevice);
             _blankTexture = Content.Load<Texture2D>("Backgrounds/Fade/blank");
 
