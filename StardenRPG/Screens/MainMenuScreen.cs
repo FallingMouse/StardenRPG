@@ -31,10 +31,11 @@ namespace StardenRPG.Screens
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            _world = new World(new Vector2(0, 1000f)); // Initialize physics world with gravity.
+            _world = new World(new Vector2(0, -10f)); // Initialize physics world with gravity.
             ScaleFactor = CalculateScaleFactor(); // Calculate the scale of the game world
 
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen(_world, ScaleFactor) { ScreenManager = ScreenManager });
+            //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen(_world, ScaleFactor) { ScreenManager = ScreenManager
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new TestScreen(_world, ScaleFactor) { ScreenManager = ScreenManager });
         }
 
         private Vector2 CalculateScaleFactor()

@@ -24,7 +24,7 @@ namespace StardenRPG.StateManagement
         protected Body HiddenBody;
         protected FixedMouseJoint _fixedMouseJoint;
 
-        public new PlayerIndex ControllingPlayer { get; set; }
+        /*public new PlayerIndex ControllingPlayer { get; set; }*/
 
         public bool EnableCameraControl { get; set; }
 
@@ -37,6 +37,13 @@ namespace StardenRPG.StateManagement
             Camera = null;
             DebugView = null;
         }
+
+        public new PlayerIndex? ControllingPlayer
+        {
+            protected get => _controllingPlayer;
+            set { _controllingPlayer = value; }
+        }
+        private PlayerIndex? _controllingPlayer;
 
         public override void Activate(bool instancePreserved)
         {
