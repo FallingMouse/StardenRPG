@@ -19,21 +19,28 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardenRPG;
 using StardenRPG.StateManagement;
+using Microsoft.Xna.Framework.Content;
 
 namespace StardenRPG.Screens
 {
     class TestScreen : PhysicsGameScreen
     {
         #region fields 
-        private readonly Vector2 _scaleFactor;
+        private ContentManager _content;
+        private SpriteFont _gameFont;
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        private float _acceleration;
-        private Body _car;
+        // scaling
+        private readonly Vector2 _scaleFactor;
+
+        protected Player player;
+
         private Body _ground;
 
+        /* Car and Wheels */
+        private Body _car;
         private Body _wheelBack;
         private Body _wheelFront;
         private WheelJoint _springBack;
@@ -42,7 +49,11 @@ namespace StardenRPG.Screens
         private Sprite _carBody;
         private Sprite _wheel;
 
+        private float _acceleration;
         private const float MaxSpeed = 50.0f;
+
+        // Add the input state object
+        private InputState input = new InputState();
         #endregion
 
 
@@ -61,18 +72,27 @@ namespace StardenRPG.Screens
         }
         #endregion
 
-
+        // Load graphics content for the game
         public override void Activate(bool instancePreserved)
         {
             base.Activate(instancePreserved);
 
             EnableCameraControl = true;
 
+            if (_content == null)
+                _content = new ContentManager(ScreenManager.Game.Services, "Content");
+
+            #region Create Object
             // terrain
             CreateGround();
 
             // Car
             CreateCar();
+
+            // Create the player
+            Point characterSize = new Point(288 * 3, 128 * 3);
+            GeneratePlayerAvatar(characterSize);
+            #endregion
 
             #region Camera
             Camera.MinRotation = -0.05f;
@@ -192,6 +212,35 @@ namespace StardenRPG.Screens
                 _carBody = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/car"), Sprite.CalculateOrigin(_car, 24f));
                 _wheel = new Sprite(ScreenManager.Content.Load<Texture2D>("Samples/wheel"));
             }
+        }
+
+        protected void GeneratePlayerAvatar(Point size)
+        {
+            /* Old Test character, just an example */
+            //Texture2D spriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/test");
+            //SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(spriteSheet.Width, spriteSheet.Height), new Vector2(6, 3));
+            //Vector2 playerStartPosition = new Vector2(100, 200);
+
+            Texture2D characterSpriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/FireKnight");
+            SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(characterSpriteSheet.Width, characterSpriteSheet.Height), new Vector2(10, 3));
+
+            Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
+            {
+                { "PlayerIdle", sacg.Generate("PlayerIdle", new Vector2(0, 0), new Vector2(7, 0), new TimeSpan(0, 0, 0, 0, 500), true) },
+                { "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
+                { "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
+                { "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(9, 2), new TimeSpan(0, 0, 0, 0, 400), false)},
+            };
+
+            Vector2 playerStartPosition = new Vector2(1, 5);
+            //Vector2 playerStartPosition = new Vector2(100, 500);
+
+            player = new Player(characterSpriteSheet, size, new Point(288, 128), World, playerStartPosition, spriteAnimationClips);
+            player.ControllingPlayer = PlayerIndex.One;
+
+            // Set the player's physics
+            player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
+            //player.Body.SetFriction(1f);
         }
         #endregion
 
