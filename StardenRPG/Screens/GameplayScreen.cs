@@ -26,7 +26,7 @@ namespace StardenRPG.Screens
         // scaling
         private readonly Vector2 _scaleFactor;
 
-        protected Player player; // Replace 'Sprite playerAvatar;' with this line
+        protected Player _player; // Replace 'Sprite playerAvatar;' with this line
         //protected Sprite playerAvatar;
         protected Ground ground, ground2; // Add this line
 
@@ -138,16 +138,16 @@ namespace StardenRPG.Screens
                 // Player Mass
                 float playerMass = 60f;
 
-                player = new Player(spriteSheet, size, new Point(0, 0), _world, playerStartPosition, spriteAnimationClips);
-                player.ControllingPlayer = PlayerIndex.One;
+                _player = new Player(spriteSheet, size, new Point(0, 0), _world, playerStartPosition, spriteAnimationClips);
+                _player.ControllingPlayer = PlayerIndex.One;
                 
                 // Set the player's physics
-                player.Body.Mass = playerMass;
-                player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
+                _player.Body.Mass = playerMass;
+                _player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
                 //player.Body.SetFriction(1f);
                 
                 // Tell the camera to follow the player
-                _camera.Follow(player);
+                _camera.Follow(_player);
         }
 
         private void CreateGround()
@@ -173,13 +173,39 @@ namespace StardenRPG.Screens
             _content.Unload();
         }
 
-        public override void HandleInput(GameTime gameTime, InputState input)
+        /*public override void HandleInput(GameTime gameTime, InputState input)
         {
             base.HandleInput(gameTime, input);
-
+            
             // Pass input to the player's HandleInput method
             player.HandleInput(input);
+
+        }*/
+
+        public override void HandleInput(GameTime gameTime, InputState input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            // Look up inputs for the active player profile.
+            int playerIndex = (int)ControllingPlayer.Value;
+
+            var keyboardState = input.CurrentKeyboardStates[playerIndex];
+            var gamePadState = input.CurrentGamePadStates[playerIndex];
+
+            PlayerIndex player;
+            if (_pauseAction.Occurred(input, ControllingPlayer, out player))
+            {
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            }
+            else
+            {
+                base.HandleInput(gameTime, input);
+                _player.HandleInput(gameTime, input); //error CS1061
+            }
         }
+
+
 
         // This method checks the GameScreen.IsActive property, so the game will
         // stop updating when the pause menu is active, or if you tab away to a different application.
@@ -199,7 +225,7 @@ namespace StardenRPG.Screens
                 _world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                 // Update the player Avatar
-                player.Update(gameTime);
+                _player.Update(gameTime);
 
                 // Update Camera
                 _camera.Update(gameTime);
@@ -209,9 +235,9 @@ namespace StardenRPG.Screens
 
                 float baseSpeed = 55000f;
                 float runningMultiplier = baseSpeed * 64f;
-                float moveSpeed = player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed;
+                float moveSpeed = _player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed;
 
-                switch (player.animationPlayer.CurrentClip.Name)
+                switch (_player.animationPlayer.CurrentClip.Name)
                 {
                     case "WalkLeft":
                         movementDirection = new Vector2(-1, 0);
@@ -226,7 +252,7 @@ namespace StardenRPG.Screens
                 }
 
                 //player.Body.LinearVelocity = movementDirection * moveSpeed;
-                player.Body.ApplyForce(movementDirection * moveSpeed);
+                _player.Body.ApplyForce(movementDirection * moveSpeed);
                 //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
             }
         }
@@ -252,7 +278,7 @@ namespace StardenRPG.Screens
             _parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
 
             // Draw the player Avatar
-            player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
+            _player.Draw(gameTime, spriteBatch); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
 
             ground.Draw(spriteBatch); // Replace the existing ground drawing code with this line
             //ground2.Draw(spriteBatch);

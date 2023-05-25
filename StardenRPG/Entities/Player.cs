@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using StardenRPG.Screens;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using tainicom.Aether.Physics2D.Common;
@@ -71,7 +72,7 @@ namespace StardenRPG.Entities
             base.Update(gameTime);
         }
 
-        public void HandleInput(InputState input)
+        public void HandleInput(GameTime gameTime, InputState input)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
