@@ -24,6 +24,7 @@ namespace StardenRPG.Entities.Weapons
 
         //public abstract void findSwordVertices(Body swordBody, Vector2 position);
 
+        //final method that actually work in real code
         public abstract Vertices findSwordVertices(Vector2 position);
         
         //public abstract void findSwordVertices(Body swordBody);
