@@ -1,9 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
+using StardenRPG.Entities.Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tainicom.Aether.Physics2D.Collision.Shapes;
+using tainicom.Aether.Physics2D.Common;
+using tainicom.Aether.Physics2D.Common.TextureTools;
+using tainicom.Aether.Physics2D.Dynamics;
 
 namespace StardenRPG.Entities.Weapons
 {
@@ -34,6 +39,52 @@ namespace StardenRPG.Entities.Weapons
                 // Add more animations as needed
             };
         }
-    }
+        /*public override void findSwordVertices(Body swordBody, Vector2 position)
+         {
+             //Vertices to define each point of sword hitbox
+             {
+                 Vertices vertices = new Vertices(4);
 
+                 //not the real position, just try if it actually work
+                 vertices.Add(new Vector2(position.X, position.Y));
+                 vertices.Add(new Vector2(position.X, position.Y));
+                 vertices.Add(new Vector2(position.X, position.Y));
+                 vertices.Add(new Vector2(position.X, position.Y));
+
+                 PolygonShape chassis = new PolygonShape(vertices, 2);
+
+                 //for (int i = 0; i < vertices.Count - 1; i++)
+                 //{
+                 //    swordBody.CreateEdge(vertices[i], vertices[i + 1]);
+                 //}
+
+                 swordBody.CreateFixture(chassis);
+                 swordBody.BodyType = BodyType.Dynamic;
+             }
+         }*/
+
+        public override void findSwordVertices(Body swordBody)
+        {
+            //Vertices to define each point of sword hitbox
+            {
+                Vertices vertices = new Vertices(4);
+
+                //not the real position, just try if it actually work
+                vertices.Add(new Vector2(-2.5f, 0f));
+                vertices.Add(new Vector2(-2.5f, 3f));
+                vertices.Add(new Vector2(-1.5f, 3f));
+                vertices.Add(new Vector2(-1.5f, 0f));
+
+                PolygonShape chassis = new PolygonShape(vertices, 2);
+
+                //for (int i = 0; i < vertices.Count - 1; i++)
+                //{
+                //    swordBody.CreateEdge(vertices[i], vertices[i + 1]);
+                //}
+
+                swordBody.CreateFixture(chassis);
+                swordBody.BodyType = BodyType.Dynamic;
+            }
+        }
+    }
 }

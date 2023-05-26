@@ -10,6 +10,7 @@ using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
+using tainicom.Aether.Physics2D.Common.TextureTools;
 
 namespace StardenRPG.Entities.Character
 {
@@ -63,6 +64,8 @@ namespace StardenRPG.Entities.Character
             WeaponBody.FixedRotation = true;
             WeaponBody.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBody.Enabled = false; // Initially disable the weapon body, we'll enable it when attacking
+            //WeaponBody.Enabled = true;
+            //CurrentWeapon.findSwordVertices(WeaponBody);
         }
 
         public override void Update(GameTime gameTime)
@@ -101,19 +104,28 @@ namespace StardenRPG.Entities.Character
                     CurrentPlayerState = PlayerState.Attacking;
                     break;
             }
-
+            
             // Update the weapon hitbox size based on the current animation frame
             if (CurrentPlayerState == PlayerState.Attacking)
             {
+                // Enable the weapon body
+                //WeaponBody.Enabled = true;
+
                 Rectangle currentWeaponHitbox = CurrentWeapon.GetCurrentHitbox("PlayerAttack", animationPlayer.CurrentFrameIndex);
 
+                //find vertices of sword in current position, but seem like it's cause delay to the game
+                //CurrentWeapon.findSwordVertices(WeaponBody, new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y));
+                CurrentWeapon.findSwordVertices(WeaponBody);
+
                 // Update the weapon body position and size
-                WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
+                //WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
+
                 // Assume UpdateWeaponFixtureSize works similarly to UpdateFixtureSize
                 //UpdateWeaponFixtureSize(currentWeaponHitbox.Width, currentWeaponHitbox.Height);
 
                 // Enable the weapon body
                 WeaponBody.Enabled = true;
+
             }
             else
             {
