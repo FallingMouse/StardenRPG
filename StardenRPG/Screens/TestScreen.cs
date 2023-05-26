@@ -67,7 +67,6 @@ namespace StardenRPG.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
             _pauseAction = new InputAction(
-                new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back }, true);
         }
         #endregion

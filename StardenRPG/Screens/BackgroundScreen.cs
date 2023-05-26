@@ -34,7 +34,7 @@ namespace StardenRPG.Screens
                 if (_content == null)
                     _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-                _backgroundTexture = _content.Load<Texture2D>("background3");
+                _backgroundTexture = _content.Load<Texture2D>("MenuBackground/background3");
             }
         }
 

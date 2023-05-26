@@ -15,7 +15,7 @@ namespace StardenRPG.StateManagement
     // without having to change the core classes of Game State Management.
     public class InputAction
     {
-        private readonly Buttons[] _buttons;
+        //private readonly Buttons[] _buttons;
         private readonly Keys[] _keys;
         private readonly bool _firstPressOnly;
 
@@ -24,11 +24,11 @@ namespace StardenRPG.StateManagement
         private delegate bool ButtonPress(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex player);
         private delegate bool KeyPress(Keys key, PlayerIndex? controllingPlayer, out PlayerIndex player);
 
-        public InputAction(Buttons[] triggerButtons, Keys[] triggerKeys, bool firstPressOnly)
+        public InputAction(/*Buttons[] triggerButtons,*/ Keys[] triggerKeys, bool firstPressOnly)
         {
             // Store the buttons and keys. If the arrays are null, we create a 0 length array so we don't
             // have to do null checks in the Occurred method
-            _buttons = triggerButtons != null ? triggerButtons.Clone() as Buttons[] : new Buttons[0];
+            //_buttons = triggerButtons != null ? triggerButtons.Clone() as Buttons[] : new Buttons[0];
             _keys = triggerKeys != null ? triggerKeys.Clone() as Keys[] : new Keys[0];
             _firstPressOnly = firstPressOnly;
         }
@@ -52,11 +52,11 @@ namespace StardenRPG.StateManagement
             }
 
             // Now we simply need to invoke the appropriate methods for each button and key in our collections
-            foreach (var button in _buttons)
+            /*foreach (var button in _buttons)
             {
                 if (buttonTest(button, playerToTest, out player))
                     return true;
-            }
+            }*/
             foreach (var key in _keys)
             {
                 if (keyTest(key, playerToTest, out player))

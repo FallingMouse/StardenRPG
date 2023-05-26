@@ -40,11 +40,9 @@ namespace StardenRPG.Screens
             MenuEntries.Add(back);
 
             sliderUp = new InputAction(
-               new[] { Buttons.DPadRight, Buttons.LeftThumbstickRight },
                new[] { Keys.Right }, false);
 
             sliderDown = new InputAction(
-               new[] { Buttons.DPadLeft, Buttons.LeftThumbstickLeft },
                new[] { Keys.Left }, false);
         }
 

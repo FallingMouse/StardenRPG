@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using StardenRPG.StateManagement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,9 +21,10 @@ namespace StardenRPG.Screens
         // "A=ok, B=cancel" usage text prompt.
         public MessageBoxScreen(string message, bool includeUsageText = true)
         {
-            const string usageText = "\nA button, Space, Enter = ok" +
-                                     "\nB button, Backspace = cancel"; 
-            
+            const string usageText = "\n     Enter = OK | Backspace = Cancel";
+
+
+
             if (includeUsageText)
                 _message = message + usageText;
             else
@@ -35,10 +36,8 @@ namespace StardenRPG.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.2);
 
             _menuSelect = new InputAction(
-                new[] { Buttons.A, Buttons.Start },
-                new[] { Keys.Enter, Keys.Space }, true);
+                new[] { Keys.Enter }, true);
             _menuCancel = new InputAction(
-                new[] { Buttons.B, Buttons.Back },
                 new[] { Keys.Back }, true);
         }
 
@@ -51,7 +50,7 @@ namespace StardenRPG.Screens
             if (!instancePreserved)
             {
                 var content = ScreenManager.Game.Content;
-                _gradientTexture = content.Load<Texture2D>("gradient");
+                _gradientTexture = content.Load<Texture2D>("MenuBackground/box1");
             }
         }
 
@@ -87,22 +86,28 @@ namespace StardenRPG.Screens
             // Center the message text in the viewport.
             var viewport = ScreenManager.GraphicsDevice.Viewport;
             var viewportSize = new Vector2(viewport.Width, viewport.Height);
-            var textSize = font.MeasureString(_message);
+
+            // Adjust font size
+            var fontSize = 80f;
+            var fontScale = fontSize / font.MeasureString(_message).Y;
+
+            var textSize = font.MeasureString(_message) * fontScale;
             var textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
             const int hPad = 32;
             const int vPad = 16;
 
-            var backgroundRectangle = new Rectangle((int)textPosition.X - hPad, 
+            var backgroundRectangle = new Rectangle((int)textPosition.X - hPad,
                 (int)textPosition.Y - vPad, (int)textSize.X + hPad * 2, (int)textSize.Y + vPad * 2);
 
-            var color = Color.White * TransitionAlpha;    // Fade the popup alpha during transitions
+            var color = Color.White * TransitionAlpha; // Fade the popup alpha during transitions
 
             spriteBatch.Begin();
 
             spriteBatch.Draw(_gradientTexture, backgroundRectangle, color);
-            spriteBatch.DrawString(font, _message, textPosition, color);
+
+            spriteBatch.DrawString(font, _message, textPosition, color, 0f, Vector2.Zero, fontScale, SpriteEffects.None, 0f);
 
             spriteBatch.End();
         }

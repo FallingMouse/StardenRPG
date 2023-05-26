@@ -31,16 +31,12 @@ namespace StardenRPG.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
             _menuUp = new InputAction(
-                new[] { Buttons.DPadUp, Buttons.LeftThumbstickUp }, 
                 new[] { Keys.Up }, true);
             _menuDown = new InputAction(
-                new[] { Buttons.DPadDown, Buttons.LeftThumbstickDown },
                 new[] { Keys.Down }, true);
             _menuSelect = new InputAction(
-                new[] { Buttons.A, Buttons.Start },
                 new[] { Keys.Enter, Keys.Space }, true);
             _menuCancel = new InputAction(
-                new[] { Buttons.B, Buttons.Back },
                 new[] { Keys.Back }, true);
         }
 
