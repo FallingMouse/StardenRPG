@@ -6,9 +6,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-
-
-
 namespace StardenRPG.Screens
 {
     public class AudioOptionsScreen : MenuScreen
@@ -34,10 +31,11 @@ namespace StardenRPG.Screens
             masterVolume.Selected += SetMasterVolume;
             back.Selected += OnCancel;
 
+            MenuEntries.Add(back);
             MenuEntries.Add(masterVolume);
             MenuEntries.Add(musicVolume);
             MenuEntries.Add(sfxVolume);
-            MenuEntries.Add(back);
+            
 
             sliderUp = new InputAction(
                new[] { Keys.Right }, false);
@@ -87,7 +85,7 @@ namespace StardenRPG.Screens
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            masterVolume.Text = $"Master Volume {(int)(ScreenManager.audioManager.MasterVolume*100f)}%";
+            masterVolume.Text = $"Master Volume {(int)(ScreenManager.audioManager.MasterVolume * 100f)}%";
             musicVolume.Text = $"Music Volume {(int)(ScreenManager.audioManager.MusicVolume * 100f)}%";
             sfxVolume.Text = $"SFX Volume {(int)(ScreenManager.audioManager.SFXVolume * 100f)}%";
 

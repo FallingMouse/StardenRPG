@@ -21,9 +21,10 @@ namespace StardenRPG.Screens
             audioMenu.Selected += AudioMenuEntrySelected;
             back.Selected += OnCancel;
 
+            MenuEntries.Add(back);
             MenuEntries.Add(controlsMenu);
             MenuEntries.Add(audioMenu);
-            MenuEntries.Add(back);
+ 
         }
 
         // Fills in the latest values for the options screen menu text.
@@ -35,7 +36,7 @@ namespace StardenRPG.Screens
 
         private void ControlsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            SetMenuEntryText();
+            ScreenManager.AddScreen(new ControlsOptionsScreen(), e.PlayerIndex);
         }
 
         private void AudioMenuEntrySelected(object sender, PlayerIndexEventArgs e)
