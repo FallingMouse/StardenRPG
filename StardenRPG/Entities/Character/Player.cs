@@ -178,7 +178,7 @@ namespace StardenRPG.Entities.Character
             }
         }
 
-        public void HandleInput(InputState input)
+        public void HandleInput(GameTime gameTime, InputState input)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
@@ -218,7 +218,7 @@ namespace StardenRPG.Entities.Character
             //64 pixels on your screen should be 1 meter in the physical world
             Vector2 movementDirection = Vector2.Zero;
 
-            float baseSpeed = 250f;
+            float baseSpeed = 25.5f; // default = 250, 21.5
             float runningMultiplier = baseSpeed * 2f;
             float moveSpeed = IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
 
@@ -239,8 +239,9 @@ namespace StardenRPG.Entities.Character
                     break;
             }
 
-            //player.Body.LinearVelocity = movementDirection * moveSpeed;
-            Body.ApplyForce(movementDirection * moveSpeed);
+            //Body.LinearVelocity = movementDirection * moveSpeed;
+            Body.LinearVelocity = movementDirection * moveSpeed * (float)(2 * gameTime.ElapsedGameTime.TotalSeconds);
+            //Body.ApplyForce(movementDirection * moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
             //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
         }
 

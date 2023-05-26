@@ -261,7 +261,7 @@ namespace StardenRPG.Screens
             base.HandleInput(gameTime, input);
 
             // Pass input to the player's HandleInput method
-            _player.HandleInput(input);
+            _player.HandleInput(gameTime, input);
         }
 
         // This method checks the GameScreen.IsActive property, so the game will

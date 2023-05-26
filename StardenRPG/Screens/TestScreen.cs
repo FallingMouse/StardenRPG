@@ -236,21 +236,21 @@ namespace StardenRPG.Screens
                 CircleShape wheelShape = new CircleShape(0.5f, 0.8f);
 
                 _car = World.CreateBody();
-                _car.BodyType = BodyType.Dynamic;
-                _car.Position = new Vector2(0.0f, 1.0f);
+                _car.BodyType = BodyType.Static;
+                _car.Position = new Vector2(0.0f + 10, 0.8f);
                 _car.CreateFixture(chassis);
                 _car.Tag = "Car";
 
                 _wheelBack = World.CreateBody();
                 _wheelBack.BodyType = BodyType.Dynamic;
-                _wheelBack.Position = new Vector2(-1.709f, 0.78f);
+                _wheelBack.Position = new Vector2(-1.709f + 10, 0.58f);
                 var wFixture = _wheelBack.CreateFixture(wheelShape);
                 wFixture.Friction = 0.9f;
 
                 wheelShape.Density = 1;
                 _wheelFront = World.CreateBody();
                 _wheelFront.BodyType = BodyType.Dynamic;
-                _wheelFront.Position = new Vector2(1.54f, 0.8f);
+                _wheelFront.Position = new Vector2(1.54f + 10, 0.6f);
                 _wheelFront.CreateFixture(wheelShape);
 
                 Vector2 axis = new Vector2(0.0f, 1.2f);
@@ -322,17 +322,6 @@ namespace StardenRPG.Screens
 
                 // Update the player Avatar
                 _player.Update(gameTime);
-
-                // Car update MotorSpeed
-                _springBack.MotorSpeed = Math.Sign(_acceleration) * MathHelper.SmoothStep(0f, MaxSpeed, Math.Abs(_acceleration));
-                if (Math.Abs(_springBack.MotorSpeed) < MaxSpeed * 0.06f)
-                {
-                    _springBack.MotorEnabled = false;
-                }
-                else
-                {
-                    _springBack.MotorEnabled = true;
-                }
             }
         }
 
@@ -340,19 +329,8 @@ namespace StardenRPG.Screens
         {
             PlayerIndex player;
 
-            if (input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
-                _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
-            else if (input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
-                _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
-            else if (input.IsKeyPressed(Keys.S, ControllingPlayer, out player))
-                _acceleration = 0f;
-            //_acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);
-            else
-                _acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);
-
-
             // Pass input to the player's HandleInput method
-            _player.HandleInput(input);
+            _player.HandleInput(gameTime, input);
 
             base.HandleInput(gameTime, input);
         }
