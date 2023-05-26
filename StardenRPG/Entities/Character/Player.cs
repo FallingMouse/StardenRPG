@@ -11,6 +11,7 @@ using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using tainicom.Aether.Physics2D.Common.TextureTools;
+using tainicom.Aether.Physics2D.Dynamics.Joints;
 
 namespace StardenRPG.Entities.Character
 {
@@ -36,6 +37,13 @@ namespace StardenRPG.Entities.Character
         // Weapon
         public Weapon CurrentWeapon { get; set; }
         public Body WeaponBody { get; set; }
+
+        //test joint sword and player
+        private WheelJoint _swordJoint;
+
+        public Vector2 _swordBodyPosition;
+        public Vertices _swordVertices;
+        public PolygonShape chassis;
 
         SpriteEffects _spriteEffects;
 
@@ -64,8 +72,27 @@ namespace StardenRPG.Entities.Character
             WeaponBody.FixedRotation = true;
             WeaponBody.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBody.Enabled = false; // Initially disable the weapon body, we'll enable it when attacking
-            //WeaponBody.Enabled = true;
-            //CurrentWeapon.findSwordVertices(WeaponBody);
+                                        //WeaponBody.Enabled = true;
+                                        //CurrentWeapon.findSwordVertices(WeaponBody);
+
+            //CurrentWeapon.findSwordVertices(WeaponBody, new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f));
+            //_swordJoint = new WheelJoint(Body, WeaponBody, new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f), new Vector2(WeaponBody.Position.X - 6.0f, WeaponBody.Position.Y), true);
+
+            //_swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
+
+            //CurrentWeapon.findSwordVertices(WeaponBody, _swordBodyPosition);
+            //_swordJoint = new WheelJoint(Body, WeaponBody, _swordBodyPosition, new Vector2(_swordBodyPosition.X, WeaponBody.Position.Y), true);
+            
+            _swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
+
+            _swordVertices =  CurrentWeapon.findSwordVertices(_swordBodyPosition);
+            chassis = new PolygonShape(_swordVertices, 2);
+            WeaponBody.CreateFixture(chassis);
+            WeaponBody.BodyType = BodyType.Dynamic;
+
+            _swordJoint = new WheelJoint(Body, WeaponBody, new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f), new Vector2(Body.Position.X - 6.0f , WeaponBody.Position.Y), true);
+
+
         }
 
         public override void Update(GameTime gameTime)
@@ -113,18 +140,41 @@ namespace StardenRPG.Entities.Character
 
                 Rectangle currentWeaponHitbox = CurrentWeapon.GetCurrentHitbox("PlayerAttack", animationPlayer.CurrentFrameIndex);
 
-                //find vertices of sword in current position, but seem like it's cause delay to the game
-                //CurrentWeapon.findSwordVertices(WeaponBody, new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y));
-                CurrentWeapon.findSwordVertices(WeaponBody);
-
                 // Update the weapon body position and size
                 //WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
+                WeaponBody.Position = new Vector2(Body.Position.X , Body.Position.Y);
+
+                if(CurrentFacingDirection == FacingDirection.Left) 
+                {
+                    _swordBodyPosition = new Vector2(Body.Position.X -12.0f, Body.Position.Y - 16f);
+
+                    _swordVertices = CurrentWeapon.findSwordVertices(_swordBodyPosition);
+                    chassis = new PolygonShape(_swordVertices, 2);
+                    WeaponBody.CreateFixture(chassis);
+                    WeaponBody.BodyType = BodyType.Dynamic;
+
+                    _swordJoint = new WheelJoint(Body, WeaponBody, _swordBodyPosition, new Vector2(_swordBodyPosition.X, WeaponBody.Position.Y), true);
+                }
+                if(CurrentFacingDirection != FacingDirection.Right)
+                {
+                    _swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
+
+                    _swordVertices =  CurrentWeapon.findSwordVertices(_swordBodyPosition);
+                    chassis = new PolygonShape(_swordVertices, 2);
+                    WeaponBody.CreateFixture(chassis);
+                    WeaponBody.BodyType = BodyType.Dynamic;
+
+                    _swordJoint = new WheelJoint(Body, WeaponBody, _swordBodyPosition, new Vector2(_swordBodyPosition.X, WeaponBody.Position.Y), true);
+                }
 
                 // Assume UpdateWeaponFixtureSize works similarly to UpdateFixtureSize
                 //UpdateWeaponFixtureSize(currentWeaponHitbox.Width, currentWeaponHitbox.Height);
 
                 // Enable the weapon body
+                //_swordJoint = new WheelJoint(Body, WeaponBody, new Vector2(WeaponBody.Position.X - 7.5f, WeaponBody.Position.Y), new Vector2(WeaponBody.Position.X - 7.5f, WeaponBody.Position.Y), false);
+                //_swordJoint = new WheelJoint(Body, WeaponBody, Body.Position, new Vector2(currentWeaponHitbox.X - 1f, currentWeaponHitbox.Y), true);
                 WeaponBody.Enabled = true;
+                                                
 
             }
             else

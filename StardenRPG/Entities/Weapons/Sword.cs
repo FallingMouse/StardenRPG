@@ -46,24 +46,38 @@ namespace StardenRPG.Entities.Weapons
                  Vertices vertices = new Vertices(4);
 
                  //not the real position, just try if it actually work
-                 vertices.Add(new Vector2(position.X, position.Y));
-                 vertices.Add(new Vector2(position.X, position.Y));
-                 vertices.Add(new Vector2(position.X, position.Y));
-                 vertices.Add(new Vector2(position.X, position.Y));
+                 vertices.Add(new Vector2(position.X, position.Y - 0.5f));
+                 vertices.Add(new Vector2(position.X, position.Y  + 1.0f));
+                 vertices.Add(new Vector2(position.X - 3f, position.Y -0.5f));
+                 vertices.Add(new Vector2(position.X - 3f, position.Y + 1.0f));
 
                  PolygonShape chassis = new PolygonShape(vertices, 2);
-
-                 //for (int i = 0; i < vertices.Count - 1; i++)
-                 //{
-                 //    swordBody.CreateEdge(vertices[i], vertices[i + 1]);
-                 //}
 
                  swordBody.CreateFixture(chassis);
                  swordBody.BodyType = BodyType.Dynamic;
              }
          }*/
 
-        public override void findSwordVertices(Body swordBody)
+        public override Vertices findSwordVertices(Vector2 position)
+        {
+            //Vertices to define each point of sword hitbox
+            vertices = new Vertices(4);
+            {
+                //not the real position, just try if it actually work
+                vertices.Add(new Vector2(position.X, position.Y - 0.5f));
+                vertices.Add(new Vector2(position.X, position.Y + 1.0f));
+                vertices.Add(new Vector2(position.X - 3f, position.Y - 0.5f));
+                vertices.Add(new Vector2(position.X - 3f, position.Y + 1.0f));
+
+                //PolygonShape chassis = new PolygonShape(vertices, 2);
+
+                //swordBody.CreateFixture(chassis);
+                //wordBody.BodyType = BodyType.Dynamic;   
+            }
+            return vertices;
+        }
+
+        /*public override void findSwordVertices(Body swordBody)
         {
             //Vertices to define each point of sword hitbox
             {
@@ -77,14 +91,9 @@ namespace StardenRPG.Entities.Weapons
 
                 PolygonShape chassis = new PolygonShape(vertices, 2);
 
-                //for (int i = 0; i < vertices.Count - 1; i++)
-                //{
-                //    swordBody.CreateEdge(vertices[i], vertices[i + 1]);
-                //}
-
                 swordBody.CreateFixture(chassis);
                 swordBody.BodyType = BodyType.Dynamic;
             }
-        }
+        }*/
     }
 }
