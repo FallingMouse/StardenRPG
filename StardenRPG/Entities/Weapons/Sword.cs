@@ -39,6 +39,7 @@ namespace StardenRPG.Entities.Weapons
                 // Add more animations as needed
             };
         }
+        //old code, maybe can be used later
         /*public override void findSwordVertices(Body swordBody, Vector2 position)
          {
              //Vertices to define each point of sword hitbox
@@ -77,6 +78,7 @@ namespace StardenRPG.Entities.Weapons
             return vertices;
         }
 
+        //old code, maybe can be used later
         /*public override void findSwordVertices(Body swordBody)
         {
             //Vertices to define each point of sword hitbox

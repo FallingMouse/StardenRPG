@@ -38,10 +38,12 @@ namespace StardenRPG.Entities.Character
         public Weapon CurrentWeapon { get; set; }
         public Body WeaponBody { get; set; }
 
-        //test joint sword and player
+        //joint sword and player
         private WheelJoint _swordJoint;
 
+        //All identifiers, contain values related to sword
         public Vector2 _swordBodyPosition;
+        public Vector2 _swordLeftSide, _swordRightSide;
         public Vertices _swordVertices;
         public PolygonShape chassis;
 
@@ -82,8 +84,8 @@ namespace StardenRPG.Entities.Character
 
             //CurrentWeapon.findSwordVertices(WeaponBody, _swordBodyPosition);
             //_swordJoint = new WheelJoint(Body, WeaponBody, _swordBodyPosition, new Vector2(_swordBodyPosition.X, WeaponBody.Position.Y), true);
-            
-            _swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
+
+            /*_swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
 
             _swordVertices =  CurrentWeapon.findSwordVertices(_swordBodyPosition);
             chassis = new PolygonShape(_swordVertices, 2);
@@ -91,8 +93,11 @@ namespace StardenRPG.Entities.Character
             WeaponBody.BodyType = BodyType.Dynamic;
 
             _swordJoint = new WheelJoint(Body, WeaponBody, new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f), new Vector2(Body.Position.X - 6.0f , WeaponBody.Position.Y), true);
+            */
 
-
+            //initial sword hitbox both side
+            _swordLeftSide = new Vector2(Body.Position.X - 11.0f, Body.Position.Y - 16f);
+            _swordRightSide = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
         }
 
         public override void Update(GameTime gameTime)
@@ -144,20 +149,29 @@ namespace StardenRPG.Entities.Character
                 //WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
                 WeaponBody.Position = new Vector2(Body.Position.X , Body.Position.Y);
 
-                if(CurrentFacingDirection == FacingDirection.Left) 
-                {
-                    _swordBodyPosition = new Vector2(Body.Position.X -12.0f, Body.Position.Y - 16f);
+                //_swordVertices = CurrentWeapon.findSwordVertices(WeaponBody.Position);
 
+                //When player attack at the left side, sword hitbox will be created at the same side
+                if (CurrentFacingDirection == FacingDirection.Left) 
+                {
+                    //_swordBodyPosition = new Vector2(Body.Position.X + 10.0f, Body.Position.Y - 16f);
+                    _swordBodyPosition = _swordLeftSide;
+
+                    //find vertices to create sword hitbox based on the sword body position
                     _swordVertices = CurrentWeapon.findSwordVertices(_swordBodyPosition);
                     chassis = new PolygonShape(_swordVertices, 2);
                     WeaponBody.CreateFixture(chassis);
                     WeaponBody.BodyType = BodyType.Dynamic;
 
+                    //joint the sword hitbox to the player body, seem like it doesn't work but have it made the code work better (maybe)
                     _swordJoint = new WheelJoint(Body, WeaponBody, _swordBodyPosition, new Vector2(_swordBodyPosition.X, WeaponBody.Position.Y), true);
                 }
-                if(CurrentFacingDirection != FacingDirection.Right)
+
+                //When player attack at the right side, sword hitbox will be created at the same side
+                if (CurrentFacingDirection == FacingDirection.Right)
                 {
-                    _swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
+                    //_swordBodyPosition = new Vector2(Body.Position.X - 6.0f, Body.Position.Y - 16f);
+                    _swordBodyPosition = _swordRightSide;
 
                     _swordVertices =  CurrentWeapon.findSwordVertices(_swordBodyPosition);
                     chassis = new PolygonShape(_swordVertices, 2);
