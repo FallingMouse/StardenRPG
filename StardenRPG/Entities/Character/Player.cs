@@ -16,6 +16,10 @@ namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
+        // HealthBar
+        public int Health { get; set; }
+        public const int MaxHealth = 100;
+
         public enum PlayerState
         {
             Idle,
@@ -45,6 +49,9 @@ namespace StardenRPG.Entities.Character
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
             : base(spriteSheet, size, origin, world, startPosition, new Vector2(2, 3), new Vector2(0.3f, 0.5f))
         {
+            // HealthBar
+            Health = MaxHealth;
+
             Body.Tag = "Player";
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
@@ -176,6 +183,12 @@ namespace StardenRPG.Entities.Character
             {
                 animationPlayer.StartClip("PlayerAttack");
                 CurrentPlayerState = PlayerState.Attacking;
+            }
+
+            // Test HealthBar
+            if (input.IsKeyPressed(Keys.H, ControllingPlayer, out player) && input.IsKeyUp(Keys.H, ControllingPlayer, out player))
+            {
+                Health -= 10;
             }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);

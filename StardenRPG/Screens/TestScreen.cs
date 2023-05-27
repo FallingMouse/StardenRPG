@@ -21,6 +21,7 @@ using StardenRPG;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics.Tracing;
 using StardenRPG.Entities.Monster;
+using StardenRPG.Entities.Bar;
 
 namespace StardenRPG.Screens
 {
@@ -68,6 +69,9 @@ namespace StardenRPG.Screens
 
         private float _acceleration;
         private const float MaxSpeed = 50.0f;
+
+        // Health Bar
+        private HealthBar healthBar;
 
         // Add the input state object
         private InputState input = new InputState();
@@ -131,6 +135,9 @@ namespace StardenRPG.Screens
             Camera.TrackingBody = _player.Body;
             Camera.EnableTracking = true;
             #endregion
+
+            // Health Bar
+            healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -407,6 +414,7 @@ namespace StardenRPG.Screens
             spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(292f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
             spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
+            healthBar.Draw(spriteBatch, _player);
 
             spriteBatch.End();
             #endregion
