@@ -327,6 +327,7 @@ namespace StardenRPG.Screens
             Vector2 slimeStartPosition = new Vector2(20, 1); // default = 30, 1
 
             slime = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, slimeStartPosition, spriteAnimationClips);
+            slime.setPlayer(_player);
             slime.Body.LinearDamping = 10f;
         }
         #endregion
@@ -349,7 +350,7 @@ namespace StardenRPG.Screens
                 _player.Update(gameTime);
 
                 // Update the slime
-                slime.Update(gameTime, _player.Position);
+                slime.Update(gameTime, _player);
             }
         }
 

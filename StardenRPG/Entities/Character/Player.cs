@@ -51,7 +51,7 @@ namespace StardenRPG.Entities.Character
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
             : base(spriteSheet, size, origin, world, startPosition, new Vector2(2, 3), new Vector2(0.3f, 0.5f))
         {
-            Body.Tag = "Player";
+            Body.Tag = this;
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("PlayerIdle");

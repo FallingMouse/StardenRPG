@@ -142,7 +142,7 @@ namespace StardenRPG
             Body.OnCollision += OnCollision;
         }
 
-        private bool OnCollision(Fixture sender, Fixture other, Contact contact)
+        public virtual bool OnCollision(Fixture sender, Fixture other, Contact contact)
         {
             // You can add custom collision handling logic here.
             return true;
