@@ -24,7 +24,9 @@ namespace StardenRPG.Entities.Character
         {
             Idle,
             Walking,
-            Attacking
+            Attacking,
+            TakingHit,
+            Death
         }
 
         public enum FacingDirection
@@ -91,6 +93,12 @@ namespace StardenRPG.Entities.Character
                     break;
                 case "PlayerAttack":
                     CurrentPlayerState = PlayerState.Attacking;
+                    break;
+                case "PlayerTakeHit":
+                    CurrentPlayerState = PlayerState.TakingHit;
+                    break;
+                case "PlayerDeath":
+                    CurrentPlayerState = PlayerState.Death;
                     break;
             }
             
@@ -172,7 +180,8 @@ namespace StardenRPG.Entities.Character
                     animationPlayer.StartClip("PlayerWalkRight");
                 }
             }
-            else if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
+            else if (CurrentPlayerState != PlayerState.Attacking 
+                || animationPlayer.IsAnimationComplete("PlayerAttack"))
             {
                 animationPlayer.StartClip("PlayerIdle");
             }
@@ -201,11 +210,6 @@ namespace StardenRPG.Entities.Character
                 case "PlayerWalkRight":
                     movementDirection = new Vector2(1, 0);
                     //Body.ApplyTorque(-100);
-                    break;
-                case "PlayerIdle":
-                    break;
-                case "PlayerAttack":
-                    movementDirection = new Vector2(0, 0);
                     break;
             }
 

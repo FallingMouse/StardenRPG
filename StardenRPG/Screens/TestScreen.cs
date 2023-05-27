@@ -288,7 +288,7 @@ namespace StardenRPG.Screens
 
             //Texture2D characterSpriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/FireKnight");
             Texture2D characterSpriteSheet = _content.Load<Texture2D>("Sprites/Character/MainCharacter/FireKnight");
-            SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(characterSpriteSheet.Width, characterSpriteSheet.Height), new Vector2(10, 3));
+            SpriteAnimationClipGenerator sacg = new SpriteAnimationClipGenerator(new Vector2(characterSpriteSheet.Width, characterSpriteSheet.Height), new Vector2(13, 5));
 
             Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips = new Dictionary<string, SpriteSheetAnimationClip>()
             {
@@ -296,6 +296,8 @@ namespace StardenRPG.Screens
                 { "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
                 { "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
                 { "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(9, 2), new TimeSpan(0, 0, 0, 0, 400), false)},
+                { "PlayerTakeHit", sacg.Generate("PlayerTakeHit", new Vector2(0, 3), new Vector2(5, 3), new TimeSpan(0, 0, 0, 0, 1000), false)},
+                { "PlayerDeath", sacg.Generate("PlayerDeath", new Vector2(0, 4), new Vector2(12, 4), new TimeSpan(0, 0, 0, 0, 500), false)},
             };
 
             Vector2 playerStartPosition = new Vector2(31, 1); // default = 1, 1
