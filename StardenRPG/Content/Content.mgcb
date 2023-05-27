@@ -19,11 +19,35 @@
 /processorParam:Quality=Best
 /build:Audio/Music/battleThemeA.mp3
 
+#begin Audio/Music/Beyond Reckoning_Full.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/Beyond Reckoning_Full.wav
+
 #begin Audio/Music/Delete_ReleaseTheFire.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Audio/Music/Delete_ReleaseTheFire.mp3
+
+#begin Audio/Music/Firebird_Full.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/Firebird_Full.wav
+
+#begin Audio/Music/Graven Tone_Full.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/Graven Tone_Full.wav
+
+#begin Audio/Music/The Blastwave_Full.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Music/The Blastwave_Full.wav
 
 #begin Audio/SFX/ui_accept_2.wav
 /importer:WavImporter

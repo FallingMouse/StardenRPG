@@ -11,6 +11,7 @@ using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using tainicom.Aether.Physics2D.Common.TextureTools;
+using StardenRPG.Entities.Bar;
 
 namespace StardenRPG.Entities.Character
 {
@@ -19,6 +20,7 @@ namespace StardenRPG.Entities.Character
         // HealthBar
         public int Health { get; set; }
         public const int MaxHealth = 100;
+        private HealthBar healthBar;
 
         public enum PlayerState
         {
