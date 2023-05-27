@@ -52,9 +52,6 @@ namespace StardenRPG.Screens
         // Add the input state object
         private InputState input = new InputState();
 
-        // Health Bar
-        private HealthBar healthBar;
-
         public GameplayScreen(World world, Vector2 scaleFactor)
         {
             World = world;
@@ -155,9 +152,6 @@ namespace StardenRPG.Screens
                 // Create ParallaxBackground instance
                 float[] parallaxFactors = new float[] { 1f, 0.9f, 0.8f, 0.8f, 0.7f, 0.6f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0f };
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
-
-                // Health Bar
-                healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice);
 
                 // Create the player
                 Point characterSize = new Point(288 * 3, 128 * 3);
@@ -343,8 +337,6 @@ namespace StardenRPG.Screens
                 ScreenManager.LineBatch.DrawLineShape(fixture.Shape, Color.Black);
             }
             ScreenManager.LineBatch.End();
-
-            healthBar.Draw(spriteBatch, _player);
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);

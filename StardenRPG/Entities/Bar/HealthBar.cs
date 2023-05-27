@@ -17,17 +17,17 @@ namespace StardenRPG.Entities.Bar
         {
             _texture = new Texture2D(graphicsDevice, 1, 1);
             _texture.SetData(new[] { Color.White });
-            _position = new Vector2(40, 40);
-            _rectangle = new Rectangle((int)_position.X, (int)_position.Y, Player.MaxHealth * 4, 30);
-            _rectangleBG = new Rectangle((int)_position.X, (int)_position.Y, Player.MaxHealth * 4, 30);
+            _position = new Vector2(7, 12);
+            _rectangle = new Rectangle((int)_position.X, (int)_position.Y, Player.MaxHealth, 1);
+            _rectangleBG = new Rectangle((int)_position.X, (int)_position.Y, Player.MaxHealth, 1);
             _color = Color.Red;
             _colorBG = Color.Gray;
         }
 
         public void Draw(SpriteBatch spriteBatch, Player player)
         {
-            _rectangleBG.Width = Player.MaxHealth * 4;
-            _rectangle.Width = player.Health * 4;
+            _rectangleBG.Width = Player.MaxHealth / 6;
+            _rectangle.Width = player.Health / 6;
             spriteBatch.Draw(_texture, _rectangleBG, _colorBG);
             spriteBatch.Draw(_texture, _rectangle, _color);
 
