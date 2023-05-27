@@ -8,11 +8,13 @@ using StardenRPG.StateManagement;
 using StardenRPG.Entities.Weapons;
 using StardenRPG.Entities.RPGsystem;
 using StardenRPG.Entities.ItemDrop;
+using StardenRPG.Entities.Bar;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using tainicom.Aether.Physics2D.Common.TextureTools;
+using StardenRPG.Entities.Bar;
 
 namespace StardenRPG.Entities.Character
 {
@@ -21,6 +23,7 @@ namespace StardenRPG.Entities.Character
         // Player RPG Stats
         public RPGCharacter CharacterStats { get; set; }
         public Money playerMoney { get; set; }
+        //public HealthBar healthBar { get; set; }
 
         public enum PlayerState
         {
@@ -195,12 +198,18 @@ namespace StardenRPG.Entities.Character
                 CurrentPlayerState = PlayerState.Attacking;
             }
 
+            // Test HealthBar
+            if (input.IsKeyPressed(Keys.H, ControllingPlayer, out player) && input.IsKeyUp(Keys.H, ControllingPlayer, out player))
+            {
+                CharacterStats.CurrentHealth -= 10;
+            }
+
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
 
             
             Vector2 movementDirection = Vector2.Zero;
 
-            float baseSpeed = 25.5f; // default = 250, 21.5
+            float baseSpeed = 25.5f; // default = 250, 25.5
             float runningMultiplier = baseSpeed * 2f;
             float moveSpeed = IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
 

@@ -14,6 +14,9 @@ using tainicom.Aether.Physics2D.Dynamics;
 using System.Text.RegularExpressions;
 using StardenRPG.Entities.Monster;
 using tainicom.Aether.Physics2D.Common;
+using StardenRPG.Entities.Bar;
+using System.Numerics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace StardenRPG.Screens
 {
@@ -149,6 +152,9 @@ namespace StardenRPG.Screens
                 // Create ParallaxBackground instance
                 float[] parallaxFactors = new float[] { 1f, 0.9f, 0.8f, 0.8f, 0.7f, 0.6f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0f };
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
+
+                // Health Bar
+                //healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice);
 
                 // Create the player
                 Point characterSize = new Point(288 * 3, 128 * 3);
@@ -305,7 +311,7 @@ namespace StardenRPG.Screens
             batchEffect.Projection = Camera.Projection;
 
             /* Old Code of draw sprite + camera(Old) */
-            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, _camera.GetViewMatrix());
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, camera.GetViewMatrix());
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
             // Draw Background..
@@ -313,6 +319,9 @@ namespace StardenRPG.Screens
 
             // Draw the parallax background
             //_parallaxBackground.Draw(spriteBatch, _camera.Position, _camera.GetViewMatrix());
+
+            // Draw the parallax background
+            
 
             // Draw the player Avatar
             _player.Draw(gameTime, spriteBatch, SpriteEffects.None); // Replace 'playerAvatar.Draw(gameTime, spriteBatch);' with this line
@@ -331,7 +340,6 @@ namespace StardenRPG.Screens
                 ScreenManager.LineBatch.DrawLineShape(fixture.Shape, Color.Black);
             }
             ScreenManager.LineBatch.End();
-
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);

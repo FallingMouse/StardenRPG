@@ -21,6 +21,7 @@ using StardenRPG;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics.Tracing;
 using StardenRPG.Entities.Monster;
+using StardenRPG.Entities.Bar;
 
 namespace StardenRPG.Screens
 {
@@ -68,6 +69,10 @@ namespace StardenRPG.Screens
 
         private float _acceleration;
         private const float MaxSpeed = 50.0f;
+
+        // Health Bar
+        private HealthBar _healthBar;
+        private Texture2D _healthBox;
 
         // Add the input state object
         private InputState input = new InputState();
@@ -130,6 +135,13 @@ namespace StardenRPG.Screens
             //Camera.TrackingBody = _car;
             Camera.TrackingBody = _player.Body;
             Camera.EnableTracking = true;
+            #endregion
+
+            #region Load Content
+            // Health Bar
+            _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
+            _healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
+            _healthBar.SetHealthBox(_healthBox);
             #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -349,6 +361,9 @@ namespace StardenRPG.Screens
                 // Update the player Avatar
                 _player.Update(gameTime);
 
+                // Update the Health Bar
+                _healthBar.Update(gameTime, _player);
+
                 // Update the slime
                 slime.Update(gameTime, _player);
             }
@@ -410,6 +425,7 @@ namespace StardenRPG.Screens
             spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(292f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
             spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
+            _healthBar.Draw(spriteBatch, _player);
 
             spriteBatch.End();
             #endregion
