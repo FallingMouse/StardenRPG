@@ -36,7 +36,7 @@ namespace StardenRPG.Screens
 
         // Old Ground
         protected Ground groundOBJ, groundOBJ2;
-        private Texture2D _groundTexture, _groundTexture2;
+        private Texture2D _groundForestTexture, _groundTexture2;
         private Vector2 groundPosition;
         float groundWidth, groundHeight;
 
@@ -80,7 +80,7 @@ namespace StardenRPG.Screens
                 //_camera.CharacterOffset = new Vector2(399, 0);
 
                 // Initialize the ground texture
-                _groundTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
+                _groundForestTexture = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
                 _groundTexture2 = new Texture2D(ScreenManager.Game.GraphicsDevice, 1, 1);
                 _groundTexture2.SetData(new[] { Color.White });
                 CreateGround();
