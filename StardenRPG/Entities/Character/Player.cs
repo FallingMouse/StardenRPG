@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using StardenRPG.Entities.Weapons;
+using StardenRPG.Entities.RPGsystem;
+using StardenRPG.Entities.ItemDrop;
+using StardenRPG.Entities.Bar;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
@@ -16,15 +19,18 @@ namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
-        // HealthBar
-        public int Health { get; set; }
-        public const int MaxHealth = 100;
+        // Player RPG Stats
+        public RPGCharacter CharacterStats { get; set; }
+        public Money playerMoney { get; set; }
+        //public HealthBar healthBar { get; set; }
 
         public enum PlayerState
         {
             Idle,
             Walking,
-            Attacking
+            Attacking,
+            TakingHit,
+            Death
         }
 
         public enum FacingDirection
@@ -49,17 +55,16 @@ namespace StardenRPG.Entities.Character
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
             : base(spriteSheet, size, origin, world, startPosition, new Vector2(2, 3), new Vector2(0.3f, 0.5f))
         {
-            // HealthBar
-            Health = MaxHealth;
-
-            Body.Tag = "Player";
+            Body.Tag = this;
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("PlayerIdle");
 
             SizeExpand = 1; // Old is 3
 
-            // Create the actual size of the character and the offset
+            // Create Character RPG Stats
+            CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
+            playerMoney = new Money(100);
 
             // Create weapon for characterr
             CurrentWeapon = new Sword();
@@ -93,6 +98,12 @@ namespace StardenRPG.Entities.Character
                     break;
                 case "PlayerAttack":
                     CurrentPlayerState = PlayerState.Attacking;
+                    break;
+                case "PlayerTakeHit":
+                    CurrentPlayerState = PlayerState.TakingHit;
+                    break;
+                case "PlayerDeath":
+                    CurrentPlayerState = PlayerState.Death;
                     break;
             }
             
@@ -174,7 +185,8 @@ namespace StardenRPG.Entities.Character
                     animationPlayer.StartClip("PlayerWalkRight");
                 }
             }
-            else if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
+            else if (CurrentPlayerState != PlayerState.Attacking 
+                || animationPlayer.IsAnimationComplete("PlayerAttack"))
             {
                 animationPlayer.StartClip("PlayerIdle");
             }
@@ -188,7 +200,7 @@ namespace StardenRPG.Entities.Character
             // Test HealthBar
             if (input.IsKeyPressed(Keys.H, ControllingPlayer, out player) && input.IsKeyUp(Keys.H, ControllingPlayer, out player))
             {
-                Health -= 10;
+                CharacterStats.CurrentHealth -= 10;
             }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
@@ -196,7 +208,7 @@ namespace StardenRPG.Entities.Character
             
             Vector2 movementDirection = Vector2.Zero;
 
-            float baseSpeed = 25.5f; // default = 250, 21.5
+            float baseSpeed = 40.5f; // default = 250, 25.5
             float runningMultiplier = baseSpeed * 2f;
             float moveSpeed = IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
 
@@ -209,11 +221,6 @@ namespace StardenRPG.Entities.Character
                 case "PlayerWalkRight":
                     movementDirection = new Vector2(1, 0);
                     //Body.ApplyTorque(-100);
-                    break;
-                case "PlayerIdle":
-                    break;
-                case "PlayerAttack":
-                    movementDirection = new Vector2(0, 0);
                     break;
             }
 

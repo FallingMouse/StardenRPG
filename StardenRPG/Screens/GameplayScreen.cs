@@ -157,7 +157,7 @@ namespace StardenRPG.Screens
                 _parallaxBackground = new ParallaxBackground(backgroundLayers, parallaxFactors, ScreenManager.GraphicsDevice.Viewport);
 
                 // Health Bar
-                healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice);
+                //healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice);
 
                 // Create the player
                 Point characterSize = new Point(288 * 3, 128 * 3);

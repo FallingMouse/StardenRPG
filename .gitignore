@@ -58,3 +58,6 @@ monodroid*.msi
 /CompiledContent/Windows/IgnoreMe.dll
 *.cachefile
 *.dll
+
+#assets
+Music/
