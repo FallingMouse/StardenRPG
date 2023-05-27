@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using StardenRPG.Entities.Weapons;
+using StardenRPG.Entities.RPGsystem;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
@@ -16,6 +17,9 @@ namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
+        // Player RPG Stats
+        public RPGCharacter CharacterStats { get; set; }
+
         public enum PlayerState
         {
             Idle,
@@ -52,7 +56,8 @@ namespace StardenRPG.Entities.Character
 
             SizeExpand = 1; // Old is 3
 
-            // Create the actual size of the character and the offset
+            // Create Character RPG Stats
+            CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
 
             // Create weapon for characterr
             CurrentWeapon = new Sword();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using StardenRPG.Entities.RPGsystem;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using tainicom.Aether.Physics2D.Common;
@@ -13,6 +14,9 @@ namespace StardenRPG.Entities.Monster
 {
     public class Slime : Sprite
     {
+        // Slime RPG Stats
+        public RPGCharacter CharacterStats { get; set; }
+
         private float moveSpeed;
         private float attackRange;
         private float attackCooldown;
@@ -31,6 +35,9 @@ namespace StardenRPG.Entities.Monster
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("SlimeIdle");
+
+            // Create Slime RPG Stats
+            CharacterStats = new RPGCharacter("Slime", 100, 10, Element.Fire);
 
             moveSpeed = 10f;
             attackRange = 1f;
