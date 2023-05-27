@@ -72,6 +72,7 @@ namespace StardenRPG.Screens
 
         // Health Bar
         private HealthBar _healthBar;
+        private Texture2D _healthBox;
 
         // Add the input state object
         private InputState input = new InputState();
@@ -136,8 +137,12 @@ namespace StardenRPG.Screens
             Camera.EnableTracking = true;
             #endregion
 
+            #region Load Content
             // Health Bar
             _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
+            _healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
+            _healthBar.SetHealthBox(_healthBox);
+            #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
