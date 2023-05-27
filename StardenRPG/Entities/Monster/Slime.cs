@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardenRPG.Entities.Character;
 using StardenRPG.Entities.RPGsystem;
+using StardenRPG.Entities.ItemDrop;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using tainicom.Aether.Physics2D.Common;
@@ -15,8 +16,11 @@ namespace StardenRPG.Entities.Monster
 {
     public class Slime : Sprite
     {
+        World world;
+
         // Slime RPG Stats
         public RPGCharacter CharacterStats { get; set; }
+        public bool IsDeath { get; set; }
 
         Player _player;
 
@@ -41,6 +45,8 @@ namespace StardenRPG.Entities.Monster
             : base(spriteSheet, size, origin, world, startPosition, new Vector2(1, 1), new Vector2(0, -0.5f))
         {
             Body.Tag = this;
+            this.world = world;
+            IsDeath = false;
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("SlimeIdle");
@@ -48,7 +54,7 @@ namespace StardenRPG.Entities.Monster
             this._player = _player;
 
             // Create Slime RPG Stats
-            CharacterStats = new RPGCharacter("Slime", 100, 10, Element.Fire);
+            CharacterStats = new RPGCharacter("Slime", 100, 10, Element.Plant);
 
             moveSpeed = 10f;
             attackRange = 1f;
@@ -59,6 +65,17 @@ namespace StardenRPG.Entities.Monster
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float distanceToPlayer = Vector2.Distance(Body.Position, _player.Position);
+
+            // Check if the slime's HP is zero or less
+            if (CharacterStats.CurrentHealth <= 0)
+            {
+                // Drop money
+                DropMoney();
+
+                // Destroy this Slime instance
+                IsDeath = true;
+                Destroy();
+            }
 
             // Check if the player is within the slime's attack range
             if (distanceToPlayer <= attackRange)
@@ -98,13 +115,35 @@ namespace StardenRPG.Entities.Monster
             // Check if this Slime is colliding with a Player
             //if (other.Body.Tag.Equals("Player"))
             if (other.Body.Tag == _player)
+            {
                 _player.CharacterStats.TakeDamage(50);
+                CharacterStats.TakeDamage(50);
+                //Body.Position -= new Vector2(1);
+            }
             /*if (other.Body.Tag is Player player)
             {
                 // If so, deal damage to the player
                 _player.CharacterStats.TakeDamage(10);
             }*/
             return true;
+        }
+
+        public void DropMoney()
+        {
+            int moneyToDrop = 10;
+
+            Money droppedMoney = new Money(moneyToDrop);
+
+            //world.AddDroppedItem(droppedMoney, Position);
+        }
+
+        public void Destroy()
+        {
+            // You can call a method to remove this slime from the game world. 
+            // The implementation of this method depends on how you're managing game entities in your game world.
+            // Here's a simple example:
+            if (Body != null && Body.FixtureList.Count > 0)
+                Body.Remove(Body.FixtureList[0]);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)

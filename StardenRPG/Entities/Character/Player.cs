@@ -7,6 +7,7 @@ using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using StardenRPG.Entities.Weapons;
 using StardenRPG.Entities.RPGsystem;
+using StardenRPG.Entities.ItemDrop;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
@@ -19,6 +20,7 @@ namespace StardenRPG.Entities.Character
     {
         // Player RPG Stats
         public RPGCharacter CharacterStats { get; set; }
+        public Money playerMoney { get; set; }
 
         public enum PlayerState
         {
@@ -60,6 +62,7 @@ namespace StardenRPG.Entities.Character
 
             // Create Character RPG Stats
             CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
+            playerMoney = new Money(100);
 
             // Create weapon for characterr
             CurrentWeapon = new Sword();
