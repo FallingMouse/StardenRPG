@@ -7,6 +7,7 @@ using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
+using static StardenRPG.Entities.Character.Player;
 
 namespace StardenRPG.Entities.Monster
 {
@@ -17,48 +18,29 @@ namespace StardenRPG.Entities.Monster
         private float attackCooldown;
         private float timeSinceLastAttack;
         
-        private float moveRange = 600f; // You can adjust this value based on your game's requirements
+        private float moveRange = 10f; // You can adjust this value based on your game's requirements
+
+        public FacingDirection CurrentFacingDirection { get; set; } = FacingDirection.Right;
+
+        SpriteEffects _spriteEffects;
 
         public Slime(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
-            : base(spriteSheet, size, origin, world, startPosition)
+            : base(spriteSheet, size, origin, world, startPosition, new Vector2(1, 1), new Vector2(0, -0.5f))
         {
+            Body.Tag = "Slime";
+
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("SlimeIdle");
 
-            moveSpeed = 40f;
-            attackRange = 60f;
+            moveSpeed = 10f;
+            attackRange = 1f;
             attackCooldown = 1f;
             timeSinceLastAttack = 0f;
-
-            /*DrawWidth = 64; // 16 * 4
-            DrawHeight = 48; // 12 * 4
-
-            _frameSizes = new Dictionary<string, List<Rectangle>> 
-            {
-                { "SlimeIdle", new List<Rectangle> {
-                        new Rectangle(0 + 25, 0 + 29, 16, 12),
-                        new Rectangle(64 + 25, 0 + 30, 18, 11),
-                        new Rectangle(128 + 23, 0 + 31, 20, 10),
-                        new Rectangle(192 + 24, 0 + 30, 18, 11), 
-                } }, 
-            };*/
         }
         public void Update(GameTime gameTime, Vector2 playerPosition)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             float distanceToPlayer = Vector2.Distance(Body.Position, playerPosition);
-
-            if (animationPlayer != null && animationPlayer.CurrentClip != null)
-            {
-                string currentClipName = animationPlayer.CurrentClip.Name;
-                /*if (_frameSizes.ContainsKey(currentClipName))
-                {
-                    Rectangle currentFrame = _frameSizes[currentClipName][animationPlayer.CurrentFrameIndex];
-                    DrawWidth = currentFrame.Width * 4;
-                    DrawHeight = currentFrame.Height * 4;
-                    UpdateFixtureSize(DrawWidth, DrawHeight);
-                }*/
-            }
 
             // Check if the player is within the slime's attack range
             if (distanceToPlayer <= attackRange)
@@ -91,35 +73,26 @@ namespace StardenRPG.Entities.Monster
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, SpriteEffects spriteEffects)
         {
-            SpriteEffects _spriteEffects = spriteEffects;
-            /*if (animationPlayer != null && animationPlayer.CurrentClip != null)
+            _spriteEffects = spriteEffects;
+
+            if (animationPlayer != null && animationPlayer.CurrentClip != null)
             {
-                if (animationPlayer.CurrentClip.Name == "SlimeIdle")
-                {
-                    DrawWidth = 64; // 16 * 4
-                    DrawHeight = 48; // 12 * 4
-                    UpdateFixtureSize(DrawWidth, DrawHeight);
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerWalkRight")
-                {
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
-                    //UpdateFixtureSize(DrawWidth, DrawHeight);
-                }
-                else if (animationPlayer.CurrentClip.Name == "PlayerWalkLeft")
+                if (CurrentFacingDirection == FacingDirection.Right)
                 {
                     _spriteEffects = SpriteEffects.FlipHorizontally;
-                    DrawWidth = 112; // 28 * 4
-                    DrawHeight = 124; // 31 * 4
                 }
-                else if (animationPlayer.CurrentClip.Name == "PlayerAttack")
-                {
-                    DrawWidth = 192; // 48 * 4;
-                    DrawHeight = 160; // 40 * 4;
-                }
-            }*/
+            }
 
-            base.Draw(gameTime, spriteBatch, _spriteEffects);
+            spriteBatch.Draw(
+                texture: spriteTexture,
+                destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), (int)Size.X, (int)Size.Y),
+                sourceRectangle: sourceRect,
+                color: Tint,
+                rotation: (float)Math.PI,
+                origin: /*Vector2.Zero*/new Vector2(64 / 2, 41 - 16),
+                effects: _spriteEffects,
+                layerDepth: 0
+            );
         }
     }
 }

@@ -116,7 +116,7 @@ namespace StardenRPG
             Position = position;
 
             Body = World.CreateBody(Position, 0, BodyType.Dynamic);
-            var fixture = Body.CreateRectangle(Size.X, Size.Y, 1f, new Vector2(-Size.X / 2, -Size.Y / 2));
+            var fixture = Body.CreateRectangle(Size.X, Size.Y, 2f, /*Vector2.Zero*/new Vector2(-Size.X / 2, Size.Y / 2));
             fixture.Tag = this;
             //Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
             //Body.BodyType = BodyType.Dynamic;
@@ -134,7 +134,7 @@ namespace StardenRPG
             Position = position;
 
             Body = World.CreateBody(Position, 0, BodyType.Dynamic);
-            var fixture = Body.CreateRectangle(widthNheight.X, widthNheight.Y, 1f, new Vector2(-_offset.X, -_offset.Y));
+            var fixture = Body.CreateRectangle(widthNheight.X, widthNheight.Y, 2f, /*Vector2.Zero*/new Vector2(_offset.X, _offset.Y));
             fixture.Tag = this;
             //Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
             //Body.BodyType = BodyType.Dynamic;
