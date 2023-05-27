@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using StardenRPG.SpriteManager;
 using StardenRPG.StateManagement;
 using StardenRPG.Entities.Weapons;
+using StardenRPG.Entities.RPGsystem;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
@@ -17,11 +18,16 @@ namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
+        // Player RPG Stats
+        public RPGCharacter CharacterStats { get; set; }
+
         public enum PlayerState
         {
             Idle,
             Walking,
-            Attacking
+            Attacking,
+            TakingHit,
+            Death
         }
 
         public enum FacingDirection
@@ -55,14 +61,15 @@ namespace StardenRPG.Entities.Character
         public Player(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition, Dictionary<string, SpriteSheetAnimationClip> spriteAnimationClips)
             : base(spriteSheet, size, origin, world, startPosition, new Vector2(2, 3), new Vector2(0.3f, 0.5f))
         {
-            Body.Tag = "Player";
+            Body.Tag = this;
 
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("PlayerIdle");
 
             SizeExpand = 1; // Old is 3
 
-            // Create the actual size of the character and the offset
+            // Create Character RPG Stats
+            CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
 
             // Create weapon for characterr
             CurrentWeapon = new Sword();
@@ -118,6 +125,12 @@ namespace StardenRPG.Entities.Character
                     break;
                 case "PlayerAttack":
                     CurrentPlayerState = PlayerState.Attacking;
+                    break;
+                case "PlayerTakeHit":
+                    CurrentPlayerState = PlayerState.TakingHit;
+                    break;
+                case "PlayerDeath":
+                    CurrentPlayerState = PlayerState.Death;
                     break;
             }
             
@@ -231,7 +244,8 @@ namespace StardenRPG.Entities.Character
                     animationPlayer.StartClip("PlayerWalkRight");
                 }
             }
-            else if (CurrentPlayerState != PlayerState.Attacking || animationPlayer.IsAnimationComplete("PlayerAttack"))
+            else if (CurrentPlayerState != PlayerState.Attacking 
+                || animationPlayer.IsAnimationComplete("PlayerAttack"))
             {
                 animationPlayer.StartClip("PlayerIdle");
             }
@@ -260,11 +274,6 @@ namespace StardenRPG.Entities.Character
                 case "PlayerWalkRight":
                     movementDirection = new Vector2(1, 0);
                     //Body.ApplyTorque(-100);
-                    break;
-                case "PlayerIdle":
-                    break;
-                case "PlayerAttack":
-                    movementDirection = new Vector2(0, 0);
                     break;
             }
 
