@@ -52,9 +52,6 @@ namespace StardenRPG.Screens
         // Add the input state object
         private InputState input = new InputState();
 
-        // Health Bar
-        private HealthBar healthBar;
-
         public GameplayScreen(World world, Vector2 scaleFactor)
         {
             World = world;
@@ -343,8 +340,6 @@ namespace StardenRPG.Screens
                 ScreenManager.LineBatch.DrawLineShape(fixture.Shape, Color.Black);
             }
             ScreenManager.LineBatch.End();
-
-            healthBar.Draw(spriteBatch, _player);
 
             // Draw Foreground..
             //spriteBatch.Draw(_content.Load<Texture2D>("Backgrounds/TestFG"), new Rectangle(0, 0, ScreenManager.GraphicsDevice.Viewport.Width, ScreenManager.GraphicsDevice.Viewport.Height), null, Color.White);

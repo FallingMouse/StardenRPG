@@ -14,6 +14,7 @@ using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using tainicom.Aether.Physics2D.Common.TextureTools;
+using StardenRPG.Entities.Bar;
 
 namespace StardenRPG.Entities.Character
 {
@@ -208,7 +209,7 @@ namespace StardenRPG.Entities.Character
             
             Vector2 movementDirection = Vector2.Zero;
 
-            float baseSpeed = 40.5f; // default = 250, 25.5
+            float baseSpeed = 25.5f; // default = 250, 25.5
             float runningMultiplier = baseSpeed * 2f;
             float moveSpeed = IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
 
