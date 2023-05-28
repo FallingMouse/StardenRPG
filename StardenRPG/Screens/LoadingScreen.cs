@@ -1,6 +1,7 @@
 using System;
 using StardenRPG.StateManagement;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace StardenRPG.Screens
 {
@@ -78,6 +79,8 @@ namespace StardenRPG.Screens
             if (ScreenState == ScreenState.Active && ScreenManager.GetScreens().Length == 1)
                 _otherScreensAreGone = true;
 
+            ScreenManager.GraphicsDevice.Clear(Color.Black);
+
             // The gameplay screen takes a while to load, so we display a loading
             // message while that is going on, but the menus load very quickly, and
             // it would look silly if we flashed this up for just a fraction of a
@@ -103,6 +106,7 @@ namespace StardenRPG.Screens
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font, message, textPosition, color);
                 spriteBatch.End();
+
             }
         }
     }
