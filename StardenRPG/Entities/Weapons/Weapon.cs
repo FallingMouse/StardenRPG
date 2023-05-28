@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tainicom.Aether.Physics2D.Common;
+using tainicom.Aether.Physics2D.Dynamics;
 
 namespace StardenRPG.Entities.Weapons
 {
@@ -18,6 +20,9 @@ namespace StardenRPG.Entities.Weapons
         {
             return HitboxSizes[animationName][frameIndex];
         }
+
+        //public abstract void findSwordVertices(Body swordBody, Vector2 position);
+        public abstract void findSwordVertices(Body swordBody);
     }
 
 }

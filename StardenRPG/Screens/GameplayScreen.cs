@@ -260,7 +260,7 @@ namespace StardenRPG.Screens
             base.HandleInput(gameTime, input);
             
             // Pass input to the player's HandleInput method
-            player.HandleInput(input);
+            _player.HandleInput((gameTime, input);
 
         }*/
 
@@ -284,7 +284,6 @@ namespace StardenRPG.Screens
                 _player.HandleInput(input); 
             }
         }
-
 
         // This method checks the GameScreen.IsActive property, so the game will
         // stop updating when the pause menu is active, or if you tab away to a different application.
@@ -312,31 +311,7 @@ namespace StardenRPG.Screens
                 // Update Camera
                 Camera.Update(gameTime);
 
-                //64 pixels on your screen should be 1 meter in the physical world
-                Vector2 movementDirection = Vector2.Zero;
-
-                float baseSpeed = 55000f;
-                float runningMultiplier = baseSpeed * 64f;
-                float moveSpeed = _player.IsRunning ? baseSpeed * runningMultiplier : baseSpeed * runningMultiplier;
-
-                switch (_player.animationPlayer.CurrentClip.Name)
-                {
-                    case "PlayerWalkLeft":
-                        movementDirection = new Vector2(-1, 0);
-                        break;
-                    case "PlayerWalkRight":
-                        movementDirection = new Vector2(1, 0);
-                        break;
-                    case "PlayerIdle":
-                        break;
-                    case "PlayerAttack":
-                        movementDirection = new Vector2(0, 0);
-                        break;
-                }
-
-                //player.Body.LinearVelocity = movementDirection * moveSpeed;
-                _player.Body.ApplyForce(movementDirection * moveSpeed);
-                //player.Body.ApplyLinearImpulse(movementDirection * moveSpeed);
+                //HandleInput(gameTime, input);
             }
         }
 

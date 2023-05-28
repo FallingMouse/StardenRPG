@@ -32,23 +32,23 @@ namespace StardenRPG
         public Vector2 Offset { get; set; } = Vector2.Zero;
         public Dictionary<string, List<Vector2>> OffsetActualSizes { get; set; }
 
-        public readonly Texture2D TextureTest;
+        public readonly Texture2D TextureForSprite;
         public readonly Vector2 SizeVT;
         public readonly Vector2 TexelSize;
         public Vector2 Origin;
 
         public Sprite(Texture2D texture, Vector2 origin)
         {
-            TextureTest = texture;
-            SizeVT = new Vector2(TextureTest.Width, TextureTest.Height);
+            TextureForSprite = texture;
+            SizeVT = new Vector2(TextureForSprite.Width, TextureForSprite.Height);
             TexelSize = Vector2.One / SizeVT;
             Origin = origin;
         }
 
         public Sprite(Texture2D texture)
         {
-            TextureTest = texture;
-            SizeVT = new Vector2(TextureTest.Width, TextureTest.Height);
+            TextureForSprite = texture;
+            SizeVT = new Vector2(TextureForSprite.Width, TextureForSprite.Height);
             TexelSize = Vector2.One / SizeVT;
             Origin = SizeVT / 2f;
         }
@@ -116,7 +116,25 @@ namespace StardenRPG
             Position = position;
 
             Body = World.CreateBody(Position, 0, BodyType.Dynamic);
-            var fixture = Body.CreateRectangle(Size.X, Size.Y, 1f, Vector2.Zero);
+            var fixture = Body.CreateRectangle(Size.X, Size.Y, 2f, /*Vector2.Zero*/new Vector2(-Size.X / 2, Size.Y / 2));
+            fixture.Tag = this;
+            //Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
+            //Body.BodyType = BodyType.Dynamic;
+            Body.FixedRotation = true;
+            Body.OnCollision += OnCollision;
+        }
+
+        public Sprite(Texture2D spriteSheetAsset, Point size, Point cellSize, World world, Vector2 position, Vector2 widthNheight, Vector2 _offset)
+        {
+            spriteTexture = spriteSheetAsset;
+            Tint = Color.White;
+            Size = size;
+            CellSize = cellSize;
+            World = world;
+            Position = position;
+
+            Body = World.CreateBody(Position, 0, BodyType.Dynamic);
+            var fixture = Body.CreateRectangle(widthNheight.X, widthNheight.Y, 2f, /*Vector2.Zero*/new Vector2(_offset.X, _offset.Y));
             fixture.Tag = this;
             //Body = World.CreateRectangle(Size.X, Size.Y, 1, Position);
             //Body.BodyType = BodyType.Dynamic;

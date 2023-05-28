@@ -155,6 +155,14 @@ namespace StardenRPG.StateManagement
 
             Vector2 camMove = Vector2.Zero;
 
+            if (input.IsKeyPressed(Keys.Up, ControllingPlayer, out player))
+                camMove.Y += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (input.IsKeyPressed(Keys.Down, ControllingPlayer, out player))
+                camMove.Y -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (input.IsKeyPressed(Keys.Left, ControllingPlayer, out player))
+                camMove.X -= 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (input.IsKeyPressed(Keys.Right, ControllingPlayer, out player))
+                camMove.X += 10f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (input.IsKeyPressed(Keys.PageUp, ControllingPlayer, out player))
                 Camera.Zoom += 5f * (float)gameTime.ElapsedGameTime.TotalSeconds * Camera.Zoom / 20f;
             if (input.IsKeyPressed(Keys.PageDown, ControllingPlayer, out player))
