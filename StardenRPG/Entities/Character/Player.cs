@@ -19,6 +19,7 @@ using Microsoft.VisualBasic;
 using tainicom.Aether.Physics2D.Collision;
 using StardenRPG.Entities.Monster;
 using StardenRPG.Entities.Bar;
+using System.Formats.Asn1;
 
 namespace StardenRPG.Entities.Character
 {
@@ -64,7 +65,7 @@ namespace StardenRPG.Entities.Character
         public PolygonShape chassis;
 
         //import Slime
-        public Slime _monster;
+        //Slime _monster;
 
        
         SpriteEffects _spriteEffects;
@@ -100,6 +101,7 @@ namespace StardenRPG.Entities.Character
             WeaponBodyLeftSide.FixedRotation = true;
             WeaponBodyLeftSide.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBodyLeftSide.Enabled = false;
+            WeaponBodyLeftSide.Tag = new Tag("weaponHitLeft");
 
             //fix position
             _swordLeftSide = new Vector2(-0.8f , -1.0f);
@@ -119,6 +121,7 @@ namespace StardenRPG.Entities.Character
             WeaponBodyRightSide.FixedRotation = true;
             WeaponBodyRightSide.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBodyRightSide.Enabled = false;
+            WeaponBodyRightSide.Tag = new Tag("weaponHitRight");
 
             //fix position
             _swordRightSide = new Vector2(4.4f, -1.0f);

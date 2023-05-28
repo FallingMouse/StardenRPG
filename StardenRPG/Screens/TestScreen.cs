@@ -38,7 +38,7 @@ namespace StardenRPG.Screens
         private readonly Vector2 _scaleFactor;
 
         protected Player _player;
-        protected Slime slime;
+        protected Slime slime, slime2;
 
         private Body _ground;
 
@@ -139,7 +139,7 @@ namespace StardenRPG.Screens
 
             #region Load Content
             // Health Bar
-            _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
+            _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime);
             _healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
             _healthBar.SetHealthBox(_healthBox);
             #endregion
@@ -346,6 +346,11 @@ namespace StardenRPG.Screens
             slime = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, slimeStartPosition, spriteAnimationClips);
             slime.setPlayer(_player);
             slime.Body.LinearDamping = 10f;
+
+            //another slime
+            slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(60.0f, 0f), spriteAnimationClips);
+            slime2.setPlayer(_player);
+            slime2.Body.LinearDamping = 10f;
         }
         #endregion
 
@@ -367,10 +372,11 @@ namespace StardenRPG.Screens
                 _player.Update(gameTime);
 
                 // Update the Health Bar
-                _healthBar.Update(gameTime, _player);
+                _healthBar.Update(gameTime, _player, slime);
 
                 // Update the slime
                 slime.Update(gameTime, _player);
+                slime2.Update(gameTime, _player);
             }
         }
 
