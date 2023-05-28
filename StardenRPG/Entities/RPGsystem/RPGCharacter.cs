@@ -22,14 +22,16 @@ namespace StardenRPG.Entities.RPGsystem
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
         public int Stamina { get; set; }
+        public int ATK { get; set; }
         public Element ElementalType { get; set; }
 
-        public RPGCharacter(string name, int maxHealth, int stamina, Element element)
+        public RPGCharacter(string name, int maxHealth, int stamina,int atk, Element element)
         {
             Name = name;
             MaxHealth = maxHealth;
             CurrentHealth = maxHealth;
             Stamina = stamina;
+            ATK = atk;
             ElementalType = element;
         }
 

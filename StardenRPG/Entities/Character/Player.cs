@@ -86,7 +86,7 @@ namespace StardenRPG.Entities.Character
             SizeExpand = 1; // Old is 3
 
             // Create Character RPG Stats
-            CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
+            CharacterStats = new RPGCharacter("Player", 100, 10, 20, Element.Fire);
             playerMoney = new Money(100);
 
             // Create weapon for characterr
@@ -136,6 +136,20 @@ namespace StardenRPG.Entities.Character
 
             _swordJoint = new WheelJoint(Body, WeaponBodyRightSide, new Vector2(WeaponBodyRightSide.Position.X, WeaponBodyRightSide.Position.Y), new Vector2(_swordBodyPosition.X, _swordBodyPosition.Y), true);
             
+        }
+
+        public Element SwitchElement(Element currentElement, Element changedElement)
+        {
+            Element prevElement;
+            //check if element, player want to change is not the same
+            if (!currentElement.Equals(changedElement))
+            {
+                //prevElement = currentElement;
+                currentElement = changedElement;
+                //changedElement = currentElement;
+            }
+
+            return currentElement;
         }
 
         public override void Update(GameTime gameTime)
@@ -304,6 +318,22 @@ namespace StardenRPG.Entities.Character
             {
                 animationPlayer.StartClip("PlayerAttack");
                 CurrentPlayerState = PlayerState.Attacking;
+            }
+
+            //test change element
+            if(input.IsNewKeyPress(Keys.Q, ControllingPlayer,out player))
+            {
+                //Element newEle = Element.Water;
+                Element currentEle = CharacterStats.ElementalType;
+
+                if(currentEle.Equals(Element.Fire))
+                {
+                    CharacterStats.ElementalType = SwitchElement(currentEle, Element.Water);
+                }
+                else if (currentEle.Equals(Element.Water))
+                {
+                    CharacterStats.ElementalType = SwitchElement(currentEle, Element.Fire);
+                }
             }
 
             // Test HealthBar

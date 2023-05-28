@@ -96,7 +96,8 @@ namespace StardenRPG.Entities.Bar
 
             // Calculate the color interpolation value based on the slime's health percentage
             float healthSlimePercentage = _slime.CharacterStats.CurrentHealth / (float)_slime.CharacterStats.MaxHealth;
-            Color interpolatedColorSlime = Color.Lerp(startColor, endColor, healthSlimePercentage);
+            //Color interpolatedColorSlime = Color.Lerp(startColor, endColor, healthSlimePercentage);
+            Color interpolatedColorSlime = Color.Lerp(new Color(20, 10, 10), new Color(200, 100, 100), healthSlimePercentage);
 
             // Draw the actual health bar
             spriteBatch.Draw(

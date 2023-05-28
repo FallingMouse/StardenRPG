@@ -54,7 +54,7 @@ namespace StardenRPG.Entities.Monster
             this._player = _player;
 
             // Create Slime RPG Stats
-            CharacterStats = new RPGCharacter("Slime", 100, 10, Element.Plant);
+            CharacterStats = new RPGCharacter("Slime", 100, 10, 10, Element.Plant);
 
             moveSpeed = 10f;
             attackRange = 1f;
@@ -116,7 +116,7 @@ namespace StardenRPG.Entities.Monster
             //if (other.Body.Tag.Equals("Player"))
             if (other.Body.Tag == _player)
             {
-                _player.CharacterStats.TakeDamage(50);
+                _player.CharacterStats.TakeDamage(CharacterStats.ATK);
                 //CharacterStats.TakeDamage(50);
                 //Body.Position -= new Vector2(1);
             }
@@ -128,11 +128,15 @@ namespace StardenRPG.Entities.Monster
                     //check element
                     if(_player.CharacterStats.ElementalType == Element.Fire)
                     {
-                        CharacterStats.TakeDamage(40);
+                        CharacterStats.TakeDamage(_player.CharacterStats.ATK * 3);
+                    }
+                    else if(_player.CharacterStats.ElementalType == CharacterStats.ElementalType)
+                    {
+                        CharacterStats.TakeDamage(0); //if player and monster have same element, it's not make damage (triggered)
                     }
                     else
                     {
-                        CharacterStats.TakeDamage(10);
+                        CharacterStats.TakeDamage(_player.CharacterStats.ATK);
                     }
                     
                 }
@@ -145,11 +149,15 @@ namespace StardenRPG.Entities.Monster
                     //check element
                     if (_player.CharacterStats.ElementalType == Element.Water)
                     {
-                        CharacterStats.TakeDamage(40);
+                        CharacterStats.TakeDamage(_player.CharacterStats.ATK * 2);
+                    }
+                    else if (_player.CharacterStats.ElementalType == CharacterStats.ElementalType)
+                    {
+                        CharacterStats.TakeDamage(0); //if player and monster have same element, it's not make damage (triggered)
                     }
                     else
                     {
-                        CharacterStats.TakeDamage(10);
+                        CharacterStats.TakeDamage(_player.CharacterStats.ATK);
                     }
                 }
             }
