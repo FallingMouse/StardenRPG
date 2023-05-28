@@ -356,7 +356,7 @@ namespace StardenRPG.Screens
 
             // Pass input to the player's HandleInput method
             // Incoming
-            /*_player.HandleInput(gameTime, input);*/
+            _player.HandleInput(gameTime, input);
 
 
             if (_pauseAction.Occurred(input, ControllingPlayer, out player))

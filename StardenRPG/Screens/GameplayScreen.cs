@@ -281,7 +281,7 @@ namespace StardenRPG.Screens
             else
             {
                 base.HandleInput(gameTime, input);
-                _player.HandleInput(input); 
+                _player.HandleInput(gameTime, input); 
             }
         }
 
