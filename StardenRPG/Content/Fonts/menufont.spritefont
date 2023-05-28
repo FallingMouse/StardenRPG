@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
 	<Asset Type="Graphics:FontDescription">
-		<FontName>Arial</FontName>
-		<Size>20</Size>
-		<Spacing>2</Spacing>
+		<FontName>Arial Black</FontName>
+		<Size>30</Size>
+		<Spacing>3</Spacing>
 		<Style>Regular</Style>
 		<CharacterRegions>
 			<CharacterRegion>

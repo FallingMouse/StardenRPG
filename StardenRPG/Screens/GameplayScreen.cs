@@ -61,7 +61,6 @@ namespace StardenRPG.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
             _pauseAction = new InputAction(
-                new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back }, true);
         }
 
@@ -262,12 +261,34 @@ namespace StardenRPG.Screens
             _content.Unload();
         }
 
-        public override void HandleInput(GameTime gameTime, InputState input)
+        /*public override void HandleInput(GameTime gameTime, InputState input)
         {
             base.HandleInput(gameTime, input);
-
+            
             // Pass input to the player's HandleInput method
-            _player.HandleInput(gameTime, input);
+            _player.HandleInput((gameTime, input);
+
+        }*/
+
+        public override void HandleInput(GameTime gameTime, InputState input)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            // Look up inputs for the active player profile.
+            int playerIndex = (int)ControllingPlayer.Value;
+            var keyboardState = input.CurrentKeyboardStates[playerIndex];
+
+            PlayerIndex player;
+            if (_pauseAction.Occurred(input, ControllingPlayer, out player))
+            {
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            }
+            else
+            {
+                base.HandleInput(gameTime, input);
+                _player.HandleInput(gameTime, input); 
+            }
         }
 
         // This method checks the GameScreen.IsActive property, so the game will
