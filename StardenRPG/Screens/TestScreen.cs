@@ -18,6 +18,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StardenRPG;
+using StardenRPG.StateManagement;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics.Tracing;
 using StardenRPG.Entities.Monster;
@@ -88,9 +89,7 @@ namespace StardenRPG.Screens
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
             _pauseAction = new InputAction(
-                new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back }, true);
-
         }
         #endregion
 
@@ -376,7 +375,21 @@ namespace StardenRPG.Screens
             PlayerIndex player;
 
             // Pass input to the player's HandleInput method
+            // Incoming
             _player.HandleInput(gameTime, input);
+
+
+            if (_pauseAction.Occurred(input, ControllingPlayer, out player))
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            /*else if (input.IsKeyPressed(Keys.A, ControllingPlayer, out player))
+                _acceleration = Math.Min(_acceleration + (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), 1f);
+            else if (input.IsKeyPressed(Keys.D, ControllingPlayer, out player))
+                _acceleration = Math.Max(_acceleration - (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds), -1f);
+            else if (input.IsKeyPressed(Keys.S, ControllingPlayer, out player))
+                _acceleration = 0f;
+            //_acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);
+            else
+                _acceleration -= Math.Sign(_acceleration) * (float)(2.0 * gameTime.ElapsedGameTime.TotalSeconds);*/
 
             base.HandleInput(gameTime, input);
         }

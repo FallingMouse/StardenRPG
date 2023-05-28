@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Content;
@@ -88,7 +89,7 @@ namespace StardenRPG.StateManagement
             Content = Game.Content;
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            //_font = content.Load<SpriteFont>("menufont");
+            _font = Content.Load<SpriteFont>("Fonts/menufont");
             LineBatch = new LineBatch(GraphicsDevice);
             _blankTexture = Content.Load<Texture2D>("Backgrounds/Fade/blank");
 
