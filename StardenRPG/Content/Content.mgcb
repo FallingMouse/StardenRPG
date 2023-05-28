@@ -285,13 +285,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/menufont.spritefont
 
-#begin Fonts/pixelfont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/pixelfont.spritefont
-
 #begin MenuBackground/blank.png
 /importer:TextureImporter
 /processor:TextureProcessor
