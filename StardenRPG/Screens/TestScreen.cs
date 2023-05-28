@@ -40,7 +40,7 @@ namespace StardenRPG.Screens
         private readonly Vector2 _scaleFactor;
 
         protected Player _player;
-        protected Slime slime;
+        protected Slime slime, slime2;
 
         private Body _ground;
 
@@ -73,7 +73,8 @@ namespace StardenRPG.Screens
         private const float MaxSpeed = 50.0f;
 
         // Health Bar
-        private HealthBar _healthBar;
+        private HealthBar _healthBar, _healthBarTestNewSlime;
+        private Texture2D _healthBox;
 
         // Coin
         //private Coin _coin;
@@ -149,10 +150,14 @@ namespace StardenRPG.Screens
 
             #region Load Content
             // Health Bar
-            _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
-            // Coin
-            //Point coinPoint = new Point(16 / 16, 16 / 16);
-            //_coin = new Coin(_coinTexture, coinPoint, new Point(16, 16), World, slime.Position);
+            //_healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
+            _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime);
+            _healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
+            //_healthBar.SetHealthBox(_healthBox);
+
+            _healthBarTestNewSlime = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime2);
+            //_healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
+            //_healthBarTestNewSlime.SetHealthBox(_healthBox);
             #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -359,6 +364,11 @@ namespace StardenRPG.Screens
             slime.setCoinTexture(_coinTexture);
             slime.setGameplayScreen(this);
             slime.Body.LinearDamping = 10f;
+
+            //another slime
+            slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(50, 1), spriteAnimationClips);
+            slime2.setPlayer(_player);
+            slime2.Body.LinearDamping = 10f;
         }
         #endregion
 
@@ -381,7 +391,8 @@ namespace StardenRPG.Screens
                 _player.Update(gameTime);
 
                 // Update the Health Bar
-                _healthBar.Update(gameTime, _player);
+                _healthBar.Update(gameTime, _player, slime);
+                _healthBarTestNewSlime.Update(gameTime, _player, slime2);
 
                 // Update the slime
                 slime.Update(gameTime, _player);
@@ -391,6 +402,9 @@ namespace StardenRPG.Screens
                 {
                     coin.Update(gameTime);
                 }
+            }
+        }
+                slime2.Update(gameTime, _player);
             }
         }
 
@@ -453,6 +467,7 @@ namespace StardenRPG.Screens
 
             // Draw the slime
             slime.Draw(gameTime, spriteBatch, SpriteEffects.None);
+            slime2.Draw(gameTime, spriteBatch, SpriteEffects.None);
 
             // Draw Coin
             foreach (var coin in Coins)
@@ -471,6 +486,7 @@ namespace StardenRPG.Screens
             spriteBatch.Draw(_groundLabTexture.TextureForSprite, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             _healthBar.Draw(spriteBatch, _player);
+            _healthBarTestNewSlime.Draw(spriteBatch, _player);
 
             spriteBatch.End();
             #endregion

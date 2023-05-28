@@ -67,7 +67,7 @@ namespace StardenRPG.Entities.Character
         public PolygonShape chassis;
 
         //import Slime
-        public Slime _monster;
+        //Slime _monster;
 
        
         SpriteEffects _spriteEffects;
@@ -86,7 +86,7 @@ namespace StardenRPG.Entities.Character
             SizeExpand = 1; // Old is 3
 
             // Create Character RPG Stats
-            CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
+            CharacterStats = new RPGCharacter("Player", 100, 20, Element.Fire);
             //playerCoin = new Coin(100);
 
             // Create weapon for characterr
@@ -103,6 +103,7 @@ namespace StardenRPG.Entities.Character
             WeaponBodyLeftSide.FixedRotation = true;
             WeaponBodyLeftSide.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBodyLeftSide.Enabled = false;
+            WeaponBodyLeftSide.Tag = new Tag("weaponHitLeft");
 
             //fix position
             _swordLeftSide = new Vector2(-0.8f , -1.0f);
@@ -122,6 +123,7 @@ namespace StardenRPG.Entities.Character
             WeaponBodyRightSide.FixedRotation = true;
             WeaponBodyRightSide.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBodyRightSide.Enabled = false;
+            WeaponBodyRightSide.Tag = new Tag("weaponHitRight");
 
             //fix position
             _swordRightSide = new Vector2(4.4f, -1.0f);
@@ -134,6 +136,20 @@ namespace StardenRPG.Entities.Character
 
             _swordJoint = new WheelJoint(Body, WeaponBodyRightSide, new Vector2(WeaponBodyRightSide.Position.X, WeaponBodyRightSide.Position.Y), new Vector2(_swordBodyPosition.X, _swordBodyPosition.Y), true);
             
+        }
+
+        public Element SwitchElement(Element currentElement, Element changedElement)
+        {
+            Element prevElement;
+            //check if element, player want to change is not the same
+            if (!currentElement.Equals(changedElement))
+            {
+                //prevElement = currentElement;
+                currentElement = changedElement;
+                //changedElement = currentElement;
+            }
+
+            return currentElement;
         }
 
         public override void Update(GameTime gameTime)
@@ -303,6 +319,28 @@ namespace StardenRPG.Entities.Character
             {
                 animationPlayer.StartClip("PlayerAttack");
                 CurrentPlayerState = PlayerState.Attacking;
+            }
+
+            //test change element
+            if(input.IsNewKeyPress(Keys.Q, ControllingPlayer,out player))
+            {
+                //Element newEle = Element.Water;
+                Element currentEle = CharacterStats.ElementalType;
+
+                if(currentEle.Equals(Element.Fire))
+                {
+                    CharacterStats.ElementalType = SwitchElement(currentEle, Element.Water);
+                }
+                else if (currentEle.Equals(Element.Water))
+                {
+                    CharacterStats.ElementalType = SwitchElement(currentEle, Element.Fire);
+                }
+            }
+
+            // Test HealthBar
+            if (input.IsKeyPressed(Keys.H, ControllingPlayer, out player) && input.IsKeyUp(Keys.H, ControllingPlayer, out player))
+            {
+                CharacterStats.CurrentHealth -= 10;
             }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);
