@@ -35,16 +35,25 @@ public class ControlsOptionsScreen : MenuScreen
         if (!fadeOut)
         {
             var line1Position = new Vector2(graphics.Viewport.Width / 2, 640);
-            var line1Origin = font.MeasureString("Move   Forward   =   D                     Interact   =   F") / 2;
-            spriteBatch.DrawString(font, "Move   Forward   =   D                     Interact   =   F", line1Position, Color.White, 0, line1Origin, 1.0f, SpriteEffects.None, 0);
+            var line1Origin = font.MeasureString("Move   Forward   =   D" +
+                "                                                                                       Interact   =   F") / 2;
+            spriteBatch.DrawString(font, "Move   Forward   =   D" +
+                "                                                                                       Interact   =   F", 
+                line1Position, Color.White, 0, line1Origin, 1.0f, SpriteEffects.None, 0);
 
             var line2Position = new Vector2(graphics.Viewport.Width / 2, 720);
-            var line2Origin = font.MeasureString("Move   Backward   =   A              Attack   =   P") / 2;
-            spriteBatch.DrawString(font, "Move   Backward   =   A              Attack   =   P", line2Position, Color.White, 0, line2Origin, 1.0f, SpriteEffects.None, 0);
+            var line2Origin = font.MeasureString("Move   Backward   =   A" +
+                "                                                                                Attack   =   P") / 2;
+            spriteBatch.DrawString(font, "Move   Backward   =   A" +
+                "                                                                                Attack   =   P", 
+                line2Position, Color.White, 0, line2Origin, 1.0f, SpriteEffects.None, 0);
 
             var line3Position = new Vector2(graphics.Viewport.Width / 2, 800);
-            var line3Origin = font.MeasureString("Pause   =   Back   SPACE                                                                     ") / 2;
-            spriteBatch.DrawString(font, "Pause   =   Back   SPACE                                                                     ", line3Position, Color.White, 0, line3Origin, 1.0f, SpriteEffects.None, 0);
+            var line3Origin = font.MeasureString("Pause   =   Back   SPACE" +
+                "                        Switch   Elements   =   Q") / 2;
+            spriteBatch.DrawString(font, "Pause   =   Back   SPACE" +
+                "                        Switch   Elements   =   Q", 
+                line3Position, Color.White, 0, line3Origin, 1.0f, SpriteEffects.None, 0);
         }
 
         for (int i = 0; i < MenuEntries.Count; i++)
