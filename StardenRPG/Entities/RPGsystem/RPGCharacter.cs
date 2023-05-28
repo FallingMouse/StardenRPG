@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static StardenRPG.Entities.Character.Player;
 
 namespace StardenRPG.Entities.RPGsystem
 {
@@ -35,6 +36,7 @@ namespace StardenRPG.Entities.RPGsystem
         public void TakeDamage(int damage)
         {
             CurrentHealth -= damage;
+
             if (CurrentHealth < 0)
             {
                 CurrentHealth = 0;

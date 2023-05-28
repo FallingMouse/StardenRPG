@@ -30,6 +30,8 @@ namespace StardenRPG.Entities.Character
         public Money playerMoney { get; set; }
         //public HealthBar healthBar { get; set; }
 
+        private bool isDead = false;
+
         public enum PlayerState
         {
             Idle,
@@ -209,7 +211,28 @@ namespace StardenRPG.Entities.Character
                 WeaponBodyLeftSide.Enabled = false;
                 WeaponBodyRightSide.Enabled = false;
             }
+
+            if (CharacterStats.CurrentHealth <= 0 && !isDead)
+            {
+                CurrentPlayerState = PlayerState.Death;
+                isDead = true;
+
+                // ดำเนินการอื่น ๆ เมื่อผู้เล่นตาย
+                // เช่น หยุดการเคลื่อนที่, ปิดการรับค่าอินพุต, แสดงหน้าจอ Game Over เป็นต้น
+            }
+
         }
+
+        public void Destroy()
+        {
+            // You can call a method to remove this slime from the game world. 
+            // The implementation of this method depends on how you're managing game entities in your game world.
+            // Here's a simple example:
+            if (Body != null && Body.FixtureList.Count > 0)
+                Body.Remove(Body.FixtureList[0]);
+        }
+
+
         /*public void UpdateWeaponFixtureSize(float width, float height)
         {
             // Convert from pixels to world units if necessary
@@ -265,10 +288,16 @@ namespace StardenRPG.Entities.Character
                     animationPlayer.StartClip("PlayerWalkRight");
                 }
             }
-            else if (CurrentPlayerState != PlayerState.Attacking 
-                || animationPlayer.IsAnimationComplete("PlayerAttack"))
+
+            else if (CurrentPlayerState != PlayerState.Attacking
+                && CurrentPlayerState != PlayerState.Death)
             {
                 animationPlayer.StartClip("PlayerIdle");
+            }
+
+            else if (CurrentPlayerState == PlayerState.Death)
+            {
+                animationPlayer.StartClip("PlayerDeath");
             }
 
             if (input.IsNewKeyPress(Keys.P, ControllingPlayer, out player))

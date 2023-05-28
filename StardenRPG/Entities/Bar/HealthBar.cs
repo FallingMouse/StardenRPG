@@ -14,10 +14,10 @@ namespace StardenRPG.Entities.Bar
         private float xOffset = -2.6f; 
         private float yOffset = -3f;
 
-        private Texture2D _texture, _healthBox;
-        private Vector2 _position, _positionBox;
-        private Rectangle _rectangle, _rectangleBG, _rectangleBox;
-        private Color _color, _colorBG;
+        private Texture2D _texture;
+        private Vector2 _position;
+        private Rectangle _rectangle, _rectangleBG;
+        private Color _colorBG;
 
         //for slime
         private Rectangle _rectangleSlime, _rectangleBGSlime, _rectangleBoxSlime;
@@ -33,11 +33,9 @@ namespace StardenRPG.Entities.Bar
             _texture.SetData(new[] { Color.White });
 
             _position = new Vector2(0, 0);
-            _positionBox = new Vector2(0, 0);
 
             _rectangle = new Rectangle((int)_position.X, (int)_position.Y, _player.CharacterStats.MaxHealth, 1);
             _rectangleBG = new Rectangle((int)_position.X, (int)_position.Y, _player.CharacterStats.MaxHealth, 1);
-            _rectangleBox = new Rectangle((int)_position.X, (int)_position.Y, _player.CharacterStats.MaxHealth + 60, 1);
 
             //slime 
             _positionSlime = new Vector2(0, 0);
@@ -83,7 +81,6 @@ namespace StardenRPG.Entities.Bar
 
             // Update the health bar's position based on the player's position
             _position = new Vector2(_player.Position.X + xOffset, _player.Position.Y - yOffset);
-            _positionBox = new Vector2(_player.Position.X + xOffset, _player.Position.Y - yOffset);
 
             // Update the health bar's position based on the slime's position
             _positionSlime = new Vector2(_slime.Position.X + xOffset, _slime.Position.Y - yOffset);
@@ -97,33 +94,21 @@ namespace StardenRPG.Entities.Bar
             _rectangleBGSlime.Location = _position.ToPoint();
         }
 
-        /*public void Draw(SpriteBatch spriteBatch, Player player)
+        public void Draw(SpriteBatch spriteBatch, Player player)
         {
             // Define the scale for the health bar
             Vector2 scale = new Vector2(0.9f, 0.5f);  // Scale the height by 0.5 (half)
 
-            // Calculate the center of the health bar for rotation
-            //Vector2 origin = new Vector2(_rectangle.Width / 2, _rectangle.Height / 2);
-
-            // Calculate the rotation angle (in radians)
-            //float rotationAngle = MathHelper.ToRadians(180);  // Rotate 180 degrees
-
             _rectangleBG.Width = _player.CharacterStats.MaxHealth / 18;
             _rectangle.Width = _player.CharacterStats.CurrentHealth / 18;
 
-            // Draw the background of the health bar
-            spriteBatch.Draw(
-                texture: _texture,
-                position: _position,
-                sourceRectangle: _rectangleBG,
-                color: _colorBG,
-                rotation: 0,
-                origin: Vector2.Zero,
-                scale: scale,
-                effects: SpriteEffects.None,
-                layerDepth: 0
-            );
+            // Calculate the gradient colors
+            Color startColor = new Color(31, 22, 28);
+            Color endColor = new Color(243, 63, 72);
 
+            // Calculate the color interpolation value based on the player's health percentage
+            float healthPercentage = _player.CharacterStats.CurrentHealth / (float)_player.CharacterStats.MaxHealth;
+            Color interpolatedColor = Color.Lerp(startColor, endColor, healthPercentage);
             // Draw the actual health bar
             spriteBatch.Draw(
                 texture: _texture,
@@ -138,13 +123,8 @@ namespace StardenRPG.Entities.Bar
             );
         }*/
 
-        public void Draw(SpriteBatch spriteBatch, Player player)
-        {
-            // Define the scale for the health bar
-            Vector2 scale = new Vector2(0.9f, 0.5f);  // Scale the height by 0.5 (half)
-
-            _rectangleBG.Width = _player.CharacterStats.MaxHealth / 18;
-            _rectangle.Width = _player.CharacterStats.CurrentHealth / 18;
+        
+            
 
             //slime
             _rectangleBGSlime.Width = _slime.CharacterStats.MaxHealth / 18;
@@ -164,25 +144,12 @@ namespace StardenRPG.Entities.Bar
                 layerDepth: 0
             );
 
-            // Draw the actual health bar
+            // Draw the actual health bar with gradient color
             spriteBatch.Draw(
                 texture: _texture,
                 position: _position,
                 sourceRectangle: _rectangle,
-                color: _color,
-                rotation: 0,
-                origin: Vector2.Zero,
-                scale: scale,
-                effects: SpriteEffects.None,
-                layerDepth: 0
-            );
-
-            // Draw the health box
-            spriteBatch.Draw(
-                texture: _healthBox,
-                position: _positionBox,
-                sourceRectangle: _rectangleBox,
-                color: Color.White,
+                color: interpolatedColor, // Use the interpolated color
                 rotation: 0,
                 origin: Vector2.Zero,
                 scale: scale,
