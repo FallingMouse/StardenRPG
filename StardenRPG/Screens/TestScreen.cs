@@ -139,14 +139,14 @@ namespace StardenRPG.Screens
 
             #region Load Content
             // Health Bar
-            _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
+            //_healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
             _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime);
             _healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
-            _healthBar.SetHealthBox(_healthBox);
+            //_healthBar.SetHealthBox(_healthBox);
 
             _healthBarTestNewSlime = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime2);
             //_healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
-            _healthBarTestNewSlime.SetHealthBox(_healthBox);
+            //_healthBarTestNewSlime.SetHealthBox(_healthBox);
             #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
