@@ -39,25 +39,6 @@ namespace StardenRPG.Entities.Weapons
                 // Add more animations as needed
             };
         }
-        //old code, maybe can be used later
-        /*public override void findSwordVertices(Body swordBody, Vector2 position)
-         {
-             //Vertices to define each point of sword hitbox
-             {
-                 Vertices vertices = new Vertices(4);
-
-                 //not the real position, just try if it actually work
-                 vertices.Add(new Vector2(position.X, position.Y - 0.5f));
-                 vertices.Add(new Vector2(position.X, position.Y  + 1.0f));
-                 vertices.Add(new Vector2(position.X - 3f, position.Y -0.5f));
-                 vertices.Add(new Vector2(position.X - 3f, position.Y + 1.0f));
-
-                 PolygonShape chassis = new PolygonShape(vertices, 2);
-
-                 swordBody.CreateFixture(chassis);
-                 swordBody.BodyType = BodyType.Dynamic;
-             }
-         }*/
 
         public override Vertices findSwordVertices(Vector2 position)
         {
@@ -65,9 +46,9 @@ namespace StardenRPG.Entities.Weapons
             vertices = new Vertices(4);
             {
                 //not the real position, just try if it actually work
-                vertices.Add(new Vector2(position.X, position.Y - 0.5f));
+                vertices.Add(new Vector2(position.X, position.Y));
                 vertices.Add(new Vector2(position.X, position.Y + 1.0f));
-                vertices.Add(new Vector2(position.X - 3f, position.Y - 0.5f));
+                vertices.Add(new Vector2(position.X - 3f, position.Y));
                 vertices.Add(new Vector2(position.X - 3f, position.Y + 1.0f));
 
                 //PolygonShape chassis = new PolygonShape(vertices, 2);
@@ -78,24 +59,5 @@ namespace StardenRPG.Entities.Weapons
             return vertices;
         }
 
-        //old code, maybe can be used later
-        /*public override void findSwordVertices(Body swordBody)
-        {
-            //Vertices to define each point of sword hitbox
-            {
-                Vertices vertices = new Vertices(4);
-
-                //not the real position, just try if it actually work
-                vertices.Add(new Vector2(-2.5f, 0f));
-                vertices.Add(new Vector2(-2.5f, 3f));
-                vertices.Add(new Vector2(-1.5f, 3f));
-                vertices.Add(new Vector2(-1.5f, 0f));
-
-                PolygonShape chassis = new PolygonShape(vertices, 2);
-
-                swordBody.CreateFixture(chassis);
-                swordBody.BodyType = BodyType.Dynamic;
-            }
-        }*/
     }
 }
