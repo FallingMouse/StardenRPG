@@ -18,16 +18,17 @@ using tainicom.Aether.Physics2D.Dynamics.Joints;
 using Microsoft.VisualBasic;
 using tainicom.Aether.Physics2D.Collision;
 using StardenRPG.Entities.Monster;
-using StardenRPG.Entities.Bar;
+using StardenRPG.Screens;
 
 namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
+        private TestScreen _testScreen;
+
         // Player RPG Stats
         public RPGCharacter CharacterStats { get; set; }
-        public Money playerMoney { get; set; }
-        //public HealthBar healthBar { get; set; }
+        public Coin playerCoin { get; set; }
 
         private bool isDead = false;
 
@@ -86,7 +87,7 @@ namespace StardenRPG.Entities.Character
 
             // Create Character RPG Stats
             CharacterStats = new RPGCharacter("Player", 100, 10, Element.Fire);
-            playerMoney = new Money(100);
+            //playerCoin = new Coin(100);
 
             // Create weapon for characterr
             CurrentWeapon = new Sword();
@@ -220,14 +221,15 @@ namespace StardenRPG.Entities.Character
 
         }
 
-        public void Destroy()
+        /*public void setCoinTexture(Texture2D _coinTexture)
         {
-            // You can call a method to remove this slime from the game world. 
-            // The implementation of this method depends on how you're managing game entities in your game world.
-            // Here's a simple example:
-            if (Body != null && Body.FixtureList.Count > 0)
-                Body.Remove(Body.FixtureList[0]);
-        }
+            this._coinTexture = _coinTexture;
+        }*/
+
+        /*public void setGameplayScreen(TestScreen _testScreen)
+        {
+            this._testScreen = _testScreen;
+        }*/
 
 
         /*public void UpdateWeaponFixtureSize(float width, float height)
@@ -301,12 +303,6 @@ namespace StardenRPG.Entities.Character
             {
                 animationPlayer.StartClip("PlayerAttack");
                 CurrentPlayerState = PlayerState.Attacking;
-            }
-
-            // Test HealthBar
-            if (input.IsKeyPressed(Keys.H, ControllingPlayer, out player) && input.IsKeyUp(Keys.H, ControllingPlayer, out player))
-            {
-                CharacterStats.CurrentHealth -= 10;
             }
 
             IsRunning = input.IsKeyPressed(Keys.LeftShift, ControllingPlayer, out _);

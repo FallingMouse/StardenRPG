@@ -11,11 +11,14 @@ using StardenRPG.StateManagement;
 using tainicom.Aether.Physics2D.Common;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
+using StardenRPG.Screens;
 
 namespace StardenRPG.Entities.Monster
 {
     public class Slime : Sprite
     {
+        private TestScreen _testScreen;
+
         World world;
 
         // Slime RPG Stats
@@ -23,6 +26,9 @@ namespace StardenRPG.Entities.Monster
         public bool IsDeath { get; set; }
 
         Player _player;
+
+        Coin droppedCoin;
+        Texture2D _coinTexture;
 
         private float moveSpeed;
         private float attackRange;
@@ -53,6 +59,8 @@ namespace StardenRPG.Entities.Monster
 
             this._player = _player;
 
+            //this._coinTexture = _coinTexture;
+
             // Create Slime RPG Stats
             CharacterStats = new RPGCharacter("Slime", 100, 10, Element.Plant);
 
@@ -67,7 +75,7 @@ namespace StardenRPG.Entities.Monster
             float distanceToPlayer = Vector2.Distance(Body.Position, _player.Position);
 
             // Check if the slime's HP is zero or less
-            if (CharacterStats.CurrentHealth <= 0)
+            if (CharacterStats.CurrentHealth <= 0 && !IsDeath)
             {
                 // Drop money
                 DropMoney();
@@ -110,6 +118,16 @@ namespace StardenRPG.Entities.Monster
             this._player = _player;
         }
 
+        public void setGameplayScreen(TestScreen _testScreen)
+        {
+            this._testScreen = _testScreen;
+        }
+
+        public void setCoinTexture(Texture2D _coinTexture)
+        {
+            this._coinTexture = _coinTexture;
+        }
+
         public override bool OnCollision(Fixture sender, Fixture other, Contact contact)
         {
             // Check if this Slime is colliding with a Player
@@ -130,18 +148,18 @@ namespace StardenRPG.Entities.Monster
 
         public void DropMoney()
         {
-            int moneyToDrop = 10;
+            int coinToDrop = 10;
 
-            Money droppedMoney = new Money(moneyToDrop);
+            droppedCoin = new Coin(_coinTexture, new Point(16 / 16, 16 / 16), new Point(16, 16), World, Position);
+            droppedCoin.Amount = coinToDrop;
 
-            //world.AddDroppedItem(droppedMoney, Position);
+            _testScreen.Coins.Add(droppedCoin);
         }
 
         public void Destroy()
         {
             // You can call a method to remove this slime from the game world. 
             // The implementation of this method depends on how you're managing game entities in your game world.
-            // Here's a simple example:
             if (Body != null && Body.FixtureList.Count > 0)
                 Body.Remove(Body.FixtureList[0]);
         }

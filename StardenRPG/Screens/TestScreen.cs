@@ -23,10 +23,11 @@ using Microsoft.Xna.Framework.Content;
 using System.Diagnostics.Tracing;
 using StardenRPG.Entities.Monster;
 using StardenRPG.Entities.Bar;
+using StardenRPG.Entities.ItemDrop;
 
 namespace StardenRPG.Screens
 {
-    class TestScreen : PhysicsGameScreen
+    public class TestScreen : PhysicsGameScreen
     {
         #region fields 
         private ContentManager _content;
@@ -74,16 +75,21 @@ namespace StardenRPG.Screens
         // Health Bar
         private HealthBar _healthBar;
 
+        // Coin
+        //private Coin _coin;
+        private Texture2D _coinTexture;
+        public List<Coin> Coins { get; private set; }
+
+
         // Add the input state object
         private InputState input = new InputState();
         #endregion
 
 
         #region constructors
-        public TestScreen(World world, Vector2 scaleFactor)
+        public TestScreen(World world)
         {
             World = world;
-            _scaleFactor = scaleFactor;
 
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -123,8 +129,13 @@ namespace StardenRPG.Screens
 
             // Create the slime
             Point slimeSize = new Point(64 / 16, 48 / 16); // Default = 64, 48
+            _coinTexture = _content.Load<Texture2D>("Sprites/Coin/coinOne"); // Coin for slime
             GenerateSlime(slimeSize);
+
+            // Create Coin
+            Coins = new List<Coin>();
             #endregion
+
 
             #region Camera
             Camera.MinRotation = -0.05f;
@@ -135,9 +146,13 @@ namespace StardenRPG.Screens
             Camera.EnableTracking = true;
             #endregion
 
+
             #region Load Content
             // Health Bar
             _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player);
+            // Coin
+            //Point coinPoint = new Point(16 / 16, 16 / 16);
+            //_coin = new Coin(_coinTexture, coinPoint, new Point(16, 16), World, slime.Position);
             #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -341,9 +356,12 @@ namespace StardenRPG.Screens
 
             slime = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, slimeStartPosition, spriteAnimationClips);
             slime.setPlayer(_player);
+            slime.setCoinTexture(_coinTexture);
+            slime.setGameplayScreen(this);
             slime.Body.LinearDamping = 10f;
         }
         #endregion
+
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
@@ -367,6 +385,12 @@ namespace StardenRPG.Screens
 
                 // Update the slime
                 slime.Update(gameTime, _player);
+
+                // Update the coins
+                foreach (var coin in Coins)
+                {
+                    coin.Update(gameTime);
+                }
             }
         }
 
@@ -429,6 +453,12 @@ namespace StardenRPG.Screens
 
             // Draw the slime
             slime.Draw(gameTime, spriteBatch, SpriteEffects.None);
+
+            // Draw Coin
+            foreach (var coin in Coins)
+            {
+                coin.Draw(gameTime, spriteBatch, SpriteEffects.None);
+            }
 
             //draw gound texture
             //ScreenManager.SpriteBatch.Draw(_background.TextureTest, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(0.5f) * _background.TexelSize, SpriteEffects.FlipVertically, 0f);

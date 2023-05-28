@@ -43,8 +43,7 @@ namespace StardenRPG
             //_screenManager.BackgroundSongAsset = "Audio/Music/battleThemeA";
 
             // ✰ Star
-            // Don't for get to delete this music cause it copyright
-            _screenManager.BackgroundSongAsset = "Audio/Music/Delete_ReleaseTheFire";
+            _screenManager.BackgroundSongAsset = "Audio/Music/Beyond-Reckoning_Full";
 
             Components.Add(_screenManager);
 
@@ -58,10 +57,9 @@ namespace StardenRPG
 
 
             //_world = new World(new Vector2(0, -160f)); // Initialize physics world with gravity.
-            //ScaleFactor = CalculateScaleFactor(); // Calculate the scale of the game world
 
-            //_screenManager.AddScreen(new GameplayScreen(_world, ScaleFactor), new PlayerIndex());
-            //_screenManager.AddScreen(new TestScreen(_world, ScaleFactor), new PlayerIndex());
+            //_screenManager.AddScreen(new GameplayScreen(_world), new PlayerIndex());
+            //_screenManager.AddScreen(new TestScreen(_world), new PlayerIndex());
         }
 
         protected override void Initialize()
@@ -77,28 +75,11 @@ namespace StardenRPG
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             base.Initialize();
         }
-
-        private Vector2 CalculateScaleFactor()
-        {
-            //int baseWidth = 1920; // Base resolution width: 1920
-            //int baseHeight = 1080; // Base resolution height: 1080
-
-            int baseWidth = 720; // Base resolution width: 1920
-            int baseHeight = 480; // Base resolution height: 1080
-
-            int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-
-            float scaleX = (float)screenWidth / baseWidth;
-            float scaleY = (float)screenHeight / baseHeight;
-            return new Vector2(scaleX, scaleY);
-        }
-
 
         protected override void LoadContent()
         {
