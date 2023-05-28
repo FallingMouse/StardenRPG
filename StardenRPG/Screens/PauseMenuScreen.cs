@@ -4,10 +4,10 @@ namespace StardenRPG.Screens
     // giving the player options to resume or quit.
     public class PauseMenuScreen : MenuScreen
     {
-        public PauseMenuScreen() : base("Paused")
+        public PauseMenuScreen() : base("PAUSED")
         {
-            var resumeGameMenuEntry = new MenuEntry("Resume Game");
-            var quitGameMenuEntry = new MenuEntry("Quit Game");
+            var resumeGameMenuEntry = new MenuEntry("RESUME   GAME");
+            var quitGameMenuEntry = new MenuEntry("QUIT   GAME");
             
             resumeGameMenuEntry.Selected += OnCancel;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
@@ -18,7 +18,7 @@ namespace StardenRPG.Screens
 
         private void QuitGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            const string message = "Are you sure you want to quit this game?";
+            const string message = "ARE   YOU   SURE   YOU   WANT   TO   QUIT   THIS   GAME?";
             var confirmQuitMessageBox = new MessageBoxScreen(message);
 
             confirmQuitMessageBox.Accepted += ConfirmQuitMessageBoxAccepted;

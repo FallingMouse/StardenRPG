@@ -16,9 +16,9 @@ namespace StardenRPG.Screens
 
         public MainMenuScreen() : base("")
         {
-            var playGameMenuEntry = new MenuEntry("Play Game");
-            var optionsMenuEntry = new MenuEntry("Options");
-            var exitMenuEntry = new MenuEntry("Exit");
+            var playGameMenuEntry = new MenuEntry("PLAY   GAME");
+            var optionsMenuEntry = new MenuEntry("OPTIONS");
+            var exitMenuEntry = new MenuEntry("EXIT");
 
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
@@ -58,7 +58,7 @@ namespace StardenRPG.Screens
 
         protected override void OnCancel(PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this game?";
+            const string message = "ARE   YOU   SURE   YOU   WANT   TO   EXIT   THIS   GAME?";
             var confirmExitMessageBox = new MessageBoxScreen(message);
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;

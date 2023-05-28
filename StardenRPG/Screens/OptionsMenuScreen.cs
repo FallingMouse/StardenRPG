@@ -15,7 +15,7 @@ namespace StardenRPG.Screens
 
             SetMenuEntryText();
 
-            var back = new MenuEntry("Back");
+            var back = new MenuEntry("BACK");
 
             controlsMenu.Selected += ControlsMenuEntrySelected;
             audioMenu.Selected += AudioMenuEntrySelected;
@@ -30,8 +30,8 @@ namespace StardenRPG.Screens
         // Fills in the latest values for the options screen menu text.
         private void SetMenuEntryText()
         {
-            controlsMenu.Text = "Controls";
-            audioMenu.Text = "Audio";
+            controlsMenu.Text = "CONTROLS";
+            audioMenu.Text = "AUDIO";
         }
 
         private void ControlsMenuEntrySelected(object sender, PlayerIndexEventArgs e)

@@ -21,7 +21,7 @@ namespace StardenRPG.Screens
         // "A=ok, B=cancel" usage text prompt.
         public MessageBoxScreen(string message, bool includeUsageText = true)
         {
-            const string usageText = "\n     Enter = OK | Backspace = Cancel";
+            const string usageText = "\n                          ENTER   =   OK       |       BACKSPACE   =   CANCEL";
 
 
 

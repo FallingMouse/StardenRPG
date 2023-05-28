@@ -22,14 +22,15 @@ namespace StardenRPG.Screens
 
         public AudioOptionsScreen() : base("")
         {            
-            MenuEntry back = new MenuEntry("Back");
+            MenuEntry back = new MenuEntry("BACK");
 
-            masterVolume = new MenuEntry($"Master Volume");
-            musicVolume = new MenuEntry($"Music Volume");
-            sfxVolume = new MenuEntry($"SFX Volume");
+            back.Selected += OnCancel;
+
+            masterVolume = new MenuEntry($"MASTER   VOLUME   ");
+            musicVolume = new MenuEntry($"MUSIC   VOLUME   ");
+            sfxVolume = new MenuEntry($"SFX   VOLUME   ");
 
             masterVolume.Selected += SetMasterVolume;
-            back.Selected += OnCancel;
 
             MenuEntries.Add(back);
             MenuEntries.Add(masterVolume);
@@ -46,10 +47,11 @@ namespace StardenRPG.Screens
 
         protected override void OnCancel(PlayerIndex playerIndex)
         {
+            base.OnCancel(playerIndex);
+
             // save the audio settings.
             ScreenManager.SaveAudioSettings();
 
-            base.OnCancel(playerIndex);
         }
 
         public override void HandleInput(GameTime gameTime, InputState input)
@@ -59,21 +61,21 @@ namespace StardenRPG.Screens
 
             if (sliderDown.Occurred(input, ControllingPlayer, out playerIndex))
             {
-                if(_selectedEntry == 0)
+                if(_selectedEntry == 1)
                     ScreenManager.audioManager.MasterVolume = MathF.Max(0f, ScreenManager.audioManager.MasterVolume - volumeDelta);
-                else if(_selectedEntry == 1)
-                    ScreenManager.audioManager.MusicVolume = MathF.Max(0f, ScreenManager.audioManager.MusicVolume - volumeDelta);
                 else if(_selectedEntry == 2)
+                    ScreenManager.audioManager.MusicVolume = MathF.Max(0f, ScreenManager.audioManager.MusicVolume - volumeDelta);
+                else if(_selectedEntry == 3)
                     ScreenManager.audioManager.SFXVolume = MathF.Max(0f, ScreenManager.audioManager.SFXVolume - volumeDelta);
             }
 
             if (sliderUp.Occurred(input, ControllingPlayer, out playerIndex))
             {
-                if (_selectedEntry == 0)
+                if (_selectedEntry == 1)
                     ScreenManager.audioManager.MasterVolume = MathF.Max(0f, ScreenManager.audioManager.MasterVolume + volumeDelta);
-                else if (_selectedEntry == 1)
-                    ScreenManager.audioManager.MusicVolume = MathF.Max(0f, ScreenManager.audioManager.MusicVolume + volumeDelta);
                 else if (_selectedEntry == 2)
+                    ScreenManager.audioManager.MusicVolume = MathF.Max(0f, ScreenManager.audioManager.MusicVolume + volumeDelta);
+                else if (_selectedEntry == 3)
                     ScreenManager.audioManager.SFXVolume = MathF.Max(0f, ScreenManager.audioManager.SFXVolume + volumeDelta);
             }
         }
@@ -85,9 +87,9 @@ namespace StardenRPG.Screens
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            masterVolume.Text = $"Master Volume {(int)(ScreenManager.audioManager.MasterVolume * 100f)}%";
-            musicVolume.Text = $"Music Volume {(int)(ScreenManager.audioManager.MusicVolume * 100f)}%";
-            sfxVolume.Text = $"SFX Volume {(int)(ScreenManager.audioManager.SFXVolume * 100f)}%";
+            masterVolume.Text = $"MASTER   VOLUME   {(int)(ScreenManager.audioManager.MasterVolume * 100f)}%";
+            musicVolume.Text = $"MUSIC   VOLUME   {(int)(ScreenManager.audioManager.MusicVolume * 100f)}%";
+            sfxVolume.Text = $"SFX   VOLUME   {(int)(ScreenManager.audioManager.SFXVolume * 100f)}%";
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
