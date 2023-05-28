@@ -14,6 +14,10 @@ using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Collision.Shapes;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using tainicom.Aether.Physics2D.Common.TextureTools;
+using tainicom.Aether.Physics2D.Dynamics.Joints;
+using Microsoft.VisualBasic;
+using tainicom.Aether.Physics2D.Collision;
+using StardenRPG.Entities.Monster;
 using StardenRPG.Entities.Bar;
 
 namespace StardenRPG.Entities.Character
@@ -47,9 +51,24 @@ namespace StardenRPG.Entities.Character
         // Weapon
         public Weapon CurrentWeapon { get; set; }
         public Body WeaponBody { get; set; }
+        public Body WeaponBodyLeftSide { get; set; }
+        public Body WeaponBodyRightSide { get; set; }
 
+        //joint sword and player
+        private WheelJoint _swordJoint;
+
+        //All identifiers, contain values related to sword
+        public Vector2 _swordBodyPosition;
+        public Vector2 _swordLeftSide, _swordRightSide;
+        public Vertices _swordLeftVertices, _swordRightVertices;
+        public PolygonShape chassis;
+
+        //import Slime
+        public Slime _monster;
+
+       
         SpriteEffects _spriteEffects;
-
+        
         // Check if the player is running
         public bool IsRunning { get; set; }
 
@@ -71,12 +90,47 @@ namespace StardenRPG.Entities.Character
             CurrentWeapon = new Sword();
 
             // Initialize the weapon body
-            WeaponBody = World.CreateBody(Position, 0, BodyType.Dynamic);
+            /*WeaponBody = World.CreateBody(Position, 0, BodyType.Dynamic);
             WeaponBody.FixedRotation = true;
             WeaponBody.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
             WeaponBody.Enabled = false; // Initially disable the weapon body, we'll enable it when attacking
-            //WeaponBody.Enabled = true;
-            //CurrentWeapon.findSwordVertices(WeaponBody);
+            */
+            //create weapon body left side
+            WeaponBodyLeftSide = World.CreateBody(Position, 0, BodyType.Dynamic);
+            WeaponBodyLeftSide.FixedRotation = true;
+            WeaponBodyLeftSide.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
+            WeaponBodyLeftSide.Enabled = false;
+
+            //fix position
+            _swordLeftSide = new Vector2(-0.8f , -1.0f);
+            
+            //When player attack at the left side, sword hitbox will be created at the same side
+            //Left Side
+            _swordLeftVertices = CurrentWeapon.findSwordVertices(_swordLeftSide); //find vertices to create sword hitbox based on the sword body position
+            chassis = new PolygonShape(_swordLeftVertices, 2);
+            WeaponBodyLeftSide.CreateFixture(chassis);
+            WeaponBodyLeftSide.BodyType = BodyType.Dynamic;
+
+            //joint the sword hitbox to the player body, seem like it doesn't work but have it made the code work better (maybe)
+            _swordJoint = new WheelJoint(Body, WeaponBodyLeftSide, new Vector2(WeaponBodyLeftSide.Position.X, WeaponBodyLeftSide.Position.Y), new Vector2(Body.Position.X, Body.Position.Y), true);
+
+            //create weapon body right side
+            WeaponBodyRightSide = World.CreateBody(Position, 0, BodyType.Dynamic);
+            WeaponBodyRightSide.FixedRotation = true;
+            WeaponBodyRightSide.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
+            WeaponBodyRightSide.Enabled = false;
+
+            //fix position
+            _swordRightSide = new Vector2(4.4f, -1.0f);
+            //When player attack at the right side, sword hitbox will be created at the same side
+            //Right Side
+            _swordRightVertices = CurrentWeapon.findSwordVertices(_swordRightSide);
+            chassis = new PolygonShape(_swordRightVertices, 2);
+            WeaponBodyRightSide.CreateFixture(chassis);
+            WeaponBodyRightSide.BodyType = BodyType.Dynamic;
+
+            _swordJoint = new WheelJoint(Body, WeaponBodyRightSide, new Vector2(WeaponBodyRightSide.Position.X, WeaponBodyRightSide.Position.Y), new Vector2(_swordBodyPosition.X, _swordBodyPosition.Y), true);
+            
         }
 
         public override void Update(GameTime gameTime)
@@ -116,24 +170,41 @@ namespace StardenRPG.Entities.Character
 
                 Rectangle currentWeaponHitbox = CurrentWeapon.GetCurrentHitbox("PlayerAttack", animationPlayer.CurrentFrameIndex);
 
-                //find vertices of sword in current position, but seem like it's cause delay to the game
-                //CurrentWeapon.findSwordVertices(WeaponBody, new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y));
-                CurrentWeapon.findSwordVertices(WeaponBody);
-
                 // Update the weapon body position and size
                 //WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
+                //WeaponBody.Position = new Vector2(Body.Position.X , Body.Position.Y);
+                WeaponBodyRightSide.Position = new Vector2(Body.Position.X, Body.Position.Y);
+                WeaponBodyLeftSide.Position = new Vector2(Body.Position.X, Body.Position.Y);
+
+                //_swordLeftVertices = CurrentWeapon.findSwordVertices(WeaponBody.Position);
+                //When player attack at the left side, sword hitbox will be created at the same side
+                if (CurrentFacingDirection == FacingDirection.Left)
+                {
+                    WeaponBodyLeftSide.Enabled = true;
+                }
+
+                //When player attack at the right side, sword hitbox will be created at the same side
+                if (CurrentFacingDirection == FacingDirection.Right)
+                {
+                    WeaponBodyRightSide.Enabled = true;
+                }
+
 
                 // Assume UpdateWeaponFixtureSize works similarly to UpdateFixtureSize
                 //UpdateWeaponFixtureSize(currentWeaponHitbox.Width, currentWeaponHitbox.Height);
 
                 // Enable the weapon body
-                WeaponBody.Enabled = true;
+                //_swordJoint = new WheelJoint(Body, WeaponBody, new Vector2(WeaponBody.Position.X - 7.5f, WeaponBody.Position.Y), new Vector2(WeaponBody.Position.X - 7.5f, WeaponBody.Position.Y), false);
+                //_swordJoint = new WheelJoint(Body, WeaponBody, Body.Position, new Vector2(currentWeaponHitbox.X - 1f, currentWeaponHitbox.Y), true);
+                //WeaponBody.Enabled = true;
+                                                
 
             }
             else
             {
                 // Disable the weapon body when not attacking
-                WeaponBody.Enabled = false;
+                WeaponBodyLeftSide.Enabled = false;
+                WeaponBodyRightSide.Enabled = false;
             }
         }
         /*public void UpdateWeaponFixtureSize(float width, float height)
@@ -159,6 +230,11 @@ namespace StardenRPG.Entities.Character
         private bool OnWeaponCollision(Fixture sender, Fixture other, Contact contact)
         {
             // Handle weapon collisions...
+            /*if (other.Body.Tag == _monster.Body.Tag)
+            {
+                _monster.CharacterStats.TakeDamage(10);
+                Console.WriteLine("Slime health : " + _monster.CharacterStats.CurrentHealth);
+            }*/
 
             return true;
         }
@@ -257,6 +333,8 @@ namespace StardenRPG.Entities.Character
             );
             /*spriteBatch.Draw(spriteTexture, Position, sourceRect, Color.White, 0, 
                 Vector2.Zero, new Vector2(72f, 32f) * 1, SpriteEffects.FlipVertically, 0f);*/
+
+            
         }
     }
 }

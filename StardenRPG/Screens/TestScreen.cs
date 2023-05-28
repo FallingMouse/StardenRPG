@@ -53,13 +53,13 @@ namespace StardenRPG.Screens
         private Sprite _wheel;
 
         //import bg
-        private Sprite _backgroundTexture;
+        private Sprite _bgForestTexture, _bgForest2Texture, _bgLabatory1Texture, _bgLabatory2Texture, _bgForesttoLabTexture;
         private Vector2 _bgBodySize = new Vector2(80f, 26f); 
         private World _world;
 
         //all about the ground & bg
-        //private Texture2D _groundTexture;
-        private Sprite _groundTexture;
+        //private Texture2D _groundForestTexture;
+        private Sprite _groundForestTexture, _groundLabTexture;
         private Vector2 _groundTextureSize, _bgTextureSize;
         private Vector2 _groundTextureOrigin, _bgTextureOrigin;
 
@@ -162,9 +162,13 @@ namespace StardenRPG.Screens
             _bgBody = _world.CreateBody(bgPosition, 0, BodyType.Static);
             var gfixture = _bgBody.CreateRectangle(_bgBodySize.X, _bgBodySize.Y, 1f, Vector2.Zero);
 
-            _backgroundTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/mapbackground"));
+            _bgForestTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/mapbackground"));
+            _bgForest2Texture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/map2bg"));
+            _bgLabatory1Texture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/map41bg"));
+            _bgLabatory2Texture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/map42bg"));
+            _bgForesttoLabTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/map3bg"));
 
-            _bgTextureSize = new Vector2(_backgroundTexture.Size.X, _backgroundTexture.Size.Y);
+            _bgTextureSize = new Vector2(_bgForestTexture.Size.X, _bgForestTexture.Size.Y);
 
             _bgTextureOrigin = _bgTextureSize / 2f;
         }
@@ -179,9 +183,10 @@ namespace StardenRPG.Screens
             _groundBody = _world.CreateBody(groundPosition, 0, BodyType.Static);
             var gfixture = _groundBody.CreateRectangle(_groundBodySize.X, _groundBodySize.Y, 1f, Vector2.Zero);
 
-            _groundTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/mapforeground")); 
+            _groundForestTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/fgfinall"));
+            _groundLabTexture = new Sprite(ScreenManager.Content.Load<Texture2D>("Backgrounds/map3fg"));
 
-            _groundTextureSize = new Vector2(_groundTexture.Size.X, _groundTexture.Size.Y);
+            _groundTextureSize = new Vector2(_groundForestTexture.Size.X, _groundForestTexture.Size.Y);
 
             _groundTextureOrigin = _groundTextureSize / 2f;
         }
@@ -191,7 +196,7 @@ namespace StardenRPG.Screens
             _ground = World.CreateBody();
             {
                 Vertices terrain = new Vertices();
-                terrain.Add(new Vector2(-25f, 5f));
+                terrain.Add(new Vector2(-25f, 10f));
                 terrain.Add(new Vector2(-25f, 0f));
                 terrain.Add(new Vector2(20f, 0f));
                 terrain.Add(new Vector2(25f, 0f));
@@ -223,8 +228,8 @@ namespace StardenRPG.Screens
                 terrain.Add(new Vector2(250f, 0f));
                 terrain.Add(new Vector2(270f, 0f));
                 terrain.Add(new Vector2(270f, 0));
-                terrain.Add(new Vector2(310f, 0f));
-                terrain.Add(new Vector2(310f, 5f));
+                terrain.Add(new Vector2(420f, 0f));
+                terrain.Add(new Vector2(420f, 10f));
 
                 for (int i = 0; i < terrain.Count - 1; ++i)
                 {
@@ -394,13 +399,13 @@ namespace StardenRPG.Screens
             #region SpriteBatch
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, ScreenManager.BatchEffect);
 
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(-108f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(-28f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(52f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(132f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(212f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(292f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_backgroundTexture.TextureForSprite, new Vector2(372f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _backgroundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgForestTexture.TextureForSprite, new Vector2(-108f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgForestTexture.TextureForSprite, new Vector2(-28f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgForest2Texture.TextureForSprite, new Vector2(52f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgForesttoLabTexture.TextureForSprite, new Vector2(132f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgLabatory1Texture.TextureForSprite, new Vector2(212f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgLabatory2Texture.TextureForSprite, new Vector2(292f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_bgLabatory2Texture.TextureForSprite, new Vector2(372f, 0f), null, Color.White, 0f, _bgTextureOrigin, new Vector2(80f, 26f) * _bgForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             // draw car
             spriteBatch.Draw(_wheel.TextureForSprite, _wheelBack.Position, null, Color.White, _wheelBack.Rotation, _wheel.Origin, new Vector2(0.5f) * _wheel.TexelSize, SpriteEffects.FlipVertically, 0f);
@@ -417,13 +422,13 @@ namespace StardenRPG.Screens
 
             //draw gound texture
             //ScreenManager.SpriteBatch.Draw(_background.TextureTest, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(0.5f) * _background.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(-108f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(-28f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(52f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(132f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(212f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(292f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
-            spriteBatch.Draw(_groundTexture.TextureForSprite, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundForestTexture.TextureForSprite, new Vector2(-108f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundForestTexture.TextureForSprite, new Vector2(-28f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundForestTexture.TextureForSprite, new Vector2(52f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundLabTexture.TextureForSprite, new Vector2(132f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundLabTexture.TextureForSprite, new Vector2(212f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundLabTexture.TextureForSprite, new Vector2(292f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
+            spriteBatch.Draw(_groundLabTexture.TextureForSprite, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             _healthBar.Draw(spriteBatch, _player);
 

@@ -13,6 +13,7 @@ namespace StardenRPG.Entities.Weapons
     {
         public string Tag { get; set; }
         public Dictionary<string, List<Rectangle>> HitboxSizes { get; protected set; }
+        public Vertices vertices { get; protected set; }
 
         public abstract void CreateHitboxSizes();
 
@@ -21,8 +22,9 @@ namespace StardenRPG.Entities.Weapons
             return HitboxSizes[animationName][frameIndex];
         }
 
-        //public abstract void findSwordVertices(Body swordBody, Vector2 position);
-        public abstract void findSwordVertices(Body swordBody);
+        //final method that actually work in real code
+        public abstract Vertices findSwordVertices(Vector2 position);
+
     }
 
 }

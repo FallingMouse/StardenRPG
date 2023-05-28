@@ -69,7 +69,8 @@ namespace StardenRPG
             // Set resolution Fullscreen
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.IsFullScreen = true;
+
+            //_graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -77,8 +78,11 @@ namespace StardenRPG
 
         private Vector2 CalculateScaleFactor()
         {
-            int baseWidth = 1920; // Base resolution width: 1920
-            int baseHeight = 1080; // Base resolution height: 1080
+            //int baseWidth = 1920; // Base resolution width: 1920
+            //int baseHeight = 1080; // Base resolution height: 1080
+
+            int baseWidth = 720; // Base resolution width: 1920
+            int baseHeight = 480; // Base resolution height: 1080
 
             int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
