@@ -305,7 +305,7 @@ namespace StardenRPG.Screens
                 { "PlayerWalkLeft", sacg.Generate("PlayerWalkLeft", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
                 { "PlayerWalkRight", sacg.Generate("PlayerWalkRight", new Vector2(0, 1), new Vector2(7, 1), new TimeSpan(0, 0, 0, 0, 500), true) },
                 { "PlayerAttack", sacg.Generate("PlayerAttack", new Vector2(0, 2), new Vector2(9, 2), new TimeSpan(0, 0, 0, 0, 400), false)},
-                { "PlayerTakeHit", sacg.Generate("PlayerTakeHit", new Vector2(0, 3), new Vector2(5, 3), new TimeSpan(0, 0, 0, 0, 1000), false)},
+                { "PlayerTakeHit", sacg.Generate("PlayerTakeHit", new Vector2(0, 3), new Vector2(5, 3), new TimeSpan(0, 0, 0, 0, 500), false)},
                 { "PlayerDeath", sacg.Generate("PlayerDeath", new Vector2(0, 4), new Vector2(12, 4), new TimeSpan(0, 0, 0, 0, 500), false)},
             };
 
