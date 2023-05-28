@@ -128,14 +128,17 @@ namespace StardenRPG.Entities.Monster
                 {
                     CharacterStats.TakeDamage(20);
                 }
-
-                /*if (_player.WeaponBodyRightSide.Enabled == true)
+            }
+            if (other.Body.Tag == _player.WeaponBodyRightSide.Tag)
+            {
+                //waiting for elemant check
+                if (_player.WeaponBodyRightSide.Enabled == true)
                 {
                     CharacterStats.TakeDamage(20);
-                }*/
+                }
             }
 
-            
+
             /*if (other.Body.Tag is Player player)
             {
                 // If so, deal damage to the player

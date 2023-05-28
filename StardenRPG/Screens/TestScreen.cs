@@ -71,7 +71,7 @@ namespace StardenRPG.Screens
         private const float MaxSpeed = 50.0f;
 
         // Health Bar
-        private HealthBar _healthBar;
+        private HealthBar _healthBar, _healthBarTestNewSlime;
         private Texture2D _healthBox;
 
         // Add the input state object
@@ -142,6 +142,10 @@ namespace StardenRPG.Screens
             _healthBar = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime);
             _healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
             _healthBar.SetHealthBox(_healthBox);
+
+            _healthBarTestNewSlime = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime2);
+            //_healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
+            _healthBarTestNewSlime.SetHealthBox(_healthBox);
             #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -348,7 +352,7 @@ namespace StardenRPG.Screens
             slime.Body.LinearDamping = 10f;
 
             //another slime
-            slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(60.0f, 0f), spriteAnimationClips);
+            slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(50, 1), spriteAnimationClips);
             slime2.setPlayer(_player);
             slime2.Body.LinearDamping = 10f;
         }
@@ -373,6 +377,7 @@ namespace StardenRPG.Screens
 
                 // Update the Health Bar
                 _healthBar.Update(gameTime, _player, slime);
+                _healthBarTestNewSlime.Update(gameTime, _player, slime2);
 
                 // Update the slime
                 slime.Update(gameTime, _player);
@@ -425,6 +430,7 @@ namespace StardenRPG.Screens
 
             // Draw the slime
             slime.Draw(gameTime, spriteBatch, SpriteEffects.None);
+            slime2.Draw(gameTime, spriteBatch, SpriteEffects.None);
 
             //draw gound texture
             //ScreenManager.SpriteBatch.Draw(_background.TextureTest, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, new Vector2(0.5f) * _background.TexelSize, SpriteEffects.FlipVertically, 0f);
@@ -437,6 +443,7 @@ namespace StardenRPG.Screens
             spriteBatch.Draw(_groundLabTexture.TextureForSprite, new Vector2(372f, -(_groundBodySize.Y)), null, Color.White, 0f, _groundTextureOrigin, new Vector2(80f, 20f) * _groundForestTexture.TexelSize, SpriteEffects.FlipVertically, 0f);
 
             _healthBar.Draw(spriteBatch, _player);
+            _healthBarTestNewSlime.Draw(spriteBatch, _player);
 
             spriteBatch.End();
             #endregion
