@@ -124,13 +124,14 @@ namespace StardenRPG.Screens
             // Car
             CreateCar();
 
+            _coinTexture = _content.Load<Texture2D>("Sprites/Coin/coinOne"); // Coin for Entities
+            
             // Create the player
             Point characterSize = new Point(288 / 16, 128 / 16); // Default = 288, 128
             GeneratePlayerAvatar(characterSize);
 
             // Create the slime
             Point slimeSize = new Point(64 / 16, 48 / 16); // Default = 64, 48
-            _coinTexture = _content.Load<Texture2D>("Sprites/Coin/coinOne"); // Coin for slime
             GenerateSlime(slimeSize);
 
             // Create Coin
@@ -341,6 +342,7 @@ namespace StardenRPG.Screens
 
             // Set the player's physics
             _player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
+            _player.setCoinTexture(_coinTexture);
             _player.Body.SetFriction(1f);
         }
 
@@ -368,6 +370,8 @@ namespace StardenRPG.Screens
             //another slime
             slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(50, 1), spriteAnimationClips);
             slime2.setPlayer(_player);
+            slime2.setCoinTexture(_coinTexture);
+            slime2.setGameplayScreen(this);
             slime2.Body.LinearDamping = 10f;
         }
         #endregion

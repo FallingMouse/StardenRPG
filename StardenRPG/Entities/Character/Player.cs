@@ -24,11 +24,10 @@ namespace StardenRPG.Entities.Character
 {
     public class Player : Sprite
     {
-        private TestScreen _testScreen;
-
         // Player RPG Stats
         public RPGCharacter CharacterStats { get; set; }
         public Coin playerCoin { get; set; }
+        Texture2D _coinTexture;
 
         private bool isDead = false;
 
@@ -65,10 +64,6 @@ namespace StardenRPG.Entities.Character
         public Vector2 _swordLeftSide, _swordRightSide;
         public Vertices _swordLeftVertices, _swordRightVertices;
         public PolygonShape chassis;
-
-        //import Slime
-        //Slime _monster;
-
        
         SpriteEffects _spriteEffects;
         
@@ -83,7 +78,7 @@ namespace StardenRPG.Entities.Character
             animationPlayer = new SpriteSheetAnimationPlayer(spriteAnimationClips);
             StartAnimation("PlayerIdle");
 
-            SizeExpand = 1; // Old is 3
+            playerCoin = new Coin(_coinTexture, new Point(16 / 16, 16 / 16), new Point(16, 16), World, Position);
 
             // Create Character RPG Stats
             CharacterStats = new RPGCharacter("Player", 100, 20, 25, Element.Fire);
@@ -92,12 +87,6 @@ namespace StardenRPG.Entities.Character
             // Create weapon for characterr
             CurrentWeapon = new Sword();
 
-            // Initialize the weapon body
-            /*WeaponBody = World.CreateBody(Position, 0, BodyType.Dynamic);
-            WeaponBody.FixedRotation = true;
-            WeaponBody.OnCollision += OnWeaponCollision; // Implement this method to handle weapon collisions
-            WeaponBody.Enabled = false; // Initially disable the weapon body, we'll enable it when attacking
-            */
             //create weapon body left side
             WeaponBodyLeftSide = World.CreateBody(Position, 0, BodyType.Dynamic);
             WeaponBodyLeftSide.FixedRotation = true;
@@ -184,19 +173,12 @@ namespace StardenRPG.Entities.Character
             // Update the weapon hitbox size based on the current animation frame
             if (CurrentPlayerState == PlayerState.Attacking)
             {
-                // Enable the weapon body
-                //WeaponBody.Enabled = true;
-
                 Rectangle currentWeaponHitbox = CurrentWeapon.GetCurrentHitbox("PlayerAttack", animationPlayer.CurrentFrameIndex);
 
                 // Update the weapon body position and size
-                //WeaponBody.Position = new Vector2(Position.X + currentWeaponHitbox.X, Position.Y + currentWeaponHitbox.Y);
-                //WeaponBody.Position = new Vector2(Body.Position.X , Body.Position.Y);
                 WeaponBodyRightSide.Position = new Vector2(Body.Position.X, Body.Position.Y);
                 WeaponBodyLeftSide.Position = new Vector2(Body.Position.X, Body.Position.Y);
 
-                //_swordLeftVertices = CurrentWeapon.findSwordVertices(WeaponBody.Position);
-                //When player attack at the left side, sword hitbox will be created at the same side
                 if (CurrentFacingDirection == FacingDirection.Left)
                 {
                     WeaponBodyLeftSide.Enabled = true;
@@ -207,17 +189,6 @@ namespace StardenRPG.Entities.Character
                 {
                     WeaponBodyRightSide.Enabled = true;
                 }
-
-
-                // Assume UpdateWeaponFixtureSize works similarly to UpdateFixtureSize
-                //UpdateWeaponFixtureSize(currentWeaponHitbox.Width, currentWeaponHitbox.Height);
-
-                // Enable the weapon body
-                //_swordJoint = new WheelJoint(Body, WeaponBody, new Vector2(WeaponBody.Position.X - 7.5f, WeaponBody.Position.Y), new Vector2(WeaponBody.Position.X - 7.5f, WeaponBody.Position.Y), false);
-                //_swordJoint = new WheelJoint(Body, WeaponBody, Body.Position, new Vector2(currentWeaponHitbox.X - 1f, currentWeaponHitbox.Y), true);
-                //WeaponBody.Enabled = true;
-                                                
-
             }
             else
             {
@@ -237,46 +208,14 @@ namespace StardenRPG.Entities.Character
 
         }
 
-        /*public void setCoinTexture(Texture2D _coinTexture)
+        public void setCoinTexture(Texture2D _coinTexture)
         {
             this._coinTexture = _coinTexture;
-        }*/
-
-        /*public void setGameplayScreen(TestScreen _testScreen)
-        {
-            this._testScreen = _testScreen;
-        }*/
-
-
-        /*public void UpdateWeaponFixtureSize(float width, float height)
-        {
-            // Convert from pixels to world units if necessary
-            float widthInWorldUnits = ConvertPixelsToWorldUnits(width);
-            float heightInWorldUnits = ConvertPixelsToWorldUnits(height);
-
-            // Remove the old fixture from the weapon body
-            if (WeaponBody.FixtureList.Count > 0)
-            {
-                WeaponBody.DestroyFixture(WeaponBody.FixtureList[0]);
-            }
-
-            // Create and attach a new fixture with the updated size
-            PolygonShape shape = new PolygonShape(1f);
-            shape.SetAsBox(widthInWorldUnits / 2, heightInWorldUnits / 2);
-            Fixture fixture = WeaponBody.CreateFixture(shape);
-            fixture.IsSensor = true; // Set to true if you want the weapon to only detect collisions without physically reacting
-        }*/
+        }
 
         // This method will handle the collisions of the weapon body
         private bool OnWeaponCollision(Fixture sender, Fixture other, Contact contact)
         {
-            // Handle weapon collisions...
-            /*if (other.Body.Tag == _monster.Body.Tag)
-            {
-                _monster.CharacterStats.TakeDamage(10);
-                Console.WriteLine("Slime health : " + _monster.CharacterStats.CurrentHealth);
-            }*/
-
             return true;
         }
 
@@ -382,8 +321,6 @@ namespace StardenRPG.Entities.Character
                 }
             }
 
-            //base.Draw(gameTime, spriteBatch, _spriteEffects);
-
             spriteBatch.Draw(
                 texture: spriteTexture,
                 destinationRectangle: new Rectangle((int)(Position.X + Offset.X), (int)(Position.Y + Offset.Y), (int)Size.X, (int)Size.Y),
@@ -394,10 +331,6 @@ namespace StardenRPG.Entities.Character
                 effects: _spriteEffects,
                 layerDepth: 0
             );
-            /*spriteBatch.Draw(spriteTexture, Position, sourceRect, Color.White, 0, 
-                Vector2.Zero, new Vector2(72f, 32f) * 1, SpriteEffects.FlipVertically, 0f);*/
-
-            
         }
     }
 }
