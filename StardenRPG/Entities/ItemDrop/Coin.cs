@@ -16,6 +16,8 @@ namespace StardenRPG.Entities.ItemDrop
         Player _player;
 
         public float Amount { get; set; } = 0.0f;
+        
+        public bool IsKeep { get; set; } = false;
 
         public Coin(Texture2D spriteSheet, Point size, Point origin, World world, Vector2 startPosition) 
             : base(spriteSheet, size, origin, world, startPosition)
@@ -33,15 +35,28 @@ namespace StardenRPG.Entities.ItemDrop
 
         public override bool OnCollision(Fixture sender, Fixture other, Contact contact)
         {
-            if (other.Body.Tag == _player)
+            if (other.Body.Tag == _player && !IsKeep)
             {
-                //_player.playerCoin.Amount += this.Amount;
+                _player.playerCoin.Amount += Amount;
+                IsKeep = true;
             }
             return true;
         }
 
+        public void Destroy()
+        {
+            // You can call a method to remove this slime from the game world. 
+            // The implementation of this method depends on how you're managing game entities in your game world.
+            if (Body != null && Body.FixtureList.Count > 0)
+                Body.Remove(Body.FixtureList[0]);
+        }
+
         public override void Update(GameTime gameTime)
         {
+            if (IsKeep)
+            {
+                Destroy();
+            }
             base.Update(gameTime);
         }
 

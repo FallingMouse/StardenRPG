@@ -27,7 +27,7 @@ namespace StardenRPG.Entities.Monster
 
         Player _player;
 
-        Coin droppedCoin;
+        public Coin droppedCoin;
         Texture2D _coinTexture;
 
         private float moveSpeed;
@@ -195,6 +195,7 @@ namespace StardenRPG.Entities.Monster
 
             droppedCoin = new Coin(_coinTexture, new Point(16 / 16, 16 / 16), new Point(16, 16), World, Position);
             droppedCoin.Amount = coinToDrop;
+            droppedCoin.setPlayer(_player);
 
             _testScreen.Coins.Add(droppedCoin);
         }

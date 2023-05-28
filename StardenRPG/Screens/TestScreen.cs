@@ -343,6 +343,7 @@ namespace StardenRPG.Screens
             // Set the player's physics
             _player.Body.LinearDamping = 10f; // Adjust this value to fine-tune the character's speed
             _player.setCoinTexture(_coinTexture);
+            _player.playerCoin.setPlayer(_player);
             _player.Body.SetFriction(1f);
         }
 
@@ -365,6 +366,7 @@ namespace StardenRPG.Screens
             slime.setPlayer(_player);
             slime.setCoinTexture(_coinTexture);
             slime.setGameplayScreen(this);
+            //slime.droppedCoin.setPlayer(_player);
             slime.Body.LinearDamping = 10f;
 
             //another slime
@@ -372,6 +374,7 @@ namespace StardenRPG.Screens
             slime2.setPlayer(_player);
             slime2.setCoinTexture(_coinTexture);
             slime2.setGameplayScreen(this);
+            //slime2.droppedCoin.setPlayer(_player);
             slime2.Body.LinearDamping = 10f;
         }
         #endregion

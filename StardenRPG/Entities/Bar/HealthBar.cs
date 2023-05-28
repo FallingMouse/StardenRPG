@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using StardenRPG.Entities.Character;
 using StardenRPG.Entities.Monster;
+using tainicom.Aether.Physics2D.Dynamics;
 
 namespace StardenRPG.Entities.Bar
 {
@@ -55,6 +56,7 @@ namespace StardenRPG.Entities.Bar
             //_healthBox = texture2;
         }
 
+
         public void Update(GameTime gameTime, Player _player, Slime _slime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -66,12 +68,21 @@ namespace StardenRPG.Entities.Bar
             _positionSlime = new Vector2(_slime.Position.X + xOffset, _slime.Position.Y - yOffset);
             _positionBoxSlime = new Vector2(_slime.Position.X + xOffset, _slime.Position.Y - yOffset);
 
-            _rectangle.Location = _position.ToPoint();
-            _rectangleBG.Location = _position.ToPoint();
 
-            //slime 
-            _rectangleSlime.Location = _position.ToPoint();
-            _rectangleBGSlime.Location = _position.ToPoint();
+            if(_slime.CharacterStats.CurrentHealth <= 0)
+            {
+                _positionSlime = new Vector2(0, -20);
+                _positionBoxSlime = new Vector2(0, -20);
+            }
+            else
+            {
+                _rectangle.Location = _position.ToPoint();
+                _rectangleBG.Location = _position.ToPoint();
+
+                //slime 
+                _rectangleSlime.Location = _position.ToPoint();
+                _rectangleBGSlime.Location = _position.ToPoint();
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Player player)
