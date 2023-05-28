@@ -353,7 +353,7 @@ namespace StardenRPG.Screens
             slime.Body.LinearDamping = 10f;
 
             //another slime
-            slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(50, 1), spriteAnimationClips);
+            slime2 = new Slime(slimeSpriteSheet, size, new Point(64, 41), World, new Vector2(70, 1), spriteAnimationClips);
             slime2.setPlayer(_player);
             slime2.Body.LinearDamping = 10f;
         }

@@ -123,10 +123,18 @@ namespace StardenRPG.Entities.Monster
             //if(other.Body.Tag.Equals(_player.WeaponBodyLeftSide.Tag) || other.Body.Tag.Equals(_player.WeaponBodyRightSide.Tag))
             if (other.Body.Tag == _player.WeaponBodyLeftSide.Tag)
             {
-                //waiting for elemant check
                 if (_player.WeaponBodyLeftSide.Enabled == true)
                 {
-                    CharacterStats.TakeDamage(20);
+                    //check element
+                    if(_player.CharacterStats.ElementalType == Element.Fire)
+                    {
+                        CharacterStats.TakeDamage(40);
+                    }
+                    else
+                    {
+                        CharacterStats.TakeDamage(10);
+                    }
+                    
                 }
             }
             if (other.Body.Tag == _player.WeaponBodyRightSide.Tag)
@@ -134,7 +142,15 @@ namespace StardenRPG.Entities.Monster
                 //waiting for elemant check
                 if (_player.WeaponBodyRightSide.Enabled == true)
                 {
-                    CharacterStats.TakeDamage(20);
+                    //check element
+                    if (_player.CharacterStats.ElementalType == Element.Water)
+                    {
+                        CharacterStats.TakeDamage(40);
+                    }
+                    else
+                    {
+                        CharacterStats.TakeDamage(10);
+                    }
                 }
             }
 
