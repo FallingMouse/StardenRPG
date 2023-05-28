@@ -379,6 +379,13 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/TestFG.png
 
+#begin Fonts/atkfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/atkfont.spritefont
+
 #begin Fonts/gamefont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

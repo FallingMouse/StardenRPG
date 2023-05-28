@@ -76,6 +76,9 @@ namespace StardenRPG.Screens
         private HealthBar _healthBar, _healthBarTestNewSlime;
         private Texture2D _healthBox;
 
+        // Add a field for the AttackBar
+        private AttackBar attackBar;
+
         // Coin
         //private Coin _coin;
         private Texture2D _coinTexture;
@@ -159,6 +162,11 @@ namespace StardenRPG.Screens
             _healthBarTestNewSlime = new HealthBar(ScreenManager.Game.GraphicsDevice, _player, slime2);
             //_healthBox = ScreenManager.Content.Load<Texture2D>("Backgrounds/Bar/HealthBox");
             //_healthBarTestNewSlime.SetHealthBox(_healthBox);
+
+            // AttackBar
+            attackBar = new AttackBar(ScreenManager.Game.GraphicsDevice, _player);
+
+            _gameFont = _content.Load<SpriteFont>("Fonts/atkfont");
             #endregion
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -401,6 +409,9 @@ namespace StardenRPG.Screens
                 _healthBar.Update(gameTime, _player, slime);
                 _healthBarTestNewSlime.Update(gameTime, _player, slime2);
 
+                // Update the AtkBar
+                attackBar.Update(gameTime, _player);
+
                 // Update the slime
                 slime.Update(gameTime, _player);
 
@@ -493,6 +504,14 @@ namespace StardenRPG.Screens
             _healthBar.Draw(spriteBatch, _player);
             _healthBarTestNewSlime.Draw(spriteBatch, _player);
 
+            //attackBar.Draw(spriteBatch, _player);
+            // Define a scale for the font size
+            float fontScale = 0.8f;  // reduce the font size to 50%
+            Vector2 fontScaleVector = new Vector2(fontScale, fontScale);
+
+            // Draw ATK
+            //spriteBatch.DrawString(_gameFont, "ATK: " + _player.CharacterStats.ATK.ToString(), _player.Position + new Vector2(5, 5), Color.White, 0, Vector2.Zero, fontScaleVector, SpriteEffects.FlipVertically, 0);
+            
             spriteBatch.End();
             #endregion
 
