@@ -86,7 +86,7 @@ namespace StardenRPG.Entities.Character
             SizeExpand = 1; // Old is 3
 
             // Create Character RPG Stats
-            CharacterStats = new RPGCharacter("Player", 100, 20, Element.Fire);
+            CharacterStats = new RPGCharacter("Player", 100, 20, 25, Element.Fire);
             //playerCoin = new Coin(100);
 
             // Create weapon for characterr

@@ -397,14 +397,12 @@ namespace StardenRPG.Screens
                 // Update the slime
                 slime.Update(gameTime, _player);
 
+                slime2.Update(gameTime, _player);
                 // Update the coins
                 foreach (var coin in Coins)
                 {
                     coin.Update(gameTime);
                 }
-            }
-        }
-                slime2.Update(gameTime, _player);
             }
         }
 
